@@ -15,6 +15,7 @@ const is = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
     <nav class="hdr__nav" aria-label="Main">
       <a href={url('/')} aria-current={is('/') ? 'page' : undefined}>Home</a>
       <a href={url('/products')} aria-current={is('/products') ? 'page' : undefined}>All products</a>
+      <a href={url('/our-work')} aria-current={is('/our-work') ? 'page' : undefined}>Our work</a>
       <details class="dd">
         <summary>Souvenirs for</summary>
         <ul>
@@ -37,6 +38,7 @@ const is = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
         <nav aria-label="Mobile">
           <a href={url('/')}>Home</a>
           <a href={url('/products')}>All products</a>
+          <a href={url('/our-work')}>Our work</a>
           <p class="mm__label">Souvenirs for</p>
           {EVENTS.map((e) => <a class="mm__sub" href={url(`/souvenirs/${e.slug}`)}>{e.name}</a>)}
           <a href={url('/how-it-works')}>How it works</a>

@@ -37,6 +37,7 @@ export const GET: APIRoute = () => {
     '',
     '## Pages',
     `- [All products](${absolute('/products')})`,
+    `- [Our work: photos of real orders](${absolute('/our-work')})`,
     `- [How it works](${absolute('/how-it-works')})`,
     `- [FAQ](${absolute('/faq')})`,
     `- [Contact](${absolute('/contact')})`,

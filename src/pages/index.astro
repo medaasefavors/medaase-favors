@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Marquee from '../components/Marquee.astro';
+import HeroSlideshow from '../components/HeroSlideshow.astro';
 import ProductCard from '../components/ProductCard.astro';
 import BundleCard from '../components/BundleCard.astro';
 import Steps from '../components/Steps.astro';
@@ -31,23 +32,22 @@ const story = [
   schema={[website(), faqPage(FAQ_PREVIEW)]}
 >
   <section class="hero">
-    <div class="hero__bg" aria-hidden="true"></div>
-    <div class="hero__stage" aria-hidden="true">
-      <span class="hero__giant">{'MEDAASE'.split('').map((c, i) => <span style={`--i:${i}`}>{c}</span>)}</span>
-      <span class="hero__favors">favors</span>
-    </div>
-    <div class="wrap hero__copy">
-      <h1>{SITE.tagline}</h1>
-      <p class="lede">Custom skincare souvenirs for weddings, funerals, naming ceremonies and every gathering in between, with your names or logo and the date on every label.</p>
-      <ul class="pills">
-        <li class="pill">From {SITE.minPerItem} pieces</li>
-        <li class="pill">Free theme design</li>
-        <li class="pill">{SITE.turnaround}</li>
-        <li class="pill">Pay with MoMo or card</li>
-      </ul>
-      <div class="btn-row">
-        <a class="btn" href={url('/products')}>Shop all products</a>
-        <a class="btn btn--ghost" href={url('/how-it-works')}>How it works</a>
+    <div class="wrap hero__in">
+      <div class="hero__media"><HeroSlideshow /></div>
+      <div class="hero__copy">
+        <span class="eyebrow">Custom souvenirs · Accra, Ghana</span>
+        <h1>{SITE.tagline}</h1>
+        <p class="lede">Skincare favours for weddings, funerals, naming ceremonies and every gathering in between, with your names or logo and the date on every label.</p>
+        <ul class="pills">
+          <li class="pill">From {SITE.minPerItem} pieces</li>
+          <li class="pill">Free theme design</li>
+          <li class="pill">{SITE.turnaround}</li>
+          <li class="pill">Pay with MoMo or card</li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn" href={url('/products')}>Shop all products</a>
+          <a class="btn btn--ghost" href={url('/our-work')}>See our work</a>
+        </div>
       </div>
     </div>
   </section>
@@ -131,82 +131,23 @@ const story = [
 
 <style>
   .hero {
-    position: relative;
-    overflow: hidden;
-    color: var(--white);
-    padding: clamp(24px, 6vw, 60px) 0 clamp(56px, 8vw, 90px);
-    min-height: min(92vh, 860px);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    padding: clamp(20px, 4vw, 56px) 0 clamp(40px, 6vw, 72px);
+    background: linear-gradient(170deg, #fff 30%, var(--pink-soft));
   }
-  /* Static gradient poster. Phase 2 replaces it with the animated Shader Gradient. */
-  .hero__bg {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(60% 60% at 80% 20%, rgba(255, 184, 209, 0.95), transparent 70%),
-      radial-gradient(50% 50% at 15% 80%, rgba(232, 80, 138, 0.45), transparent 70%),
-      linear-gradient(160deg, #1b2a4e 0%, #2d3f73 45%, #c97ca0 100%);
-  }
-  .hero__stage {
-    position: relative;
-    flex: 1;
-    min-height: 34vw;
+  .hero__in {
     display: grid;
-    place-items: center;
-  }
-  .hero__giant {
-    font-family: var(--display);
-    font-size: 17vw;
-    line-height: 0.9;
-    color: var(--pink);
-    letter-spacing: -0.02em;
-    display: flex;
-  }
-  .hero__giant span {
-    display: inline-block;
-    animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-    animation-delay: calc(var(--i) * 70ms);
-  }
-  .hero__favors {
-    position: absolute;
-    right: 10%;
-    bottom: 4%;
-    font-family: var(--body);
-    font-style: italic;
-    font-weight: 500;
-    font-size: clamp(2.4rem, 8vw, 7rem);
-    color: var(--white);
-    transform: rotate(-6deg);
-  }
-  .hero__copy {
-    position: relative;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: center;
   }
   .hero h1 {
-    max-width: 16ch;
+    max-width: 14ch;
   }
-  .hero .lede {
-    color: rgba(255, 255, 255, 0.9);
-  }
-  .hero .pill {
-    color: var(--white);
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-  .hero .btn {
-    background: var(--white);
-    color: var(--navy);
-    border-color: var(--white);
-  }
-  .hero .btn--ghost {
-    background: transparent;
-    color: var(--white);
-  }
-  @keyframes rise {
-    from {
-      opacity: 0;
-      transform: translateY(40%);
+  @media (min-width: 960px) {
+    .hero__in {
+      grid-template-columns: 1fr 1fr;
+    }
+    .hero__media {
+      order: 2;
     }
   }
   .story__steps {

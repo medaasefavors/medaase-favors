@@ -1,0 +1,148 @@
+---
+// Clean crossfading slideshow of real work. With no JavaScript, or with reduced
+// motion, it simply shows the first slide (dots still let people browse).
+import { Picture } from 'astro:assets';
+import { HERO_SLIDES } from '../data/photos';
+---
+<div class="ss" data-ss aria-roledescription="carousel" aria-label="Some of our work">
+  <div class="ss__track">
+    {HERO_SLIDES.map((w, i) => (
+      <figure class:list={['ss__slide', { 'is-on': i === 0 }]} aria-roledescription="slide" aria-label={`${i + 1} of ${HERO_SLIDES.length}`} aria-hidden={i === 0 ? undefined : 'true'}>
+        <Picture
+          src={w.photo.src}
+          alt={w.photo.alt}
+          formats={['avif', 'webp']}
+          widths={[420, 640, 900, 1200]}
+          sizes="(min-width: 960px) 46vw, 100vw"
+          loading={i === 0 ? 'eager' : 'lazy'}
+          fetchpriority={i === 0 ? 'high' : undefined}
+          class="ss__img"
+        />
+        <figcaption class="ss__cap"><b>{w.title}</b> · {w.occasion}</figcaption>
+      </figure>
+    ))}
+  </div>
+  <div class="ss__dots" role="group" aria-label="Choose a slide" hidden data-ss-dots>
+    {HERO_SLIDES.map((w, i) => (
+      <button type="button" class="ss__dot" aria-label={`Show ${w.title}`} aria-pressed={i === 0 ? 'true' : 'false'} data-i={i}></button>
+    ))}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ss]').forEach((root) => {
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('.ss__slide'));
+    const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('.ss__dot'));
+    const dotWrap = root.querySelector<HTMLElement>('[data-ss-dots]');
+    if (slides.length < 2 || !dotWrap) return;
+    dotWrap.hidden = false;
+    let i = 0;
+    let timer: number | undefined;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const show = (n: number) => {
+      i = (n + slides.length) % slides.length;
+      slides.forEach((s, k) => {
+        s.classList.toggle('is-on', k === i);
+        if (k === i) s.removeAttribute('aria-hidden');
+        else s.setAttribute('aria-hidden', 'true');
+      });
+      dots.forEach((d, k) => d.setAttribute('aria-pressed', String(k === i)));
+    };
+    const stop = () => window.clearInterval(timer);
+    const start = () => {
+      if (reduce || document.hidden) return;
+      stop();
+      timer = window.setInterval(() => show(i + 1), 4500);
+    };
+    dots.forEach((d) => d.addEventListener('click', () => { show(Number(d.dataset.i)); start(); }));
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', start);
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    start();
+  });
+</script>
+
+<style>
+  .ss {
+    position: relative;
+  }
+  .ss__track {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--pink-soft);
+    box-shadow: var(--shadow);
+  }
+  .ss__slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 0.9s ease;
+  }
+  .ss__slide.is-on {
+    opacity: 1;
+  }
+  .ss__slide :global(.ss__img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.04);
+    transition: transform 5s ease-out;
+  }
+  .ss__slide.is-on :global(.ss__img) {
+    transform: scale(1);
+  }
+  .ss__cap {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    max-width: calc(100% - 28px);
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.86);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    color: var(--navy);
+    font-size: 0.92rem;
+  }
+  .ss__dots {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 10px;
+  }
+  .ss__dot {
+    width: 44px;
+    height: 32px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+    position: relative;
+  }
+  .ss__dot::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: rgba(27, 42, 78, 0.25);
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, background 0.3s ease;
+  }
+  .ss__dot[aria-pressed='true']::before {
+    width: 28px;
+    background: var(--navy);
+  }
+  @media (min-width: 960px) {
+    .ss__track {
+      aspect-ratio: 4 / 5;
+    }
+  }
+</style>
