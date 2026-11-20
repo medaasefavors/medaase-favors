@@ -93,8 +93,8 @@ export const FAQS: { cat: FaqCategory; q: string; a: string }[] = [
   },
   {
     cat: 'design',
-    q: 'Can I add a drawstring bag?',
-    a: `Yes, ${cedi(ADD_ONS.bag)} each in pink, navy, white, gold or mixed. Each guest's favours go in one bag.`,
+    q: 'Can I add a drawstring organza bag?',
+    a: `Yes, ${cedi(ADD_ONS.bag)} each in pink, navy, white, gold or mixed. Each guest's favours go in one organza bag.`,
   },
   {
     cat: 'design',

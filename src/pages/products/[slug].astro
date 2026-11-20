@@ -5,7 +5,7 @@ import ProductVisual from '../../components/ProductVisual.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import FaqList from '../../components/FaqList.astro';
 import {
-  PRODUCTS, ADD_ONS, BAG_COLOURS, CARD_SHAPES, sizesOf, startsFrom, highestUnit, type Product,
+  PRODUCTS, ADD_ONS, BAG_COLOURS, sizesOf, startsFrom, highestUnit, type Product,
 } from '../../data/products';
 import { SITE } from '../../data/site';
 import { cedi } from '../../lib/format';
@@ -125,9 +125,9 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
 
             <fieldset>
               <legend>Add ons (per piece)</legend>
-              <label class="opt opt--line"><input type="checkbox" name="bag" /><span>Drawstring bag ({BAG_COLOURS.join(', ')}) <b>+{cedi(ADD_ONS.bag)}</b></span></label>
+              <label class="opt opt--line"><input type="checkbox" name="bag" /><span>Drawstring organza bag ({BAG_COLOURS.join(', ')}) <b>+{cedi(ADD_ONS.bag)}</b></span></label>
               {p.cardMount && (
-                <label class="opt opt--line"><input type="checkbox" name="card" /><span>Mount on a printed card ({CARD_SHAPES.join(', ')}; custom shape +{cedi(ADD_ONS.shape)}) <b>+{cedi(ADD_ONS.card)}</b></span></label>
+                <label class="opt opt--line"><input type="checkbox" name="card" /><span>Mount on a printed card with your names, date and a short message <b>+{cedi(ADD_ONS.card)}</b></span></label>
               )}
               <label class="opt opt--line"><input type="checkbox" name="tag" /><span>Thank you tag, printed with your label text <b>+{cedi(ADD_ONS.tag)}</b></span></label>
             </fieldset>

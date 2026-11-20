@@ -16,9 +16,8 @@ export const PRICES = {
 
 export const ADD_ONS = {
   label: 1.5, // Label (front text or logo + date)
-  bag: 2.5, // Drawstring bag
+  bag: 2.5, // Drawstring organza bag
   card: 3, // Mount on printed card
-  shape: 3, // Custom shape (extra)
   tag: 2, // Thank you tag
 };
 
@@ -44,7 +43,6 @@ const BOTTLES = ['Clear', 'Black', 'White'];
 const TUBES = ['Clear', 'Black', 'White']; // TBD: confirm lip balm tube colours
 
 export const BAG_COLOURS = ['Pink', 'Navy', 'White', 'Gold', 'Mixed colours'];
-export const CARD_SHAPES = ['Rectangle', 'Circle', 'Heart', 'Custom shape'];
 
 export interface Product {
   slug: Slug;
@@ -196,7 +194,7 @@ export const PRODUCTS: Product[] = [
     category: 'lip',
     blurb: 'Pocket sized and always welcome.',
     description:
-      'Pocket sized and always welcome. A smooth, nourishing balm that slips into any clutch, and looks especially sweet mounted on a card in the shape of your choice.',
+      'Pocket sized and always welcome. A smooth, nourishing balm that slips into any clutch, and looks especially sweet mounted on a printed card.',
     scents: SCENTS,
     containers: TUBES,
     lids: [], // TBD: confirm cap colour options
@@ -205,12 +203,12 @@ export const PRODUCTS: Product[] = [
     cardMountSizes: ['One size 5g'],
     longCopy: [
       "Small, affordable and loved by everyone from grandma to the cousins. It goes everywhere in a pocket or clutch.",
-      "Mount it on a printed card in a rectangle, circle, heart or a custom shape for an extra special touch.",
+      "Mount it on a printed card with your names, the date and a short thank you message for an extra special touch.",
     ],
     faqs: [
       { q: 'Is it good for children\'s parties?', a: 'Yes. It is small, safe to carry and a hit with all ages.' },
     ],
-    imageAlt: 'Pink lip balm tube mounted on a heart shaped printed card',
+    imageAlt: 'Pink lip balm tube mounted on a printed thank you card',
   },
 ];
 
@@ -254,7 +252,7 @@ export function startsFrom(slug: Slug) {
 export function highestUnit(slug: Slug) {
   const p = getProduct(slug)!;
   const top = Math.max(...Object.values(PRICES[slug]));
-  const card = p.cardMount ? ADD_ONS.card + ADD_ONS.shape : 0;
+  const card = p.cardMount ? ADD_ONS.card : 0;
   return top + ADD_ONS.label + ADD_ONS.bag + ADD_ONS.tag + card;
 }
 
