@@ -5,7 +5,6 @@ import BundleCard from '../../components/BundleCard.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { PRODUCTS, CATEGORIES, SUGGESTED_BUNDLES } from '../../data/products';
-import { SITE } from '../../data/site';
 import { breadcrumbs } from '../../lib/schema';
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'All products', path: '/products' }];
 ---
@@ -20,7 +19,7 @@ const crumbs = [{ name: 'Home', path: '/' }, { name: 'All products', path: '/pro
     <div class="wrap">
       <Breadcrumbs items={crumbs} />
       <h1>All products</h1>
-      <p class="lede">Six skincare favours, each one dressed in your colours with your names or logo and the date. Every order starts from {SITE.minPerItem} pieces per product, and the label design is always free.</p>
+      <p class="lede">Six skincare favours, dressed in your colours with your names or logo.</p>
 
       <div class="chips" role="group" aria-label="Filter products" data-chips hidden>
         {CATEGORIES.map((c, i) => <button type="button" class="chip" data-filter={c.id} aria-pressed={i === 0 ? 'true' : 'false'}>{c.label}</button>)}
@@ -35,8 +34,7 @@ const crumbs = [{ name: 'Home', path: '/' }, { name: 'All products', path: '/pro
 
   <section class="section section--pink">
     <div class="wrap">
-      <h2>Suggested bundles</h2>
-      <p class="lede">Two or more different products take 5% off your whole order.</p>
+      <h2>Bundle and save 5%</h2>
       <div class="grid grid--2">{SUGGESTED_BUNDLES.map((b) => <BundleCard id={b.id} />)}</div>
     </div>
   </section>

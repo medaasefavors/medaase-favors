@@ -19,11 +19,6 @@ import { PHOTOS } from '../data/photos';
 const favourites = ['pure-african-shea-butter', 'shimmer-oil', 'lip-balm', 'body-butter'].map(
   (s) => PRODUCTS.find((p) => p.slug === s)!,
 );
-const story = [
-  { t: 'Choose your favours', d: 'A shea tub, a lip balm and a shimmer oil, in the colours of your day.' },
-  { t: 'Add your names and date', d: 'Your label is designed for free: "Esi & Kwame · 12.12.2026".' },
-  { t: 'Packed for every guest', d: 'Each guest\'s favours go into one drawstring bag, tied and ready.' },
-];
 ---
 <Base
   title="Medaase Favors | Custom Souvenirs in Ghana"
@@ -69,26 +64,20 @@ const story = [
     <div class="wrap">
       <span class="eyebrow">Suggested bundles</span>
       <h2>Bundle it and save 5% on your whole order</h2>
-      <p class="lede">Choose two or more different products and 5% comes off everything, automatically.</p>
       <div class="grid grid--2">{SUGGESTED_BUNDLES.map((b) => <BundleCard id={b.id} />)}</div>
     </div>
   </section>
 
   <section class="section story">
     <div class="wrap">
-      <span class="eyebrow">From your idea to their hands</span>
+      <span class="eyebrow">Made by us</span>
       <h2>One bag. One thank you. Every guest.</h2>
       <div class="story__photos">
         {[PHOTOS.sheaTubs, PHOTOS.amberDroppers].map((ph) => (
           <Picture src={ph.src} alt={ph.alt} formats={['avif', 'webp']} widths={[360, 600, 900]} sizes="(min-width: 900px) 540px, 50vw" loading="lazy" class="story__photo" />
         ))}
       </div>
-      <ol class="story__steps">
-        {story.map((s, i) => (
-          <li class="card"><span class="story__n">0{i + 1}</span><h3>{s.t}</h3><p>{s.d}</p></li>
-        ))}
-      </ol>
-      <a class="btn" href={url('/products')}>Start your order</a>
+      <a class="btn" href={url('/our-work')}>See more of our work</a>
     </div>
   </section>
 
@@ -120,7 +109,7 @@ const story = [
   <section class="section section--pink">
     <div class="wrap">
       <span class="eyebrow">Questions</span>
-      <h2>You asked, we answered</h2>
+      <h2>Quick answers</h2>
       <FaqList faqs={FAQ_PREVIEW} />
       <p style="margin-top:24px"><a class="btn btn--ghost" href={url('/faq')}>All questions</a></p>
     </div>

@@ -4,7 +4,6 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ProductVisual from '../../components/ProductVisual.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import FaqList from '../../components/FaqList.astro';
-import CtaBand from '../../components/CtaBand.astro';
 import {
   PRODUCTS, ADD_ONS, BAG_COLOURS, CARD_SHAPES, sizesOf, startsFrom, highestUnit, type Product,
 } from '../../data/products';
@@ -64,6 +63,11 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
           <p class="price pp__price"><small>Starts from</small>{cedi(from)} <span>per piece</span></p>
           <p class="lede">{p.description}</p>
           {p.kicker && <p class="pp__kicker">{p.kicker}</p>}
+          <ul class="pills">
+            <li class="pill">From {SITE.minPerItem} pieces</li>
+            <li class="pill">Free label design</li>
+            <li class="pill">Ready in {SITE.turnaround}</li>
+          </ul>
 
           <form class="opts" data-product={p.slug} onsubmit="return false">
             <fieldset>
@@ -149,50 +153,35 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   <section class="section section--pink">
     <div class="wrap pp__more">
       <div class="prose">
-        <h2>About our {p.name.replace('100% ', '')}</h2>
+        <h2>Why guests love it</h2>
         {p.longCopy.map((t) => <p>{t}</p>)}
       </div>
-      <div>
-        <div class="card">
-          <h2>Prices per piece</h2>
-          <table class="table">
-            <thead><tr><th scope="col">Size</th><th scope="col">Price</th></tr></thead>
-            <tbody>{sizes.map((s) => <tr><td>{s.size}</td><td>{cedi(s.price)}</td></tr>)}</tbody>
-          </table>
-          <p style="margin-top:14px;font-size:0.95rem">Label +{cedi(ADD_ONS.label)} · Drawstring bag +{cedi(ADD_ONS.bag)} · Thank you tag +{cedi(ADD_ONS.tag)}{p.cardMount && ` · Printed card +${cedi(ADD_ONS.card)}`}. Minimum {SITE.minPerItem} pieces.</p>
-        </div>
+      <div class="card">
+        <h2>Prices per piece</h2>
+        <table class="table">
+          <thead><tr><th scope="col">Size</th><th scope="col">Price</th></tr></thead>
+          <tbody>{sizes.map((s) => <tr><td>{s.size}</td><td>{cedi(s.price)}</td></tr>)}</tbody>
+        </table>
       </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="wrap grid grid--2">
-      <div>
-        <h2>What's included</h2>
-        <ul class="prose">{p.included.map((i) => <li>{i}</li>)}</ul>
+  {p.faqs.length > 0 && (
+    <section class="section">
+      <div class="wrap">
+        <h2>Questions</h2>
+        <FaqList faqs={p.faqs} />
       </div>
-      <div>
-        <h2>How long it takes</h2>
-        <p>We send your label design on WhatsApp within 24 hours of your order. Once you approve it, your favours are ready in {SITE.turnaround}. You get {SITE.designRounds} rounds of design changes for free. Need them sooner? See our <a href={url('/faq')}>rush order policy</a>.</p>
-      </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <section class="section section--pink">
     <div class="wrap">
-      <h2>Questions about {p.shortName.toLowerCase()}</h2>
-      <FaqList faqs={p.faqs} />
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
       <h2>Bundle it with</h2>
-      <p class="lede">Add one more product and save 5% on everything.</p>
+      <p class="lede">Add one more product and save 5% on your whole order.</p>
       <div class="grid grid--3">{others.map((o) => <ProductCard product={o} />)}</div>
     </div>
   </section>
-  <CtaBand />
 </Base>
 
 <style>
