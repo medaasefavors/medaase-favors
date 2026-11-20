@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Steps from '../components/Steps.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { BUNDLE_DISCOUNT } from '../data/products';
+import { cedi } from '../lib/format';
+import { url } from '../lib/url';
+import { breadcrumbs } from '../lib/schema';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'How it works', path: '/how-it-works' }];
+---
+<Base title="How Ordering Souvenirs Works | Medaase Favors" description="Choose your favours, pay online with MoMo or card, approve your free label design on WhatsApp, then collect in 5 to 7 working days." path="/how-it-works" schema={[breadcrumbs(crumbs)]}>
+  <section class="section">
+    <span class="ghost-word" aria-hidden="true">EASY</span>
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>How it works</h1>
+      <p class="lede">Ordering custom souvenirs should be the easiest part of planning your event. Here is everything that happens, from your first click to the moment your guests say thank you back.</p>
+      <h2 class="sr-only">The four steps</h2>
+      <Steps />
+    </div>
+  </section>
+  <section class="section section--pink">
+    <div class="wrap prose">
+      <h2>1. Choose your favours</h2>
+      <p>Pick a product, then choose the size, scent, container and lid colours that match your theme. Add a label with your names or logo and the event date, and add a drawstring bag, a thank you tag or a printed card if you like. Each product starts from {SITE.minPerItem} pieces.</p>
+      <p>Add two or more different products and you save {Math.round(BUNDLE_DISCOUNT * 100)}% on your whole order. Each guest's favours can be packed together in one drawstring bag.</p>
+      <h2>2. Pay to lock in your date</h2>
+      <p>Pay the full amount online through Paystack with MTN MoMo, Telecel Cash, AirtelTigo Money or a bank card. Your date is secured as soon as payment goes through, and you receive an email confirmation with your order reference.</p>
+      <h2>3. Approve your design</h2>
+      <p>Within 24 hours we send your label design on WhatsApp, matched to your theme. You get {SITE.designRounds} rounds of changes for free. Nothing is printed until you are happy.</p>
+      <h2>4. Collect or get it delivered</h2>
+      <p>Your favours are ready {SITE.turnaround} after you approve the design. Pick them up for free in {SITE.pickupArea}, or have them delivered within Accra for {cedi(SITE.deliveryFeeAccra)}.</p>
+      <h2>Short on time?</h2>
+      <p>If your event is less than {SITE.rushWorkingDays} working days away, a {Math.round(SITE.rushRate * 100)}% rush fee applies. If it is less than {SITE.blockWorkingDays} working days away, please <a href={url('/contact')}>message us on WhatsApp</a> first so we can check if we can make it in time.</p>
+    </div>
+  </section>
+  <CtaBand />
+</Base>

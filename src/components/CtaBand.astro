@@ -1,0 +1,17 @@
+---
+import { url } from '../lib/url';
+interface Props { title?: string; text?: string; button?: string; href?: string }
+const { title = 'Ready to say medaase?', text = 'Pick your favours, add your names and date, and we will take it from there.', button = 'Start your order', href = '/products' } = Astro.props;
+---
+<section class="cta section section--navy">
+  <div class="wrap">
+    <h2>{title}</h2>
+    <p class="lede">{text}</p>
+    <a class="btn btn--pink" href={url(href)}>{button}</a>
+  </div>
+</section>
+<style>
+  .cta { text-align: center; overflow: hidden; }
+  .cta .lede { margin: 0 auto 1.6em; }
+  .cta h2 { font-size: clamp(2.2rem, 6vw, 4rem); color: var(--pink); }
+</style>

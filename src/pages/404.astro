@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { PRODUCTS } from '../data/products';
+import { EVENTS } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base title="Page not found | Medaase Favors" description="This page could not be found." path="/404" noindex>
+  <section class="section">
+    <div class="wrap">
+      <h1>Oops, this page wandered off</h1>
+      <p class="lede">Let us get you back to the favours.</p>
+      <div class="grid grid--2">
+        <div><h2>Products</h2><ul>{PRODUCTS.map((p) => <li><a href={url(`/products/${p.slug}`)}>{p.name}</a></li>)}</ul></div>
+        <div><h2>Souvenirs for</h2><ul>{EVENTS.map((e) => <li><a href={url(`/souvenirs/${e.slug}`)}>{e.name}</a></li>)}</ul></div>
+      </div>
+      <p><a class="btn" href={url('/')}>Go home</a></p>
+    </div>
+  </section>
+</Base>

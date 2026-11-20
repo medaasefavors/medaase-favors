@@ -1,0 +1,12 @@
+---
+// "MF" monogram (placeholder until the owner supplies a logo).
+// Phase 6 layers the Liquid Metal shader on top; this SVG stays as the fallback.
+interface Props { size?: number; tone?: 'navy' | 'pink' | 'white' }
+const { size = 44, tone = 'navy' } = Astro.props;
+const fill = tone === 'pink' ? '#FFB8D1' : tone === 'white' ? '#FFFFFF' : '#1B2A4E';
+const text = tone === 'navy' ? '#FFB8D1' : '#1B2A4E';
+---
+<svg width={size} height={size} viewBox="0 0 64 64" role="img" aria-label="Medaase Favors">
+  <circle cx="32" cy="32" r="32" fill={fill} />
+  <text x="32" y="41" text-anchor="middle" font-family="Young Serif, Georgia, serif" font-size="26" fill={text}>MF</text>
+</svg>

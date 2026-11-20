@@ -1,0 +1,66 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import BundleCard from '../../components/BundleCard.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { PRODUCTS, CATEGORIES, SUGGESTED_BUNDLES } from '../../data/products';
+import { SITE } from '../../data/site';
+import { breadcrumbs } from '../../lib/schema';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'All products', path: '/products' }];
+---
+<Base
+  title="All Souvenir Products | Medaase Favors Ghana"
+  description="Shea butter, body butter, shimmer oil, hand cream, hand wash gel and lip balm souvenirs, personalised with your names or logo. From 25 pieces."
+  path="/products"
+  schema={[breadcrumbs(crumbs)]}
+>
+  <section class="section">
+    <span class="ghost-word" aria-hidden="true">SHOP</span>
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>All products</h1>
+      <p class="lede">Six skincare favours, each one dressed in your colours with your names or logo and the date. Every order starts from {SITE.minPerItem} pieces per product, and the label design is always free.</p>
+
+      <div class="chips" role="group" aria-label="Filter products" data-chips hidden>
+        {CATEGORIES.map((c, i) => <button type="button" class="chip" data-filter={c.id} aria-pressed={i === 0 ? 'true' : 'false'}>{c.label}</button>)}
+      </div>
+
+      <h2 class="sr-only">Products</h2>
+      <div class="grid grid--3" data-grid>
+        {PRODUCTS.map((p) => <ProductCard product={p} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--pink">
+    <div class="wrap">
+      <h2>Suggested bundles</h2>
+      <p class="lede">Two or more different products take 5% off your whole order.</p>
+      <div class="grid grid--2">{SUGGESTED_BUNDLES.map((b) => <BundleCard id={b.id} />)}</div>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+
+<script>
+  const chips = document.querySelector<HTMLElement>('[data-chips]');
+  if (chips) {
+    chips.hidden = false;
+    const cards = document.querySelectorAll<HTMLElement>('[data-grid] [data-category]');
+    chips.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+      if (!btn) return;
+      const f = btn.dataset.filter;
+      chips.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      cards.forEach((c) => (c.hidden = f !== 'all' && c.dataset.category !== f));
+    });
+  }
+</script>
+
+<style>
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 28px; }
+  .chip { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 2px solid var(--navy); background: transparent; color: var(--navy); font: 500 1rem var(--body); cursor: pointer; }
+  .chip[aria-pressed='true'] { background: var(--navy); color: var(--white); }
+  [data-grid] [hidden] { display: none; }
+</style>

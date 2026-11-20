@@ -1,0 +1,85 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import BundleCard from '../../components/BundleCard.astro';
+import FaqList from '../../components/FaqList.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { EVENT_PAGES, type EventPage } from '../../data/events';
+import { getProduct } from '../../data/products';
+import { SITE } from '../../data/site';
+import { url } from '../../lib/url';
+import { breadcrumbs, faqPage } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return EVENT_PAGES.map((e) => ({ params: { event: e.slug }, props: { e } }));
+}
+const { e } = Astro.props as { e: EventPage };
+const path = `/souvenirs/${e.slug}`;
+const crumbs = [{ name: 'Home', path: '/' }, { name: `Souvenirs for ${e.name.toLowerCase()}`, path }];
+const somber = e.slug === 'funerals';
+---
+<Base title={e.title} description={e.metaDescription} path={path} schema={[breadcrumbs(crumbs), faqPage(e.faqs)]}>
+  <section class:list={['ev-hero', { 'ev-hero--calm': somber }]}>
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <span class="eyebrow">Souvenirs for {e.name.toLowerCase()}</span>
+      <h1>{e.h1}</h1>
+      <p class="lede">{e.intro}</p>
+      <ul class="pills">
+        <li class="pill">From {SITE.minPerItem} pieces</li>
+        <li class="pill">Free label design</li>
+        <li class="pill">{SITE.turnaround}</li>
+      </ul>
+      <a class="btn" href={url('/products')}>{e.cta}</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap prose">
+      {e.sections.map((s) => (
+        <>
+          <h2>{s.h}</h2>
+          {s.p.map((t) => <p>{t}</p>)}
+        </>
+      ))}
+    </div>
+  </section>
+
+  <section class="section section--pink">
+    <div class="wrap">
+      <h2>Recommended for {e.name.toLowerCase()}</h2>
+      <div class="grid grid--4">{e.products.map((s) => <ProductCard product={getProduct(s)!} />)}</div>
+      <h3 style="margin-top:40px">Bundle and save 5%</h3>
+      <div class="grid grid--2">{e.bundles.map((b) => <BundleCard id={b} headingLevel="h3" />)}</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Label ideas</h2>
+      <p class="lede">Up to 32 characters on the front, with your date printed underneath.</p>
+      <ul class="ideas">{e.labelIdeas.map((l) => <li><span>{l}</span><small>12.12.2026</small></li>)}</ul>
+      <p>Need more inspiration? Read <a href={url('/guides/what-to-write-on-souvenir-labels')}>30 ideas for what to write on souvenir labels</a>.</p>
+    </div>
+  </section>
+
+  <section class="section section--pink">
+    <div class="wrap">
+      <h2>Questions about {e.name.toLowerCase()} souvenirs</h2>
+      <FaqList faqs={e.faqs} />
+    </div>
+  </section>
+
+  <CtaBand title={somber ? 'We are here to help' : 'Ready to say medaase?'} text={somber ? 'Choose your souvenirs online, or message us and we will guide you gently through every step.' : undefined} button={e.cta} />
+</Base>
+
+<style>
+  .ev-hero { padding: clamp(32px, 6vw, 72px) 0 clamp(48px, 7vw, 90px); background: linear-gradient(160deg, var(--pink-soft), #fff 60%); }
+  .ev-hero--calm { background: linear-gradient(160deg, #eef0f6, #fff 60%); }
+  .ev-hero h1 { max-width: 18ch; }
+  .ideas { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); }
+  .ideas li { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 120px; padding: 18px; border: 2px solid var(--navy); border-radius: 18px; background: var(--white); }
+  .ideas span { font-family: var(--display); font-size: 1.3rem; }
+  .ideas small { font-size: 0.9rem; color: var(--muted); letter-spacing: 0.08em; }
+</style>

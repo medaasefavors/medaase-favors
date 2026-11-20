@@ -1,0 +1,26 @@
+---
+import { SITE } from '../data/site';
+interface Props { headingLevel?: 'h2' | 'h3' }
+const { headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+const steps = [
+  { t: 'Choose', d: 'Customise your favours and add them to your order.' },
+  { t: 'Pay', d: 'Pay in full with MoMo or card to lock in your date.' },
+  { t: 'Approve your design', d: `We send your label design on WhatsApp within 24 hours. ${SITE.designRounds} rounds of changes are free.` },
+  { t: 'Collect', d: `Ready in ${SITE.turnaround} after approval. Pick up or get it delivered.` },
+];
+---
+<ol class="steps">
+  {steps.map((s, i) => (
+    <li class="card">
+      <span class="steps__n" aria-hidden="true">{i + 1}</span>
+      <H>{s.t}</H>
+      <p>{s.d}</p>
+    </li>
+  ))}
+</ol>
+<style>
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); }
+  .steps__n { display: inline-grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--navy); color: var(--pink); font-family: var(--display); font-size: 1.4rem; margin-bottom: 14px; }
+  .steps p { margin: 0; color: var(--muted); }
+</style>

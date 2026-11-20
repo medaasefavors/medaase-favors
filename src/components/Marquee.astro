@@ -1,0 +1,16 @@
+---
+import { EVENTS } from '../data/site';
+const words = EVENTS.map((e) => e.name);
+---
+<div class="mq" aria-label="Souvenirs for weddings, funerals, naming ceremonies, birthdays, church events and corporate gifts">
+  <div class="mq__track" aria-hidden="true">
+    {[0, 1].map(() => <span class="mq__set">{words.map((w) => <span>{w} <b>✦</b></span>)}</span>)}
+  </div>
+</div>
+<style>
+  .mq { background: var(--pink); color: var(--navy); overflow: hidden; padding: 16px 0; }
+  .mq__track { display: flex; width: max-content; animation: mq 38s linear infinite; }
+  .mq__set { display: flex; gap: 28px; padding-right: 28px; font-family: var(--display); font-size: clamp(1.3rem, 3vw, 2rem); white-space: nowrap; }
+  .mq b { font-weight: 400; margin-left: 28px; color: var(--hot); }
+  @keyframes mq { to { transform: translateX(-50%); } }
+</style>

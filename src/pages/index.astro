@@ -1,0 +1,244 @@
+---
+import Base from '../layouts/Base.astro';
+import Marquee from '../components/Marquee.astro';
+import ProductCard from '../components/ProductCard.astro';
+import BundleCard from '../components/BundleCard.astro';
+import Steps from '../components/Steps.astro';
+import FaqList from '../components/FaqList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { PRODUCTS, SUGGESTED_BUNDLES } from '../data/products';
+import { EVENT_PAGES } from '../data/events';
+import { FAQ_PREVIEW } from '../data/faq';
+import { url } from '../lib/url';
+import { website, faqPage } from '../lib/schema';
+
+const favourites = ['pure-african-shea-butter', 'shimmer-oil', 'lip-balm', 'body-butter'].map(
+  (s) => PRODUCTS.find((p) => p.slug === s)!,
+);
+const story = [
+  { t: 'Choose your favours', d: 'A shea tub, a lip balm and a shimmer oil, in the colours of your day.' },
+  { t: 'Add your names and date', d: 'Your label is designed for free: "Esi & Kwame · 12.12.2026".' },
+  { t: 'Packed for every guest', d: 'Each guest\'s favours go into one drawstring bag, tied and ready.' },
+];
+---
+<Base
+  title="Medaase Favors | Custom Souvenirs in Ghana"
+  description="Custom skincare souvenirs in Accra for weddings, funerals, naming ceremonies and more. Your names or logo and date on every label. From 25 pieces."
+  path="/"
+  schema={[website(), faqPage(FAQ_PREVIEW)]}
+>
+  <section class="hero">
+    <div class="hero__bg" aria-hidden="true"></div>
+    <div class="hero__stage" aria-hidden="true">
+      <span class="hero__giant">{'MEDAASE'.split('').map((c, i) => <span style={`--i:${i}`}>{c}</span>)}</span>
+      <span class="hero__favors">favors</span>
+    </div>
+    <div class="wrap hero__copy">
+      <h1>{SITE.tagline}</h1>
+      <p class="lede">Custom skincare souvenirs for weddings, funerals, naming ceremonies and every gathering in between, with your names or logo and the date on every label.</p>
+      <ul class="pills">
+        <li class="pill">From {SITE.minPerItem} pieces</li>
+        <li class="pill">Free theme design</li>
+        <li class="pill">{SITE.turnaround}</li>
+        <li class="pill">Pay with MoMo or card</li>
+      </ul>
+      <div class="btn-row">
+        <a class="btn" href={url('/products')}>Shop all products</a>
+        <a class="btn btn--ghost" href={url('/how-it-works')}>How it works</a>
+      </div>
+    </div>
+  </section>
+
+  <Marquee />
+
+  <section class="section">
+    <span class="ghost-word" aria-hidden="true">FAVOURS</span>
+    <div class="wrap">
+      <span class="eyebrow">Guest favourites</span>
+      <h2>Little thank yous your guests will keep</h2>
+      <p class="lede">Every favour is skincare people actually use, so your names stay on the dressing table long after the party.</p>
+      <div class="grid grid--4">{favourites.map((p) => <ProductCard product={p} />)}</div>
+      <p style="margin-top:28px"><a class="btn btn--ghost" href={url('/products')}>See all products</a></p>
+    </div>
+  </section>
+
+  <section class="section section--pink">
+    <div class="wrap">
+      <span class="eyebrow">Suggested bundles</span>
+      <h2>Bundle it and save 5% on your whole order</h2>
+      <p class="lede">Choose two or more different products and 5% comes off everything, automatically.</p>
+      <div class="grid grid--2">{SUGGESTED_BUNDLES.map((b) => <BundleCard id={b.id} />)}</div>
+    </div>
+  </section>
+
+  <section class="section story">
+    <div class="wrap">
+      <span class="eyebrow">From your idea to their hands</span>
+      <h2>One bag. One thank you. Every guest.</h2>
+      <ol class="story__steps">
+        {story.map((s, i) => (
+          <li class="card"><span class="story__n">0{i + 1}</span><h3>{s.t}</h3><p>{s.d}</p></li>
+        ))}
+      </ol>
+      <a class="btn" href={url('/products')}>Start your order</a>
+    </div>
+  </section>
+
+  <section class="section section--pink">
+    <span class="ghost-word" aria-hidden="true">THANK YOU</span>
+    <div class="wrap">
+      <span class="eyebrow">Made for every gathering</span>
+      <h2>Souvenirs for every occasion in Ghana</h2>
+      <div class="grid grid--3 events">
+        {EVENT_PAGES.map((e) => (
+          <a class="events__tile" href={url(`/souvenirs/${e.slug}`)}>
+            <span class="events__name">{e.name}</span>
+            <span class="events__go">See ideas →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <span class="ghost-word" aria-hidden="true">EASY</span>
+    <div class="wrap">
+      <span class="eyebrow">How it works</span>
+      <h2>Four easy steps</h2>
+      <Steps />
+    </div>
+  </section>
+
+  <section class="section section--pink">
+    <div class="wrap">
+      <span class="eyebrow">Questions</span>
+      <h2>You asked, we answered</h2>
+      <FaqList faqs={FAQ_PREVIEW} />
+      <p style="margin-top:24px"><a class="btn btn--ghost" href={url('/faq')}>All questions</a></p>
+    </div>
+  </section>
+
+  <CtaBand />
+</Base>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    color: var(--white);
+    padding: clamp(24px, 6vw, 60px) 0 clamp(56px, 8vw, 90px);
+    min-height: min(92vh, 860px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+  /* Static gradient poster. Phase 2 replaces it with the animated Shader Gradient. */
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(60% 60% at 80% 20%, rgba(255, 184, 209, 0.95), transparent 70%),
+      radial-gradient(50% 50% at 15% 80%, rgba(232, 80, 138, 0.45), transparent 70%),
+      linear-gradient(160deg, #1b2a4e 0%, #2d3f73 45%, #c97ca0 100%);
+  }
+  .hero__stage {
+    position: relative;
+    flex: 1;
+    min-height: 34vw;
+    display: grid;
+    place-items: center;
+  }
+  .hero__giant {
+    font-family: var(--display);
+    font-size: 17vw;
+    line-height: 0.9;
+    color: var(--pink);
+    letter-spacing: -0.02em;
+    display: flex;
+  }
+  .hero__giant span {
+    display: inline-block;
+    animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--i) * 70ms);
+  }
+  .hero__favors {
+    position: absolute;
+    right: 10%;
+    bottom: 4%;
+    font-family: var(--body);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(2.4rem, 8vw, 7rem);
+    color: var(--white);
+    transform: rotate(-6deg);
+  }
+  .hero__copy {
+    position: relative;
+  }
+  .hero h1 {
+    max-width: 16ch;
+  }
+  .hero .lede {
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .hero .pill {
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  .hero .btn {
+    background: var(--white);
+    color: var(--navy);
+    border-color: var(--white);
+  }
+  .hero .btn--ghost {
+    background: transparent;
+    color: var(--white);
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(40%);
+    }
+  }
+  .story__steps {
+    list-style: none;
+    padding: 0;
+    margin: 28px 0 32px;
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+  .story__n {
+    font-family: var(--display);
+    font-size: 2.4rem;
+    color: var(--hot);
+  }
+  .events__tile {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 200px;
+    padding: 24px;
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--white);
+    background: linear-gradient(160deg, #2d3f73, var(--navy));
+    box-shadow: var(--shadow);
+    transition: transform 0.25s ease;
+  }
+  .events__tile:nth-child(even) {
+    background: linear-gradient(160deg, #c2306b, #8f1f4e);
+  }
+  .events__tile:hover {
+    transform: translateY(-6px);
+  }
+  .events__name {
+    font-family: var(--display);
+    font-size: 1.8rem;
+  }
+  .events__go {
+    font-weight: 700;
+  }
+</style>

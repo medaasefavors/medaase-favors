@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+import { cedi } from '../lib/format';
+---
+<Base title="Terms of Sale | Medaase Favors" description="Terms for ordering custom souvenirs from Medaase Favors: payment, design approval, timing, rush orders and delivery." path="/terms">
+  <section class="section">
+    <div class="wrap prose">
+      <h1>Terms of sale</h1>
+      <p><em>Draft: to be reviewed by the owner before launch.</em></p>
+      <h2>Orders</h2>
+      <p>The minimum order is {SITE.minPerItem} pieces per product. Prices are shown in Ghana cedis per piece.</p>
+      <h2>Payment</h2>
+      <p>Orders are paid in full upfront at checkout through Paystack. Your date is secured once payment is confirmed.</p>
+      <h2>Design and approval</h2>
+      <p>We send your label design on WhatsApp within 24 hours. {SITE.designRounds} rounds of changes are free. Production starts only after you approve. Changes after approval may not be possible.</p>
+      <h2>Timing and rush orders</h2>
+      <p>Orders are ready {SITE.turnaround} after design approval. Events less than {SITE.rushWorkingDays} working days away carry a {Math.round(SITE.rushRate * 100)}% rush fee on products and add ons. For events less than {SITE.blockWorkingDays} working days away, please contact us before ordering.</p>
+      <h2>Collection and delivery</h2>
+      <p>Pickup in {SITE.pickupArea} is free. Delivery within Accra costs {cedi(SITE.deliveryFeeAccra)}. Delivery outside Accra is arranged on request.</p>
+      <h2>Refunds and cancellations</h2>
+      <p>To be confirmed by the owner.</p>
+    </div>
+  </section>
+</Base>

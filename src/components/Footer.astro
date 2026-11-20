@@ -1,0 +1,151 @@
+---
+import Logo from './Logo.astro';
+import { SITE, EVENTS, whatsappLink } from '../data/site';
+import { PRODUCTS } from '../data/products';
+import { url } from '../lib/url';
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr__top">
+      <div class="ftr__brand">
+        <Logo size={56} tone="pink" />
+        <p class="ftr__tag">{SITE.tagline}</p>
+        <p class="ftr__small">Custom skincare souvenirs for every event, made in Accra.</p>
+      </div>
+      <nav aria-label="Products" class="ftr__col">
+        <h2>Products</h2>
+        <ul>{PRODUCTS.map((p) => <li><a href={url(`/products/${p.slug}`)}>{p.shortName}</a></li>)}</ul>
+      </nav>
+      <nav aria-label="Events" class="ftr__col">
+        <h2>Souvenirs for</h2>
+        <ul>{EVENTS.map((e) => <li><a href={url(`/souvenirs/${e.slug}`)}>{e.name}</a></li>)}</ul>
+      </nav>
+      <div class="ftr__col">
+        <h2>Help</h2>
+        <ul>
+          <li><a href={url('/how-it-works')}>How it works</a></li>
+          <li><a href={url('/faq')}>FAQ</a></li>
+          <li><a href={url('/guides')}>Guides</a></li>
+          <li><a href={url('/contact')}>Contact</a></li>
+        </ul>
+      </div>
+      <div class="ftr__col">
+        <h2>Say hello</h2>
+        <ul>
+          <li><a href={whatsappLink()} rel="noopener">WhatsApp</a></li>
+          <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+          <li><a href={SITE.instagram} rel="noopener">Instagram {SITE.instagramHandle}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ftr__bottom">
+      <p>© {year} {SITE.name}</p>
+      <p>
+        <a href={url('/privacy')}>Privacy</a> · <a href={url('/terms')}>Terms</a>
+        · <button type="button" class="ftr__fx" data-fx-toggle hidden>Turn off effects</button>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<script is:inline>
+  (function () {
+    var btn = document.querySelector('[data-fx-toggle]');
+    if (!btn) return;
+    var off = false;
+    try { off = localStorage.getItem('mf-fx') === 'off'; } catch (e) {}
+    var set = function () {
+      document.documentElement.dataset.fx = off ? 'off' : 'on';
+      btn.textContent = off ? 'Turn on effects' : 'Turn off effects';
+    };
+    btn.hidden = false;
+    set();
+    btn.addEventListener('click', function () {
+      off = !off;
+      try { localStorage.setItem('mf-fx', off ? 'off' : 'on'); } catch (e) {}
+      set();
+    });
+  })();
+</script>
+
+<style>
+  .ftr {
+    background: var(--navy);
+    color: var(--white);
+    padding: 64px 0 28px;
+  }
+  .ftr a {
+    color: var(--white);
+    text-decoration: none;
+  }
+  .ftr a:hover {
+    text-decoration: underline;
+  }
+  .ftr__top {
+    display: grid;
+    gap: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 170px), 1fr));
+  }
+  .ftr__brand {
+    grid-column: 1 / -1;
+  }
+  .ftr__tag {
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    margin: 16px 0 6px;
+    color: var(--pink);
+  }
+  .ftr__small {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .ftr__col h2 {
+    font-family: var(--body);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--pink);
+  }
+  .ftr__col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .ftr__col li a {
+    display: inline-block;
+    padding: 6px 0;
+    min-height: 32px;
+    overflow-wrap: anywhere;
+  }
+  .ftr__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    font-size: 0.95rem;
+  }
+  .ftr__bottom p {
+    margin: 0;
+  }
+  .ftr__fx {
+    background: none;
+    border: 0;
+    color: var(--white);
+    font: inherit;
+    cursor: pointer;
+    padding: 8px 0;
+    text-decoration: underline;
+  }
+  @media (min-width: 900px) {
+    .ftr__top {
+      grid-template-columns: 1.4fr repeat(4, 1fr);
+    }
+    .ftr__brand {
+      grid-column: auto;
+    }
+  }
+</style>

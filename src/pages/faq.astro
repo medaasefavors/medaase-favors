@@ -1,0 +1,20 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import FaqList from '../components/FaqList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { FAQS } from '../data/faq';
+import { breadcrumbs, faqPage } from '../lib/schema';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'FAQ', path: '/faq' }];
+---
+<Base title="Souvenir FAQs: Prices, Minimums, Timing | Medaase Favors" description="Answers about custom souvenirs in Ghana: minimum order, prices, how long it takes, label design, bundle discount, payment and delivery." path="/faq" schema={[breadcrumbs(crumbs), faqPage(FAQS)]}>
+  <section class="section">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Frequently asked questions</h1>
+      <p class="lede">Everything people usually ask before ordering. Still unsure? Message us on WhatsApp and a real person will answer.</p>
+      <FaqList faqs={FAQS} headingLevel="h2" />
+    </div>
+  </section>
+  <CtaBand />
+</Base>

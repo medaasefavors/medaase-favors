@@ -1,0 +1,233 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ProductVisual from '../../components/ProductVisual.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import FaqList from '../../components/FaqList.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import {
+  PRODUCTS, ADD_ONS, BAG_COLOURS, CARD_SHAPES, sizesOf, startsFrom, highestUnit, type Product,
+} from '../../data/products';
+import { SITE, whatsappLink } from '../../data/site';
+import { cedi } from '../../lib/format';
+import { absolute, url } from '../../lib/url';
+import { breadcrumbs, faqPage } from '../../lib/schema';
+
+export function getStaticPaths() {
+  return PRODUCTS.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
+}
+
+const { product: p } = Astro.props as { product: Product };
+const sizes = sizesOf(p.slug);
+const from = startsFrom(p.slug);
+const path = `/products/${p.slug}`;
+const crumbs = [
+  { name: 'Home', path: '/' },
+  { name: 'All products', path: '/products' },
+  { name: p.name, path },
+];
+const others = PRODUCTS.filter((x) => x.slug !== p.slug).slice(0, 3);
+const productSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: p.name,
+  description: p.description,
+  image: [absolute('/og/default.png')],
+  brand: { '@type': 'Brand', name: SITE.name },
+  url: absolute(path),
+  offers: {
+    '@type': 'AggregateOffer',
+    priceCurrency: 'GHS',
+    lowPrice: from,
+    highPrice: highestUnit(p.slug),
+    offerCount: sizes.length,
+    availability: 'https://schema.org/InStock',
+    seller: { '@id': absolute('/') + '#organization' },
+  },
+};
+const title = `${p.shortName} Souvenirs in Ghana | Medaase Favors`;
+const desc = `${p.name} souvenirs personalised with your names or logo and event date. Starts from ${cedi(from)} per piece, from ${SITE.minPerItem} pieces. Free label design.`;
+---
+<Base title={title} description={desc.slice(0, 155)} path={path} schema={[productSchema, breadcrumbs(crumbs), faqPage(p.faqs)]} ogType="product">
+  <section class="section pp">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <div class="pp__grid">
+        <div class="pp__media">
+          <div class="pp__stage card"><ProductVisual slug={p.slug} alt={p.imageAlt} tall /></div>
+          <p class="pp__note">Live 3D preview with your label coming soon. Photos of the real product will appear here.</p>
+        </div>
+
+        <div class="pp__info">
+          <h1>{p.name}</h1>
+          <p class="price pp__price"><small>Starts from</small>{cedi(from)} <span>per piece</span></p>
+          <p class="lede">{p.description}</p>
+          {p.kicker && <p class="pp__kicker">{p.kicker}</p>}
+
+          <form class="opts" data-product={p.slug} onsubmit="return false">
+            <fieldset>
+              <legend>Size</legend>
+              <div class="opts__row">
+                {sizes.map((s, i) => (
+                  <label class="opt"><input type="radio" name="size" value={s.size} checked={i === 0} /><span>{s.size}<b>{cedi(s.price)}</b></span></label>
+                ))}
+              </div>
+            </fieldset>
+
+            {p.scents.length > 0 && (
+              <fieldset>
+                <legend>Scent</legend>
+                <div class="opts__row">
+                  {p.scents.map((s, i) => <label class="opt"><input type="radio" name="scent" value={s} checked={i === 0} /><span>{s}</span></label>)}
+                </div>
+              </fieldset>
+            )}
+
+            <fieldset>
+              <legend>Container</legend>
+              <div class="opts__row">
+                {p.containers.map((s, i) => <label class="opt"><input type="radio" name="container" value={s} checked={i === 0} /><span>{s}</span></label>)}
+              </div>
+            </fieldset>
+
+            {p.lids.length > 0 && (
+              <fieldset>
+                <legend>{p.lidLabel}</legend>
+                <div class="opts__row">
+                  {p.lids.map((s, i) => <label class="opt"><input type="radio" name="lid" value={s} checked={i === 0} /><span>{s}</span></label>)}
+                </div>
+              </fieldset>
+            )}
+
+            <fieldset>
+              <legend>Label</legend>
+              <div class="opts__row opts__row--big">
+                <label class="opt opt--big"><input type="radio" name="label" value="none" checked /><span><strong>No label</strong>Plain product. The simplest option.</span></label>
+                <label class="opt opt--big"><input type="radio" name="label" value="yes" /><span><strong>Add label</strong>Your names or logo, with the date below. +{cedi(ADD_ONS.label)} each</span></label>
+              </div>
+              <div class="opts__label">
+                <label class="field">Front text (up to 32 characters)
+                  <input type="text" name="frontText" maxlength="32" placeholder="Esi & Kwame" />
+                </label>
+                <label class="field">Or upload a logo (PNG, JPG, SVG or PDF, up to 5 MB)
+                  <input type="file" name="logo" accept=".png,.jpg,.jpeg,.svg,.pdf" />
+                </label>
+                <label class="field">Event date (printed as 12.12.2026)
+                  <input type="date" name="eventDate" />
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Add ons (per piece)</legend>
+              <label class="opt opt--line"><input type="checkbox" name="bag" /><span>Drawstring bag ({BAG_COLOURS.join(', ')}) <b>+{cedi(ADD_ONS.bag)}</b></span></label>
+              {p.cardMount && (
+                <label class="opt opt--line"><input type="checkbox" name="card" /><span>Mount on a printed card ({CARD_SHAPES.join(', ')}; custom shape +{cedi(ADD_ONS.shape)}) <b>+{cedi(ADD_ONS.card)}</b></span></label>
+              )}
+              <label class="opt opt--line"><input type="checkbox" name="tag" /><span>Thank you tag, printed with your label text <b>+{cedi(ADD_ONS.tag)}</b></span></label>
+            </fieldset>
+
+            <fieldset>
+              <legend>Quantity</legend>
+              <label class="field">Pieces (minimum {SITE.minPerItem}, in steps of {SITE.qtyStep})
+                <input type="number" name="qty" min={SITE.minPerItem} step={SITE.qtyStep} value={SITE.minPerItem} inputmode="numeric" />
+              </label>
+            </fieldset>
+
+            <div class="bar" data-price-bar>
+              <p class="bar__price"><span data-unit>{cedi(from)} each</span> · <span data-total>{cedi(from * SITE.minPerItem)} for {SITE.minPerItem}</span></p>
+              <button class="btn" type="submit" data-add>Add to order</button>
+            </div>
+            <p class="pp__wa">Prefer to chat? <a href={whatsappLink(`Hello! I would like to order ${p.name} souvenirs.`)} rel="noopener">Order on WhatsApp</a></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--pink">
+    <div class="wrap pp__more">
+      <div class="prose">
+        <h2>About our {p.name.replace('100% ', '')}</h2>
+        {p.longCopy.map((t) => <p>{t}</p>)}
+      </div>
+      <div>
+        <div class="card">
+          <h2>Prices per piece</h2>
+          <table class="table">
+            <thead><tr><th scope="col">Size</th><th scope="col">Price</th></tr></thead>
+            <tbody>{sizes.map((s) => <tr><td>{s.size}</td><td>{cedi(s.price)}</td></tr>)}</tbody>
+          </table>
+          <p style="margin-top:14px;font-size:0.95rem">Label +{cedi(ADD_ONS.label)} · Drawstring bag +{cedi(ADD_ONS.bag)} · Thank you tag +{cedi(ADD_ONS.tag)}{p.cardMount && ` · Printed card +${cedi(ADD_ONS.card)}`}. Minimum {SITE.minPerItem} pieces.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap grid grid--2">
+      <div>
+        <h2>What's included</h2>
+        <ul class="prose">{p.included.map((i) => <li>{i}</li>)}</ul>
+      </div>
+      <div>
+        <h2>How long it takes</h2>
+        <p>We send your label design on WhatsApp within 24 hours of your order. Once you approve it, your favours are ready in {SITE.turnaround}. You get {SITE.designRounds} rounds of design changes for free. Need them sooner? See our <a href={url('/faq')}>rush order policy</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--pink">
+    <div class="wrap">
+      <h2>Questions about {p.shortName.toLowerCase()}</h2>
+      <FaqList faqs={p.faqs} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2>Bundle it with</h2>
+      <p class="lede">Add one more product and save 5% on everything.</p>
+      <div class="grid grid--3">{others.map((o) => <ProductCard product={o} />)}</div>
+    </div>
+  </section>
+  <CtaBand />
+</Base>
+
+<style>
+  .pp__grid { display: grid; gap: clamp(24px, 4vw, 56px); }
+  .pp__stage { padding: 0; overflow: hidden; }
+  .pp__stage :global(svg) { width: 100%; }
+  .pp__note { font-size: 0.92rem; color: var(--muted); margin-top: 12px; }
+  .pp__price { font-size: clamp(2rem, 5vw, 2.8rem); }
+  .pp__price span { font-family: var(--body); font-size: 1rem; color: var(--muted); }
+  .pp__kicker { font-family: var(--display); font-size: 1.3rem; color: var(--navy); }
+  .opts fieldset { border: 0; padding: 0; margin: 0 0 26px; min-width: 0; }
+  .opts legend { font-weight: 700; font-size: 1.05rem; margin-bottom: 10px; }
+  .opts__row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opt { position: relative; cursor: pointer; }
+  .opt input { position: absolute; opacity: 0; inset: 0; }
+  .opt > span { display: inline-flex; flex-direction: column; justify-content: center; min-height: 48px; padding: 8px 16px; border: 2px solid var(--line); border-radius: 16px; background: var(--white); }
+  .opt b { font-weight: 500; color: var(--muted); font-size: 0.9rem; }
+  .opt input:checked + span { border-color: var(--navy); background: var(--pink-soft); }
+  .opt input:focus-visible + span { outline: 3px solid var(--hot); outline-offset: 2px; }
+  .opts__row--big { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
+  .opt--big > span { width: 100%; padding: 16px 18px; border-radius: 20px; gap: 4px; }
+  .opt--big strong { font-family: var(--display); font-weight: 400; font-size: 1.25rem; }
+  .opt--line { display: block; margin-bottom: 8px; }
+  .opt--line > span { display: block; width: 100%; }
+  .opt--line input { width: 1px; height: 1px; }
+  .opts__label { display: grid; gap: 12px; margin-top: 14px; }
+  .field { display: grid; gap: 6px; font-weight: 500; font-size: 0.98rem; }
+  .field input { font: 1rem var(--body); min-height: 48px; padding: 10px 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--white); color: var(--ink); width: 100%; }
+  .field input[type='file'] { padding: 10px; }
+  .bar { position: sticky; bottom: 12px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-radius: 999px; background: rgba(255,255,255,0.9); border: 1px solid var(--line); box-shadow: var(--shadow); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  .bar__price { margin: 0 0 0 8px; font-weight: 700; }
+  .pp__wa { margin-top: 14px; font-size: 0.98rem; }
+  .pp__more { display: grid; gap: 32px; }
+  @media (min-width: 960px) {
+    .pp__grid { grid-template-columns: 1fr 1fr; align-items: start; }
+    .pp__media { position: sticky; top: 92px; }
+    .pp__more { grid-template-columns: 1.4fr 1fr; align-items: start; }
+  }
+</style>

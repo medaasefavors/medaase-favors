@@ -1,0 +1,25 @@
+---
+import Base from '../../layouts/Base.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { GUIDES } from '../../data/guides';
+import { url } from '../../lib/url';
+import { breadcrumbs } from '../../lib/schema';
+const crumbs = [{ name: 'Home', path: '/' }, { name: 'Guides', path: '/guides' }];
+---
+<Base title="Souvenir Guides and Ideas | Medaase Favors" description="Helpful guides for planning souvenirs in Ghana: how many to order, funeral souvenir ideas and what to write on labels." path="/guides" schema={[breadcrumbs(crumbs)]}>
+  <section class="section">
+    <div class="wrap">
+      <Breadcrumbs items={crumbs} />
+      <h1>Guides</h1>
+      <p class="lede">Practical advice for planning souvenirs for weddings, funerals, naming ceremonies and every gathering in Ghana.</p>
+      <div class="grid grid--3">
+        {GUIDES.map((g) => (
+          <article class="card">
+            <h2 style="font-size:1.45rem"><a href={url(`/guides/${g.slug}`)}>{g.title}</a></h2>
+            <p>{g.metaDescription}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

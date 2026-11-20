@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, whatsappLink } from '../data/site';
+import { url } from '../lib/url';
+---
+<Base title="Checkout | Medaase Favors" description="Review your order and pay securely with Paystack." path="/checkout" noindex>
+  <section class="section">
+    <div class="wrap">
+      <h1>Your order</h1>
+      <div class="card" data-empty>
+        <p class="lede">Your order is empty for now.</p>
+        <p>Choose your favours, add your names and date, and they will appear here. You pay the full amount upfront with Paystack: MTN MoMo, Telecel Cash, AirtelTigo Money or card.</p>
+        <div class="btn-row">
+          <a class="btn" href={url('/products')}>Shop all products</a>
+          <a class="btn btn--ghost" href={whatsappLink('Hello! I would like help with my souvenir order.')} rel="noopener">Order on WhatsApp</a>
+        </div>
+      </div>
+      <p style="margin-top:20px;font-size:0.95rem">Minimum {SITE.minPerItem} pieces per product. Delivery within Accra {`GH₵ ${SITE.deliveryFeeAccra}`}, or pick up for free.</p>
+    </div>
+  </section>
+</Base>

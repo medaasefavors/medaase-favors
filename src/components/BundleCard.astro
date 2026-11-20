@@ -1,0 +1,26 @@
+---
+import { SUGGESTED_BUNDLES, getProduct, bundleStartsFrom } from '../data/products';
+import { cedi } from '../lib/format';
+import { url } from '../lib/url';
+interface Props { id: string; headingLevel?: 'h2' | 'h3' }
+const { id, headingLevel = 'h3' } = Astro.props;
+const b = SUGGESTED_BUNDLES.find((x) => x.id === id)!;
+const H = headingLevel;
+const first = b.items[0];
+---
+<article class="bundle card">
+  <span class="bundle__badge">Save 5%</span>
+  <H>{b.name}</H>
+  <p>{b.blurb}</p>
+  <ul>
+    {b.items.map((i) => <li>{getProduct(i.slug)!.shortName} · {i.size}</li>)}
+  </ul>
+  <p class="price"><small>Starts from, per guest</small>{cedi(bundleStartsFrom(b.items))}</p>
+  <a class="btn" href={url(`/products/${first.slug}?bundle=${b.id}`)}>Start with {b.name}</a>
+</article>
+<style>
+  .bundle { position: relative; background: linear-gradient(150deg, rgba(255,184,209,0.55), rgba(255,255,255,0.7)); }
+  .bundle__badge { position: absolute; top: 18px; right: 18px; background: var(--navy); color: var(--white); border-radius: 999px; padding: 6px 12px; font-weight: 700; font-size: 0.85rem; }
+  .bundle ul { padding-left: 1.1em; margin: 0 0 1em; }
+  .bundle h2, .bundle h3 { padding-right: 90px; }
+</style>
