@@ -1,12 +1,16 @@
 ---
-// "MF" monogram (placeholder until the owner supplies a logo).
-// Phase 6 layers the Liquid Metal shader on top; this SVG stays as the fallback.
-interface Props { size?: number; tone?: 'navy' | 'pink' | 'white' }
-const { size = 44, tone = 'navy' } = Astro.props;
-const fill = tone === 'pink' ? '#FFB8D1' : tone === 'white' ? '#FFFFFF' : '#1B2A4E';
-const text = tone === 'navy' ? '#FFB8D1' : '#1B2A4E';
+// Medaase Favors logo from the brand kit (src/assets/brand).
+// variant: primary (on white), on-navy, on-pink, mono-white, mono-navy.
+import primary from '../assets/brand/logo-primary.svg';
+import onNavy from '../assets/brand/logo-on-navy.svg';
+import onPink from '../assets/brand/logo-on-pink.svg';
+import monoWhite from '../assets/brand/logo-mono-white.svg';
+import monoNavy from '../assets/brand/logo-mono-navy.svg';
+type Variant = 'primary' | 'on-navy' | 'on-pink' | 'mono-white' | 'mono-navy';
+interface Props { variant?: Variant; height?: number; decorative?: boolean }
+const { variant = 'primary', height = 48, decorative = false } = Astro.props;
+const map = { primary, 'on-navy': onNavy, 'on-pink': onPink, 'mono-white': monoWhite, 'mono-navy': monoNavy };
+const img = map[variant];
+const width = Math.round((height * 406) / 132);
 ---
-<svg width={size} height={size} viewBox="0 0 64 64" role="img" aria-label="Medaase Favors">
-  <circle cx="32" cy="32" r="32" fill={fill} />
-  <text x="32" y="41" text-anchor="middle" font-family="Young Serif, Georgia, serif" font-size="26" fill={text}>MF</text>
-</svg>
+<img src={img.src} width={width} height={height} alt={decorative ? '' : 'Medaase Favors'} class="logo" decoding="async" />

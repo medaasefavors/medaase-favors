@@ -12,6 +12,7 @@ import { SITE, whatsappLink } from '../../data/site';
 import { cedi } from '../../lib/format';
 import { absolute, url } from '../../lib/url';
 import { breadcrumbs, faqPage } from '../../lib/schema';
+import { PRODUCT_PHOTOS } from '../../data/photos';
 
 export function getStaticPaths() {
   return PRODUCTS.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
@@ -54,8 +55,8 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       <Breadcrumbs items={crumbs} />
       <div class="pp__grid">
         <div class="pp__media">
-          <div class="pp__stage card"><ProductVisual slug={p.slug} alt={p.imageAlt} tall /></div>
-          <p class="pp__note">Live 3D preview with your label coming soon. Photos of the real product will appear here.</p>
+          <div class="pp__stage card"><ProductVisual slug={p.slug} alt={p.imageAlt} tall eager /></div>
+          <p class="pp__note">{PRODUCT_PHOTOS[p.slug] ? 'A live 3D preview with your own label is coming soon.' : 'Photos and a live 3D preview with your own label are coming soon.'}</p>
         </div>
 
         <div class="pp__info">

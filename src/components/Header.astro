@@ -9,8 +9,7 @@ const is = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
 <header class="hdr">
   <div class="wrap hdr__in">
     <a href={url('/')} class="hdr__brand" aria-label="Medaase Favors home">
-      <Logo size={42} />
-      <span class="hdr__name">Medaase <em>Favors</em></span>
+      <Logo height={46} decorative />
     </a>
 
     <nav class="hdr__nav" aria-label="Main">
@@ -87,15 +86,6 @@ const is = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
     gap: 10px;
     text-decoration: none;
     margin-right: auto;
-  }
-  .hdr__name {
-    font-family: var(--display);
-    font-size: 1.25rem;
-  }
-  .hdr__name em {
-    font-family: var(--body);
-    font-style: italic;
-    font-weight: 500;
   }
   .hdr__nav {
     display: none;
@@ -245,8 +235,9 @@ const is = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
     .hdr__cart span:not(.hdr__count) {
       display: none;
     }
-    .hdr__name {
-      font-size: 1.05rem;
+    .hdr__brand :global(.logo) {
+      height: 40px;
+      width: auto;
     }
   }
   @media (min-width: 1000px) {

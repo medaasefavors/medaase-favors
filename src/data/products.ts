@@ -37,7 +37,7 @@ export const CATEGORIES: { id: Category | 'all'; label: string }[] = [
 
 // TBD: confirm scents, containers and lids per product.
 const SCENTS = ['Unscented', 'Vanilla', 'Coconut', 'Rose'];
-const TUBS = ['White tub', 'Clear tub', 'Pink tub'];
+const TUBS = ['Black tub', 'White tub', 'Clear tub', 'Pink tub']; // Black matches the owner's photos
 const TUB_LIDS = ['Gold', 'White', 'Pink', 'Navy'];
 const OIL_BOTTLES = ['Amber dropper bottle', 'Clear bottle', 'Frosted bottle'];
 const OIL_CAPS = ['Black dropper', 'Gold', 'White'];

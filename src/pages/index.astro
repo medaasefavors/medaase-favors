@@ -12,6 +12,8 @@ import { EVENT_PAGES } from '../data/events';
 import { FAQ_PREVIEW } from '../data/faq';
 import { url } from '../lib/url';
 import { website, faqPage } from '../lib/schema';
+import { Picture } from 'astro:assets';
+import { PHOTOS } from '../data/photos';
 
 const favourites = ['pure-african-shea-butter', 'shimmer-oil', 'lip-balm', 'body-butter'].map(
   (s) => PRODUCTS.find((p) => p.slug === s)!,
@@ -76,6 +78,11 @@ const story = [
     <div class="wrap">
       <span class="eyebrow">From your idea to their hands</span>
       <h2>One bag. One thank you. Every guest.</h2>
+      <div class="story__photos">
+        {[PHOTOS.sheaTubs, PHOTOS.amberDroppers].map((ph) => (
+          <Picture src={ph.src} alt={ph.alt} formats={['avif', 'webp']} widths={[360, 600, 900]} sizes="(min-width: 900px) 540px, 50vw" loading="lazy" class="story__photo" />
+        ))}
+      </div>
       <ol class="story__steps">
         {story.map((s, i) => (
           <li class="card"><span class="story__n">0{i + 1}</span><h3>{s.t}</h3><p>{s.d}</p></li>
@@ -209,6 +216,25 @@ const story = [
     display: grid;
     gap: 20px;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  }
+  .story__photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(10px, 2vw, 24px);
+    margin: 24px 0 8px;
+  }
+  .story__photos :global(.story__photo) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  @media (min-width: 900px) {
+    .story__photos :global(.story__photo) {
+      aspect-ratio: 4 / 3;
+    }
   }
   .story__n {
     font-family: var(--display);

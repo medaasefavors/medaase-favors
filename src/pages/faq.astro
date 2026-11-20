@@ -3,18 +3,53 @@ import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import FaqList from '../components/FaqList.astro';
 import CtaBand from '../components/CtaBand.astro';
-import { FAQS } from '../data/faq';
+import { FAQS, FAQ_CATEGORIES, faqsIn } from '../data/faq';
+import { whatsappLink } from '../data/site';
 import { breadcrumbs, faqPage } from '../lib/schema';
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'FAQ', path: '/faq' }];
 ---
 <Base title="Souvenir FAQs: Prices, Minimums, Timing | Medaase Favors" description="Answers about custom souvenirs in Ghana: minimum order, prices, how long it takes, label design, bundle discount, payment and delivery." path="/faq" schema={[breadcrumbs(crumbs), faqPage(FAQS)]}>
-  <section class="section">
+  <section class="section faqp">
     <div class="wrap">
       <Breadcrumbs items={crumbs} />
-      <h1>Frequently asked questions</h1>
-      <p class="lede">Everything people usually ask before ordering. Still unsure? Message us on WhatsApp and a real person will answer.</p>
-      <FaqList faqs={FAQS} headingLevel="h2" />
+      <h1>Questions? We've got you.</h1>
+      <p class="lede">Everything people usually ask before ordering, sorted so you can find it fast. Still unsure? <a href={whatsappLink()} rel="noopener">Message us on WhatsApp</a> and a real person will answer.</p>
+
+      <nav class="faqp__jump" aria-label="FAQ topics">
+        {FAQ_CATEGORIES.map((c) => <a href={`#${c.id}`} class="pill">{c.label}</a>)}
+      </nav>
+
+      {FAQ_CATEGORIES.map((c) => (
+        <section id={c.id} class="faqp__group" aria-labelledby={`${c.id}-h`}>
+          <h2 id={`${c.id}-h`}>{c.label}</h2>
+          <FaqList faqs={faqsIn(c.id)} group={`faq-${c.id}`} />
+        </section>
+      ))}
     </div>
   </section>
   <CtaBand />
 </Base>
+
+<style>
+  .faqp__jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 12px;
+  }
+  .faqp__jump .pill {
+    text-decoration: none;
+    min-height: 44px;
+    background: var(--white);
+  }
+  .faqp__jump .pill:hover {
+    background: var(--pink-soft);
+  }
+  .faqp__group {
+    margin-top: clamp(40px, 6vw, 64px);
+    scroll-margin-top: 90px;
+  }
+  .faqp__group h2 {
+    font-size: clamp(1.6rem, 3.4vw, 2.2rem);
+  }
+</style>
