@@ -1,13 +1,13 @@
 ---
-import { SITE } from '../data/site';
+import { SITE, designRoundsText } from '../data/site';
 interface Props { headingLevel?: 'h2' | 'h3' }
 const { headingLevel = 'h3' } = Astro.props;
 const H = headingLevel;
 const steps = [
   { t: 'Choose', d: 'Customise your favours and add them to your order.' },
   { t: 'Pay', d: 'Pay in full with MoMo or card to lock in your date.' },
-  { t: 'Approve your design', d: `We send your label design on WhatsApp within 24 hours. ${SITE.designRounds} rounds of changes are free.` },
-  { t: 'Collect', d: `Ready in ${SITE.turnaround} after approval. Pick up or get it delivered.` },
+  { t: 'Approve your design', d: `We email your label design within 24 hours, with ${designRoundsText()} free.` },
+  { t: 'Collect', d: `Ready in ${SITE.turnaround} after approval. Pick up or have it delivered.` },
 ];
 ---
 <ol class="steps">

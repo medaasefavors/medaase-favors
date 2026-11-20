@@ -36,7 +36,7 @@ export const GUIDES: Guide[] = [
       {
         h: 'Plan special gifts for your inner circle',
         p: [
-          'Your bridal train, parents, MC, planner and the aunties who did all the running around deserve something a little more generous. Many couples give them a larger 250g tub of shea butter or body butter, matching the guest favours but clearly special.',
+          'Your bridal train, parents, MC, planner and the aunties who did all the running around deserve something a little more generous. Many couples give them a larger 250g jar of shea butter or body butter, matching the guest favours but clearly special.',
         ],
       },
       {
@@ -51,7 +51,7 @@ export const GUIDES: Guide[] = [
       {
         h: 'Give yourself time',
         p: [
-          'Order at least two weeks before the wedding. That leaves time to approve your free label design on WhatsApp, for us to make your favours in 5 to 7 working days, and for you to collect them without last minute stress.',
+          'Order at least two weeks before the wedding. That leaves time to approve your free label design, for us to make your favours in 5 to 7 working days, and for you to collect them without last minute stress.',
         ],
       },
     ],
@@ -76,11 +76,11 @@ export const GUIDES: Guide[] = [
       {
         h: 'Ideas that work well',
         list: [
-          'A small tub of pure shea butter with the deceased\'s name and dates',
+          'A small jar of pure shea butter with the deceased\'s name and dates',
           'Hand cream in a white bottle with a simple photo label',
           'Hand wash gel for very large gatherings',
           'Lip balm on a printed card for younger relatives',
-          'A larger tub for chief mourners and those who helped with the arrangements',
+          'A larger jar for chief mourners and those who helped with the arrangements',
         ],
       },
       {
@@ -160,7 +160,7 @@ export const GUIDES: Guide[] = [
       {
         h: 'A few tips',
         p: [
-          'Keep it short so it reads clearly on a small tub. Use the names people actually call you. Double check spelling, especially of names and dates. And remember, we design the label for free and send it to you on WhatsApp, so you can see exactly how it looks before anything is printed.',
+          'Keep it short so it reads clearly on a small jar. Use the names people actually call you. Double check spelling, especially of names and dates. And remember, we design the label for free and email it to you, so you can see exactly how it looks before anything is printed.',
         ],
       },
     ],

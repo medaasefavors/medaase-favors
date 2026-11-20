@@ -4,7 +4,7 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import FaqList from '../components/FaqList.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { FAQS, FAQ_CATEGORIES, faqsIn } from '../data/faq';
-import { whatsappLink } from '../data/site';
+import { emailLink } from '../data/site';
 import { breadcrumbs, faqPage } from '../lib/schema';
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'FAQ', path: '/faq' }];
 ---
@@ -13,7 +13,7 @@ const crumbs = [{ name: 'Home', path: '/' }, { name: 'FAQ', path: '/faq' }];
     <div class="wrap">
       <Breadcrumbs items={crumbs} />
       <h1>Questions? We've got you.</h1>
-      <p class="lede">Everything people usually ask before ordering, sorted so you can find it fast. Still unsure? <a href={whatsappLink()} rel="noopener">Message us on WhatsApp</a> and a real person will answer.</p>
+      <p class="lede">Everything people usually ask before ordering, sorted so you can find it fast. Still unsure? <a href={emailLink()}>Email us</a>.</p>
 
       <nav class="faqp__jump" aria-label="FAQ topics">
         {FAQ_CATEGORIES.map((c) => <a href={`#${c.id}`} class="pill">{c.label}</a>)}

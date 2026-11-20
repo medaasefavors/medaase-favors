@@ -35,15 +35,13 @@ export const CATEGORIES: { id: Category | 'all'; label: string }[] = [
   { id: 'lip', label: 'Lip' },
 ];
 
-// TBD: confirm scents, containers and lids per product.
-const SCENTS = ['Unscented', 'Vanilla', 'Coconut', 'Rose'];
-const TUBS = ['Black tub', 'White tub', 'Clear tub', 'Pink tub']; // Black matches the owner's photos
-const TUB_LIDS = ['Gold', 'White', 'Pink', 'Navy'];
-const OIL_BOTTLES = ['Amber dropper bottle', 'Clear bottle', 'Frosted bottle'];
-const OIL_CAPS = ['Black dropper', 'Gold', 'White'];
-const PUMP_BOTTLES = ['White bottle', 'Clear bottle', 'Pink bottle'];
-const PUMP_CAPS = ['White pump', 'Gold pump', 'Pink flip cap', 'Navy flip cap'];
-const BALM_TUBES = ['White tube', 'Pink tube', 'Navy tube'];
+// Confirmed by the owner.
+const SCENTS = ['Plain Jane', 'Choco', 'Caramel', 'Strawberry'];
+const JARS = ['Black jar', 'White jar', 'Clear jar'];
+const JAR_LIDS = ['Black', 'White'];
+// Bottles and tubes come as one colour, body and cap together.
+const BOTTLES = ['Clear', 'Black', 'White'];
+const TUBES = ['Clear', 'Black', 'White']; // TBD: confirm lip balm tube colours
 
 export const BAG_COLOURS = ['Pink', 'Navy', 'White', 'Gold', 'Mixed colours'];
 export const CARD_SHAPES = ['Rectangle', 'Circle', 'Heart', 'Custom shape'];
@@ -75,24 +73,24 @@ export const PRODUCTS: Product[] = [
     category: 'butters',
     blurb: 'Pure, unrefined shea, dressed in your colours and names.',
     description:
-      'Pure, unrefined shea, soft enough to scoop and rich enough for elbows, heels and dry hands. We dress each tub in your colours and names, so it stays on the dressing table long after the party.',
+      'Pure, unrefined shea, soft enough to scoop and rich enough for elbows, heels and dry hands. We dress each jar in your colours and names, so it stays on the dressing table long after the party.',
     kicker: 'The favour every auntie actually uses.',
     scents: SCENTS,
-    containers: TUBS,
-    lids: TUB_LIDS,
+    containers: JARS,
+    lids: JAR_LIDS,
     lidLabel: 'Lid',
     cardMount: true,
     cardMountSizes: ['Small 50g'],
     longCopy: [
-      "Shea butter is the favour Ghanaian guests actually use: on dry hands, heels and a baby's skin after the bath. So your tub ends up on the dressing table, not in a drawer.",
-      "Ours is always 100% pure and unrefined. Small tubs suit guests; large tubs make a proper thank you for bridesmaids, chief mourners and helpers.",
+      "Shea butter is the favour Ghanaian guests actually use: on dry hands, heels and a baby's skin after the bath. So your jar ends up on the dressing table, not in a drawer.",
+      "Ours is always 100% pure and unrefined. Small jars suit guests; large jars make a proper thank you for bridesmaids, chief mourners and helpers.",
     ],
     faqs: [
-      { q: 'Is your shea butter really 100% pure?', a: 'Yes. It is 100% pure, unrefined African shea butter. If you choose a scent, a small amount of fragrance is added; choose Unscented to keep it completely plain.' },
-      { q: 'Which size is best for wedding guests?', a: 'Most couples choose the small 50g tub for guests and the large 250g tub for the bridal party and parents.' },
+      { q: 'Is your shea butter really 100% pure?', a: 'Yes. It is 100% pure, unrefined African shea butter. If you choose a scent, a small amount of fragrance is added; choose Plain Jane to keep it completely plain.' },
+      { q: 'Which size is best for wedding guests?', a: 'Most couples choose the small 50g jar for guests and the large 250g jar for the bridal party and parents.' },
       { q: 'Will it melt in the heat?', a: 'Shea butter softens in strong heat and firms up again when it cools. Keep boxes out of direct sun at the venue and it will look its best.' },
     ],
-    imageAlt: 'Small tub of 100% pure African shea butter with a custom wedding label',
+    imageAlt: 'Small jar of 100% pure African shea butter with a custom wedding label',
   },
   {
     slug: 'body-butter',
@@ -103,8 +101,8 @@ export const PRODUCTS: Product[] = [
     description:
       'Whipped light in the jar, melting into skin with a soft finish that lasts through the evening. A gift that feels a little indulgent and gets used every single day.',
     scents: SCENTS,
-    containers: TUBS,
-    lids: TUB_LIDS,
+    containers: JARS,
+    lids: JAR_LIDS,
     lidLabel: 'Lid',
     cardMount: false,
     cardMountSizes: [],
@@ -116,7 +114,7 @@ export const PRODUCTS: Product[] = [
       { q: 'How is body butter different from shea butter?', a: 'Our shea butter is pure and firm. Body butter is whipped to a lighter, fluffier texture that spreads more easily and feels more like a pampering treat.' },
       { q: 'Does it leave skin greasy?', a: 'No. It melts in and leaves a soft finish that lasts through the evening.' },
     ],
-    imageAlt: 'Jar of whipped body butter with a pink lid and a personalised label',
+    imageAlt: 'Jar of whipped body butter with a white lid and a personalised label',
   },
   {
     slug: 'shimmer-oil',
@@ -127,8 +125,8 @@ export const PRODUCTS: Product[] = [
     description:
       'Silky body oil with a fine golden shimmer that catches the light on shoulders and collarbones. For the guest who plans to shine at the after party.',
     scents: SCENTS,
-    containers: OIL_BOTTLES,
-    lids: OIL_CAPS,
+    containers: BOTTLES,
+    lids: [],
     lidLabel: 'Cap',
     cardMount: false,
     cardMountSizes: [],
@@ -139,7 +137,7 @@ export const PRODUCTS: Product[] = [
     faqs: [
       { q: 'Is the shimmer very sparkly?', a: 'No. It is a fine golden shimmer that gives skin a soft glow, not chunky glitter.' },
       { q: 'Which bottle looks most premium?', a: 'The amber dropper bottle with a black dropper is the most popular. Frosted bottles look soft and modern.' },
-      { q: 'Can men use it?', a: 'Of course. Choose Unscented for a neutral feel.' },
+      { q: 'Can men use it?', a: 'Of course. Choose Plain Jane for no added scent.' },
     ],
     imageAlt: 'Amber dropper bottle of golden shimmer oil with a custom label',
   },
@@ -152,8 +150,8 @@ export const PRODUCTS: Product[] = [
     description:
       'Light and quick to sink in, with no greasy feel. Kind to the hands that hugged you all day.',
     scents: SCENTS,
-    containers: PUMP_BOTTLES,
-    lids: PUMP_CAPS,
+    containers: BOTTLES,
+    lids: [],
     lidLabel: 'Pump or cap',
     cardMount: false,
     cardMountSizes: [],
@@ -176,8 +174,8 @@ export const PRODUCTS: Product[] = [
     description:
       'A gentle gel that leaves hands clean and soft. A practical keepsake that brings your celebration to mind at every sink.',
     scents: [], // TBD: confirm whether hand wash gel has scent options
-    containers: PUMP_BOTTLES,
-    lids: PUMP_CAPS,
+    containers: BOTTLES,
+    lids: [],
     lidLabel: 'Pump or cap',
     cardMount: false,
     cardMountSizes: [],
@@ -200,7 +198,7 @@ export const PRODUCTS: Product[] = [
     description:
       'Pocket sized and always welcome. A smooth, nourishing balm that slips into any clutch, and looks especially sweet mounted on a card in the shape of your choice.',
     scents: SCENTS,
-    containers: BALM_TUBES,
+    containers: TUBES,
     lids: [], // TBD: confirm cap colour options
     lidLabel: 'Cap',
     cardMount: true,

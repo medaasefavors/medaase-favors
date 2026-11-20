@@ -1,4 +1,4 @@
-import { SITE } from './site';
+import { SITE, designRoundsText } from './site';
 import { ADD_ONS, BUNDLE_DISCOUNT, PRODUCTS, startsFrom } from './products';
 import { cedi } from '../lib/format';
 
@@ -34,12 +34,12 @@ export const FAQS: { cat: FaqCategory; q: string; a: string }[] = [
   {
     cat: 'timing',
     q: 'Can I order souvenirs for an event this weekend?',
-    a: `Under ${SITE.rushWorkingDays} working days away: yes, with a ${Math.round(SITE.rushRate * 100)}% rush fee. Under ${SITE.blockWorkingDays}: message us on WhatsApp first.`,
+    a: `Under ${SITE.rushWorkingDays} working days away: yes, with a ${Math.round(SITE.rushRate * 100)}% rush fee. Under ${SITE.blockWorkingDays}: email us first.`,
   },
   {
     cat: 'design',
     q: 'Is the label design free?',
-    a: `Yes, matched to your theme, with ${SITE.designRounds} free rounds of changes.`,
+    a: `Yes, matched to your theme, with ${designRoundsText()} free.`,
   },
   {
     cat: 'design',
@@ -73,8 +73,8 @@ export const FAQS: { cat: FaqCategory; q: string; a: string }[] = [
   },
   {
     cat: 'payment',
-    q: 'Do you deliver outside Accra?',
-    a: `Within Accra it is ${cedi(SITE.deliveryFeeAccra)}, or pick up for free. Outside Accra, message us and we will arrange it.`,
+    q: 'Do you deliver?',
+    a: `Yes. Within Accra we send ${SITE.deliveryAccra}. Outside Accra it is a flat ${cedi(SITE.deliveryFeeOutsideAccra)}. You can also pick up for free, ${SITE.pickupHours}.`,
   },
   {
     cat: 'events',
@@ -84,12 +84,12 @@ export const FAQS: { cat: FaqCategory; q: string; a: string }[] = [
   {
     cat: 'ordering',
     q: 'Can I see a sample before ordering?',
-    a: 'Message us on WhatsApp and we will let you know.',
+    a: 'Email us and we will let you know.',
   },
   {
     cat: 'ordering',
     q: 'What if I need to change my order?',
-    a: 'Message us on WhatsApp with your order reference. Changes are easy before you approve the design, but may not be possible after.',
+    a: 'Email us with your order reference. Changes are easy before you approve the design, but may not be possible after.',
   },
   {
     cat: 'design',
@@ -98,13 +98,13 @@ export const FAQS: { cat: FaqCategory; q: string; a: string }[] = [
   },
   {
     cat: 'design',
-    q: 'Can I choose the colours of the tubs and lids?',
-    a: 'Yes, for every product.',
+    q: 'Can I choose the container colour?',
+    a: 'Yes. Jars come in black, white or clear with a black or white lid. Bottles come in clear, black or white.',
   },
   {
     cat: 'design',
     q: 'How will I know my design is right before you print?',
-    a: 'We send it on WhatsApp within 24 hours. Nothing is printed until you approve it.',
+    a: 'We email it within 24 hours. Nothing is printed until you approve it.',
   },
 ];
 

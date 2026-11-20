@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { SITE, EVENTS, whatsappLink } from '../data/site';
+import { SITE, EVENTS } from '../data/site';
 import { PRODUCTS } from '../data/products';
 import { url } from '../lib/url';
 const year = new Date().getFullYear();
@@ -11,7 +11,7 @@ const year = new Date().getFullYear();
       <div class="ftr__brand">
         <Logo variant="on-navy" height={72} />
         <p class="ftr__tag">{SITE.tagline}</p>
-        <p class="ftr__small">Custom skincare souvenirs for every event, made in Accra.</p>
+        <p class="ftr__small">Custom skincare souvenirs for every event. Made in Ghana.</p>
       </div>
       <nav aria-label="Products" class="ftr__col">
         <h2>Products</h2>
@@ -34,7 +34,6 @@ const year = new Date().getFullYear();
       <div class="ftr__col">
         <h2>Say hello</h2>
         <ul>
-          <li><a href={whatsappLink()} rel="noopener">WhatsApp</a></li>
           <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
           <li><a href={SITE.instagram} rel="noopener">Instagram {SITE.instagramHandle}</a></li>
         </ul>

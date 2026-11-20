@@ -18,7 +18,7 @@ export const PHOTOS = {
   },
   sheaTubs: {
     src: sheaTubs,
-    alt: 'Freshly filled tubs of 100% pure African shea butter in black jars, seen from above',
+    alt: 'Freshly filled black jars of 100% pure African shea butter, seen from above',
   },
   thankYouCard: {
     src: thankYouCard,
@@ -63,7 +63,7 @@ export const WORKS: Work[] = [
   { photo: PHOTOS.thankYouCard, title: 'Thank you', occasion: 'Customer gift', note: 'A burgundy lip balm on a printed card with a sweet prayer for every guest.', product: 'lip-balm' },
   { photo: PHOTOS.kissCard, title: 'Kiss the Miss goodbye', occasion: 'Bridal shower', note: 'Hot pink lip balms on "Congratulations!" cards for the bride\'s last night out.', product: 'lip-balm' },
   { photo: PHOTOS.brideSquadRow, title: 'The whole squad', occasion: 'Wedding', note: 'Twelve matching lip balms, lined up and ready for the bridal train.', product: 'lip-balm' },
-  { photo: PHOTOS.sheaTubs, title: 'Pure shea, freshly poured', occasion: 'In the making', note: '100% pure African shea butter, poured into black tubs before labelling.', product: 'pure-african-shea-butter' },
+  { photo: PHOTOS.sheaTubs, title: 'Pure shea, freshly poured', occasion: 'In the making', note: '100% pure African shea butter, poured into black jars before labelling.', product: 'pure-african-shea-butter' },
   { photo: PHOTOS.kissInHand, title: 'Pocket sized', occasion: 'Bridal shower', note: 'Small enough for any clutch, pretty enough to keep.', product: 'lip-balm' },
   { photo: PHOTOS.amberDroppers, title: 'Shimmer oil, ready to dress', occasion: 'In the making', note: 'Amber dropper bottles of golden shimmer oil, waiting for their labels.', product: 'shimmer-oil' },
 ];

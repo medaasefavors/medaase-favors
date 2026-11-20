@@ -9,7 +9,7 @@ import { url } from '../lib/url';
 import { breadcrumbs } from '../lib/schema';
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'How it works', path: '/how-it-works' }];
 ---
-<Base title="How Ordering Souvenirs Works | Medaase Favors" description="Choose your favours, pay online with MoMo or card, approve your free label design on WhatsApp, then collect in 5 to 7 working days." path="/how-it-works" schema={[breadcrumbs(crumbs)]}>
+<Base title="How Ordering Souvenirs Works | Medaase Favors" description="Choose your favours, pay online with MoMo or card, approve your free label design, then collect in 5 to 7 working days." path="/how-it-works" schema={[breadcrumbs(crumbs)]}>
   <section class="section">
     <span class="ghost-word" aria-hidden="true">EASY</span>
     <div class="wrap">
@@ -28,7 +28,7 @@ const crumbs = [{ name: 'Home', path: '/' }, { name: 'How it works', path: '/how
       </div>
       <div>
         <h2>Short on time?</h2>
-        <p>Under {SITE.rushWorkingDays} working days to your event: {Math.round(SITE.rushRate * 100)}% rush fee. Under {SITE.blockWorkingDays}: <a href={url('/contact')}>message us first</a>.</p>
+        <p>Under {SITE.rushWorkingDays} working days to your event: {Math.round(SITE.rushRate * 100)}% rush fee. Under {SITE.blockWorkingDays}: <a href={url('/contact')}>email us first</a>.</p>
       </div>
     </div>
   </section>

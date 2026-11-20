@@ -1,36 +1,35 @@
 ---
 import Base from '../layouts/Base.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import { SITE, whatsappLink } from '../data/site';
+import { SITE, emailLink } from '../data/site';
+import { cedi } from '../lib/format';
 import { breadcrumbs } from '../lib/schema';
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }];
 ---
-<Base title="Contact Medaase Favors | Souvenirs in Accra" description="Message Medaase Favors on WhatsApp, email or Instagram about custom souvenirs for your event in Accra and across Ghana." path="/contact" schema={[breadcrumbs(crumbs)]}>
+<Base title="Contact Medaase Favors | Custom Souvenirs in Ghana" description="Email Medaase Favors about custom souvenirs for your event. Office hours, pickup times and delivery across Ghana." path="/contact" schema={[breadcrumbs(crumbs)]}>
   <section class="section">
     <div class="wrap">
       <Breadcrumbs items={crumbs} />
-      <h1>Say hello</h1>
-      <p class="lede">Questions about your event, a big order or a tight date? Message us. A real person answers, usually the same day.</p>
-      <div class="grid grid--3">
-        <div class="card">
-          <h2 style="font-size:1.5rem">WhatsApp</h2>
-          <p>The fastest way to reach us, and where we send your label design.</p>
-          <a class="btn" href={whatsappLink()} rel="noopener">Chat on WhatsApp</a>
-        </div>
+      <h1>Contact</h1>
+      <p class="lede">Questions about your event, a big order or a tight date? Email us.</p>
+      <div class="grid grid--2">
         <div class="card">
           <h2 style="font-size:1.5rem">Email</h2>
-          <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+          <p><a href={emailLink()}>{SITE.email}</a></p>
+          <p>Office hours: {SITE.businessHours}.</p>
         </div>
         <div class="card">
           <h2 style="font-size:1.5rem">Instagram</h2>
-          <p>See our latest favours and DM us to order.</p>
           <p><a href={SITE.instagram} rel="noopener">{SITE.instagramHandle}</a></p>
         </div>
-      </div>
-      <div class="card" style="margin-top:28px">
-        <h2 style="font-size:1.5rem">Pickup and hours</h2>
-        <p>Pickup area: {SITE.pickupArea}. We share the exact pickup point when your order is ready.</p>
-        <p>Hours: {SITE.businessHours}.</p>
+        <div class="card">
+          <h2 style="font-size:1.5rem">Pickup</h2>
+          <p>Free. {SITE.pickupHours}. No pickups on weekends or outside these hours.</p>
+        </div>
+        <div class="card">
+          <h2 style="font-size:1.5rem">Delivery</h2>
+          <p>Within Accra: {SITE.deliveryAccra}.<br />Outside Accra: {cedi(SITE.deliveryFeeOutsideAccra)} flat.</p>
+        </div>
       </div>
     </div>
   </section>

@@ -8,18 +8,18 @@ export const SITE = {
   name: 'Medaase Favors',
   tagline: "Say medaase in a way they'll remember",
   description:
-    'Custom skincare souvenirs for weddings, funerals, naming ceremonies, birthdays, church events and corporate gifts in Accra, Ghana. Your names or logo and the date on every label.',
+    'Custom skincare souvenirs for weddings, funerals, naming ceremonies, birthdays, church events and corporate gifts in Ghana. Your names or logo and the date on every label.',
   locale: 'en-GH',
-  whatsapp: '233XXXXXXXXX', // TBD: WhatsApp business number, digits only
-  whatsappReady: false, // TBD: set true once the real number is in
+  whatsapp: '233XXXXXXXXX', // TBD: number to come. Not shown anywhere on the site (owner: no WhatsApp ordering)
   email: 'hello@medaasefavors.com', // TBD
   instagram: 'https://instagram.com/medaase.favors',
   instagramHandle: '@medaase.favors',
-  pickupArea: 'Accra', // TBD: pickup location
-  businessHours: 'Monday to Saturday, 9am to 6pm', // TBD
+  pickupArea: 'Accra', // TBD: exact pickup location
+  businessHours: 'Monday to Friday, 9am to 5pm',
+  pickupHours: 'Monday to Friday, 9:30am to 4:30pm, except public holidays',
   telephone: '', // TBD: leave empty until confirmed (kept out of structured data)
-  deliveryFeeAccra: 60, // TBD
-  deliveryOutsideAccra: 'TBD', // TBD: delivery policy outside Accra
+  deliveryAccra: 'by Yango or Uber, priced by your location',
+  deliveryFeeOutsideAccra: 60, // flat fee, GH₵
   samplePolicy: 'TBD', // TBD: can customers get a sample before ordering?
   minPerItem: 25,
   qtyStep: 5,
@@ -27,7 +27,7 @@ export const SITE = {
   rushWorkingDays: 7, // TBD: rush fee applies under this many working days
   blockWorkingDays: 5, // TBD: checkout blocked under this many working days
   turnaround: '5 to 7 working days',
-  designRounds: 2,
+  designRounds: 1,
   googleReviewUrl: '', // TBD: once the Google Business Profile exists
 };
 
@@ -50,6 +50,14 @@ export const EVENTS = [
   { slug: 'corporate-gifts', name: 'Corporate gifts', short: 'Corporate gifts' },
 ] as const;
 
-export function whatsappLink(text = 'Hello Medaase Favors! I would like to ask about souvenirs.') {
-  return `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`;
+/** Email link with a prefilled subject. */
+export function emailLink(subject = 'Souvenir enquiry') {
+  return `mailto:${SITE.email}?subject=${encodeURIComponent(subject)}`;
+}
+
+/** "one round" / "two rounds" of design changes. */
+export function designRoundsText() {
+  const words = ['no', 'one', 'two', 'three'];
+  const n = SITE.designRounds;
+  return `${words[n] ?? n} round${n === 1 ? '' : 's'} of changes`;
 }

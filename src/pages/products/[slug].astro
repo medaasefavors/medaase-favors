@@ -7,7 +7,7 @@ import FaqList from '../../components/FaqList.astro';
 import {
   PRODUCTS, ADD_ONS, BAG_COLOURS, CARD_SHAPES, sizesOf, startsFrom, highestUnit, type Product,
 } from '../../data/products';
-import { SITE, whatsappLink } from '../../data/site';
+import { SITE } from '../../data/site';
 import { cedi } from '../../lib/format';
 import { absolute, url } from '../../lib/url';
 import { breadcrumbs, faqPage } from '../../lib/schema';
@@ -143,7 +143,6 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
               <p class="bar__price"><span data-unit>{cedi(from)} each</span> · <span data-total>{cedi(from * SITE.minPerItem)} for {SITE.minPerItem}</span></p>
               <button class="btn" type="submit" data-add>Add to order</button>
             </div>
-            <p class="pp__wa">Prefer to chat? <a href={whatsappLink(`Hello! I would like to order ${p.name} souvenirs.`)} rel="noopener">Order on WhatsApp</a></p>
           </form>
         </div>
       </div>

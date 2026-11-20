@@ -28,8 +28,8 @@ export const EVENT_PAGES: EventPage[] = [
     h1: 'Wedding souvenirs your guests will actually keep',
     intro: 'Send every guest home with your names, your date and something they will use every day.',
     body: [
-      'Skincare does not end up in a drawer. A tub of shea butter or a bottle of shimmer oil sits on the dressing table, and your guests remember your day every time they use it.',
-      'Match tubs, lids and labels to your colours, and give the bridal train a larger size so they feel extra special.',
+      'Skincare does not end up in a drawer. A jar of shea butter or a bottle of shimmer oil sits on the dressing table, and your guests remember your day every time they use it.',
+      'Choose black, white or clear jars with a label in your colours, and give the bridal train a larger size so they feel extra special.',
     ],
     products: ['pure-african-shea-butter', 'body-butter', 'shimmer-oil', 'lip-balm'],
     bundles: ['glow-set', 'sweet-pair'],
@@ -40,7 +40,7 @@ export const EVENT_PAGES: EventPage[] = [
       { q: 'How early should I order?', a: 'Two weeks before the wedding is ideal.' },
     ],
     cta: 'Design your wedding favours',
-    imageAlt: "Wedding souvenirs: shea butter tubs with the couple's names on the labels",
+    imageAlt: "Wedding souvenirs: shea butter jars with the couple's names on the labels",
   },
   {
     slug: 'funerals',
@@ -59,11 +59,11 @@ export const EVENT_PAGES: EventPage[] = [
     labelIdeas: ['In loving memory of Maame Akosua', 'Celebrating Opanin Kwabena', 'Forever in our hearts', 'Rest well, Grandma', 'Called to glory · 1942 to 2026', 'A life well lived'],
     faqs: [
       { q: 'Can the label include a photo?', a: 'Yes. Upload the photo and we will design a simple, respectful label around it.' },
-      { q: 'Can you match our funeral cloth colours?', a: 'Yes. Tell us the colours and we will match the label and lids.' },
-      { q: 'The funeral is very soon. Can you help?', a: 'Message us on WhatsApp first and we will tell you honestly what is possible.' },
+      { q: 'Can you match our funeral cloth colours?', a: 'Yes. Tell us the colours and we will match the label.' },
+      { q: 'The funeral is very soon. Can you help?', a: 'Email us first and we will tell you honestly what is possible.' },
     ],
     cta: 'Choose funeral souvenirs',
-    imageAlt: 'Funeral souvenirs: shea butter tubs with an "In loving memory" label',
+    imageAlt: 'Funeral souvenirs: shea butter jars with an "In loving memory" label',
   },
   {
     slug: 'naming-ceremonies',
@@ -74,18 +74,18 @@ export const EVENT_PAGES: EventPage[] = [
     h1: "Naming ceremony souvenirs with your baby's name",
     intro: 'Thank everyone who came to welcome your little one with a favour that carries their name.',
     body: [
-      "Shea butter has always been part of caring for a newborn in Ghana, so a small tub with the baby's name feels just right. Lip balm on a heart-shaped card is another favourite.",
+      "Shea butter has always been part of caring for a newborn in Ghana, so a small jar with the baby's name feels just right. Lip balm on a heart-shaped card is another favourite.",
       "With the eighth day coming fast, you can order before the baby arrives and send us the name later.",
     ],
     products: ['pure-african-shea-butter', 'lip-balm', 'body-butter', 'hand-cream'],
     bundles: ['sweet-pair'],
     labelIdeas: ['Welcome, Baby Adwoa', 'Nana Yaw Boateng', 'Thank you for welcoming Kofi', 'Blessed with Ama', 'Our little miracle', 'Twins: Ataa & Atta'],
     faqs: [
-      { q: "Can I order before we choose the baby's name?", a: 'Yes. Order with the expected date and send the name on WhatsApp when it is chosen.' },
+      { q: "Can I order before we choose the baby's name?", a: 'Yes. Order with the expected date and email us the name when it is chosen.' },
       { q: 'Can you do souvenirs for twins?', a: 'Yes. Both names on one label, or two designs in different colours.' },
     ],
     cta: 'Design your naming ceremony favours',
-    imageAlt: "Naming ceremony souvenirs: small shea butter tubs with the baby's name",
+    imageAlt: "Naming ceremony souvenirs: small shea butter jars with the baby's name",
   },
   {
     slug: 'birthdays',
@@ -119,7 +119,7 @@ export const EVENT_PAGES: EventPage[] = [
     intro: 'Mark the day with a favour every member takes home and uses.',
     body: [
       'Shea butter, hand cream and hand wash gel suit everyone from the youth to the elders, and they are affordable in large numbers.',
-      'We match lids to your church colours and design the label around your anniversary logo or theme.',
+      'We design the label around your church colours, anniversary logo or theme.',
     ],
     products: ['pure-african-shea-butter', 'hand-cream', 'hand-wash-gel', 'lip-balm'],
     bundles: ['sweet-pair'],
@@ -148,7 +148,7 @@ export const EVENT_PAGES: EventPage[] = [
     labelIdeas: ['Your company logo', 'Thank you for a great year', 'Welcome to the team', 'With gratitude, from all of us', "Happy Women's Day", 'Annual Conference 2026'],
     faqs: [
       { q: 'Do you provide a receipt?', a: 'Yes. You get an itemised email confirmation with your order reference.' },
-      { q: 'Can you match our brand colours?', a: 'Yes. Upload your logo and we will match containers, lids and label.' },
+      { q: 'Can you match our brand colours?', a: 'Yes. Upload your logo and we will design the label in your brand colours.' },
     ],
     cta: 'Order branded corporate gifts',
     imageAlt: 'Corporate gifts: hand cream and lip balm with a company logo',

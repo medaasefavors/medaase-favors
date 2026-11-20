@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { SITE, EVENTS } from '../data/site';
+import { SITE, EVENTS, designRoundsText } from '../data/site';
 import { PRODUCTS, ADD_ONS, BUNDLE_DISCOUNT, sizesOf, startsFrom } from '../data/products';
 import { GUIDES } from '../data/guides';
 import { cedi } from '../lib/format';
@@ -9,13 +9,14 @@ export const GET: APIRoute = () => {
   const lines = [
     `# ${SITE.name}`,
     '',
-    `> ${SITE.name} ("medaase" is Twi for "thank you") makes custom skincare souvenirs (favours) in Accra, Ghana for weddings, funerals, naming ceremonies, birthdays, church events and corporate gifts. Each favour can carry a label with names or a logo and the event date.`,
+    `> ${SITE.name} ("medaase" is Twi for "thank you") makes custom skincare souvenirs (favours) in Ghana for weddings, funerals, naming ceremonies, birthdays, church events and corporate gifts. Each favour can carry a label with names or a logo and the event date.`,
     '',
     '## Key facts',
-    `- Location: ${SITE.pickupArea}, Ghana. Delivery within Accra for ${cedi(SITE.deliveryFeeAccra)}, or free pickup.`,
+    `- Made in Ghana. Free pickup, ${SITE.pickupHours}. Delivery within Accra ${SITE.deliveryAccra}; outside Accra a flat ${cedi(SITE.deliveryFeeOutsideAccra)}.`,
+    `- Office hours: ${SITE.businessHours}.`,
     `- Minimum order: ${SITE.minPerItem} pieces per product.`,
     `- Turnaround: ${SITE.turnaround} after the customer approves the label design.`,
-    `- Label design: free, matched to the event theme, ${SITE.designRounds} rounds of changes, sent on WhatsApp within 24 hours.`,
+    `- Label design: free, matched to the event theme, ${designRoundsText()}, emailed within 24 hours.`,
     '- Payment: full payment upfront online through Paystack (MTN MoMo, Telecel Cash, AirtelTigo Money or card).',
     `- Bundle discount: ${Math.round(BUNDLE_DISCOUNT * 100)}% off the whole order for 2 or more different products.`,
     `- Rush orders: events under ${SITE.rushWorkingDays} working days away add a ${Math.round(SITE.rushRate * 100)}% rush fee.`,
@@ -29,7 +30,7 @@ export const GET: APIRoute = () => {
     '## How to order',
     '1. Choose products and customise size, scent, container, lid and label.',
     '2. Pay in full online with Paystack.',
-    '3. Approve the free label design on WhatsApp.',
+    '3. Approve the free label design by email.',
     '4. Collect or get it delivered.',
     '',
     '## Events',

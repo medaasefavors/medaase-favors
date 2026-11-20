@@ -1,6 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { SITE, whatsappLink } from '../../data/site';
+import { SITE, designRoundsText } from '../../data/site';
 ---
 <Base title="Thank you for your order | Medaase Favors" description="Your Medaase Favors order is confirmed." path="/order/thank-you" noindex>
   <section class="section">
@@ -10,13 +10,12 @@ import { SITE, whatsappLink } from '../../data/site';
       <div class="card">
         <h2 style="font-size:1.5rem">What happens next</h2>
         <ol>
-          <li>We send your label design on WhatsApp within 24 hours.</li>
-          <li>You get {SITE.designRounds} rounds of changes for free.</li>
+          <li>We email your label design within 24 hours.</li>
+          <li>You get {designRoundsText()} for free.</li>
           <li>Your favours are ready {SITE.turnaround} after you approve.</li>
         </ol>
         <div class="btn-row">
-          <a class="btn" href={whatsappLink('Hello! I just placed an order with Medaase Favors.')} rel="noopener">Message us on WhatsApp</a>
-          <a class="btn btn--ghost" href={SITE.instagram} rel="noopener">Follow {SITE.instagramHandle}</a>
+          <a class="btn" href={SITE.instagram} rel="noopener">Follow {SITE.instagramHandle}</a>
         </div>
       </div>
     </div>
