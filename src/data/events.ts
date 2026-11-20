@@ -37,7 +37,7 @@ export const EVENT_PAGES: EventPage[] = [
       {
         h: 'Match your favours to your colours',
         p: [
-          'You choose the tub or bottle, the lid colour and the scent, and we design a label around your theme for free. Gold lids for a champagne and ivory wedding, pink tubs for a blush theme, navy for something classic. Add a small drawstring bag in your colours and each guest\'s favours are packed together, ready to hand out at the door or place on every seat.',
+          'You choose the tub or bottle, the lid colour and the scent, and we design a label around your theme for free. Gold lids for a champagne and ivory wedding, pink tubs for a blush theme, navy for something classic. Add a drawstring organza bag in your colours and each guest\'s favours are packed together, ready to hand out at the door or place on every seat.',
           'For the bridal party, parents and the people who helped you plan, step up to a large 250g shea butter or body butter. It is a generous thank you that still matches what the rest of your guests receive.',
         ],
       },
@@ -132,7 +132,7 @@ export const EVENT_PAGES: EventPage[] = [
         h: 'The sweetest outdooring favour',
         p: [
           'At an outdooring, the whole family comes together to welcome the baby and share in the joy of a name. Shea butter has always been part of caring for a newborn in Ghana, which makes a small tub with the baby\'s name on it a souvenir that feels just right. Guests take it home and use it, and many mothers keep one as a memento.',
-          'Lip balm is another favourite, especially when it is mounted on a printed card in the shape of a heart, a baby\'s onesie or a little crown. Pair a lip balm with a small shea butter for The Sweet Pair and save 5% on your whole order.',
+          'Lip balm is another favourite, especially when it is mounted on a printed card with the baby\'s name and a sweet welcome message. Pair a lip balm with a small shea butter for The Sweet Pair and save 5% on your whole order.',
         ],
       },
       {
@@ -179,8 +179,8 @@ export const EVENT_PAGES: EventPage[] = [
       {
         h: 'Party favours that feel grown up',
         p: [
-          'Birthday party favours do not have to be sweets in a paper bag. A bottle of golden shimmer oil, a jar of whipped body butter or a lip balm on a heart shaped card feels like a real gift, and guests love having something pretty to take home. For milestone birthdays especially, a personalised souvenir turns a good party into one everyone remembers.',
-          'The Glow Set, with a lip balm, a small body butter and a small shimmer oil, is made for birthday parties. Pack them together in a drawstring bag in your party colours and save 5% on your whole order.',
+          'Birthday party favours do not have to be sweets in a paper bag. A bottle of golden shimmer oil, a jar of whipped body butter or a lip balm on a printed card feels like a real gift, and guests love having something pretty to take home. For milestone birthdays especially, a personalised souvenir turns a good party into one everyone remembers.',
+          'The Glow Set, with a lip balm, a small body butter and a small shimmer oil, is made for birthday parties. Pack them together in a drawstring organza bag in your party colours and save 5% on your whole order.',
         ],
       },
       {
@@ -209,10 +209,10 @@ export const EVENT_PAGES: EventPage[] = [
     faqs: [
       { q: 'What are good birthday party favours for adults?', a: 'Shimmer oil, body butter and lip balm are favourites for adult birthdays. Bundle them as The Glow Set for 5% off.' },
       { q: 'Can I put the celebrant\'s age on the label?', a: 'Yes. Any text up to 32 characters works, such as "Abena at 30", with the date underneath.' },
-      { q: 'Can you make birthday souvenirs for children?', a: 'Yes. Lip balm on a fun shaped card is a hit with children and their parents.' },
+      { q: 'Can you make birthday souvenirs for children?', a: 'Yes. Lip balm on a colourful printed card is a hit with children and their parents.' },
     ],
     cta: 'Design your birthday favours',
-    imageAlt: 'Birthday party favours: shimmer oil and lip balms in a pink drawstring bag',
+    imageAlt: 'Birthday party favours: shimmer oil and lip balms in a pink organza bag',
   },
   {
     slug: 'church-events',
@@ -282,7 +282,7 @@ export const EVENT_PAGES: EventPage[] = [
       {
         h: 'Your brand, done properly',
         p: [
-          'Upload your logo and we design a clean label that respects your brand colours, then send it on WhatsApp for approval. Choose containers and lids that match your brand palette. Add a drawstring bag in navy, white or gold and a thank you tag for a finished look.',
+          'Upload your logo and we design a clean label that respects your brand colours, then send it on WhatsApp for approval. Choose containers and lids that match your brand palette. Add a drawstring organza bag in navy, white or gold and a thank you tag for a finished look.',
         ],
       },
       {

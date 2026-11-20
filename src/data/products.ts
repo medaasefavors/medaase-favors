@@ -16,9 +16,8 @@ export const PRICES = {
 
 export const ADD_ONS = {
   label: 1.5, // Label (front text or logo + date)
-  bag: 2.5, // Drawstring bag
+  bag: 2.5, // Drawstring organza bag
   card: 3, // Mount on printed card
-  shape: 3, // Custom shape (extra)
   tag: 2, // Thank you tag
 };
 
@@ -46,7 +45,6 @@ const PUMP_CAPS = ['White pump', 'Gold pump', 'Pink flip cap', 'Navy flip cap'];
 const BALM_TUBES = ['White tube', 'Pink tube', 'Navy tube'];
 
 export const BAG_COLOURS = ['Pink', 'Navy', 'White', 'Gold', 'Mixed colours'];
-export const CARD_SHAPES = ['Rectangle', 'Circle', 'Heart', 'Custom shape'];
 
 export interface Product {
   slug: Slug;
@@ -99,7 +97,7 @@ export const PRODUCTS: Product[] = [
       { q: 'Is your shea butter really 100% pure?', a: 'Yes. It is 100% pure, unrefined African shea butter. If you choose a scent, a small amount of fragrance is added; choose Unscented to keep it completely plain.' },
       { q: 'Which size is best for wedding guests?', a: 'Most couples choose the small 50g tub for guests and the large 250g tub for the bridal party and parents.' },
       { q: 'Will it melt in the heat?', a: 'Shea butter softens in strong heat and firms up again when it cools. Keep boxes out of direct sun at the venue and it will look its best.' },
-      { q: 'Can I mount the small tub on a card?', a: 'Yes. The small 50g tub can be mounted on a printed card in a rectangle, circle, heart or a custom shape.' },
+      { q: 'Can I mount the small tub on a card?', a: 'Yes. The small 50g tub can be mounted on a printed card that carries your names, the date and a short thank you message.' },
     ],
     imageAlt: 'Small tub of 100% pure African shea butter with a custom wedding label',
   },
@@ -238,7 +236,7 @@ export const PRODUCTS: Product[] = [
     category: 'lip',
     blurb: 'Pocket sized and always welcome.',
     description:
-      'Pocket sized and always welcome. A smooth, nourishing balm that slips into any clutch, and looks especially sweet mounted on a card in the shape of your choice.',
+      'Pocket sized and always welcome. A smooth, nourishing balm that slips into any clutch, and looks especially sweet mounted on a printed card.',
     scents: SCENTS,
     containers: BALM_TUBES,
     lids: [], // TBD: confirm cap colour options
@@ -253,15 +251,15 @@ export const PRODUCTS: Product[] = [
     ],
     longCopy: [
       'Lip balm is the friendliest souvenir there is. It is small, light, affordable and everyone uses it, from the grandmother in the front row to the teenage cousins at the back. Guests slip it into a pocket or clutch and it goes everywhere with them.',
-      'It looks especially sweet mounted on a printed card. Choose a rectangle, circle or heart, or ask for a custom shape such as a church, a cake, a baby\'s onesie or your company logo. The card carries your design and the balm sits right in the middle.',
+      'It looks especially sweet mounted on a printed card. The card carries your names, the date and a short message such as "Thank you for coming", and the balm sits right in the middle.',
       'Pick a flavour, choose your tube colour and add a label with your names or logo and the date. Pair it with a small shea butter for The Sweet Pair, or with a small body butter and shimmer oil for The Glow Set, and save 5% on your whole order.',
     ],
     faqs: [
       { q: 'What is the cheapest souvenir you make?', a: 'The lip balm, which starts from GH₵ 13 per piece.' },
-      { q: 'Can I mount the lip balm on a card?', a: 'Yes. Choose a rectangle, circle or heart card, or a custom shape for a small extra fee.' },
+      { q: 'Can I mount the lip balm on a card?', a: 'Yes. We mount it on a printed card with your names, the date and a short message of your choice.' },
       { q: 'Is it good for children\'s parties?', a: 'Yes. It is small, safe to carry and a hit with all ages.' },
     ],
-    imageAlt: 'Pink lip balm tube mounted on a heart shaped printed card',
+    imageAlt: 'Pink lip balm tube mounted on a printed thank you card',
   },
 ];
 
@@ -305,7 +303,7 @@ export function startsFrom(slug: Slug) {
 export function highestUnit(slug: Slug) {
   const p = getProduct(slug)!;
   const top = Math.max(...Object.values(PRICES[slug]));
-  const card = p.cardMount ? ADD_ONS.card + ADD_ONS.shape : 0;
+  const card = p.cardMount ? ADD_ONS.card : 0;
   return top + ADD_ONS.label + ADD_ONS.bag + ADD_ONS.tag + card;
 }
 

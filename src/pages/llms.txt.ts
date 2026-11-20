@@ -24,7 +24,7 @@ export const GET: APIRoute = () => {
     ...PRODUCTS.map(
       (p) => `- [${p.name}](${absolute(`/products/${p.slug}`)}): starts from ${cedi(startsFrom(p.slug))}. Sizes: ${sizesOf(p.slug).map((s) => `${s.size} ${cedi(s.price)}`).join(', ')}.`,
     ),
-    `- Add ons per piece: label ${cedi(ADD_ONS.label)}, drawstring bag ${cedi(ADD_ONS.bag)}, printed card ${cedi(ADD_ONS.card)} (lip balm and small shea butter only; custom shape +${cedi(ADD_ONS.shape)}), thank you tag ${cedi(ADD_ONS.tag)}.`,
+    `- Add ons per piece: label ${cedi(ADD_ONS.label)}, drawstring organza bag ${cedi(ADD_ONS.bag)}, printed card ${cedi(ADD_ONS.card)} (lip balm and small shea butter only; carries names, date and a short message), thank you tag ${cedi(ADD_ONS.tag)}.`,
     '',
     '## How to order',
     '1. Choose products and customise size, scent, container, lid and label.',

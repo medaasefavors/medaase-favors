@@ -67,8 +67,8 @@ export const FAQS: { q: string; a: string }[] = [
     a: 'Message us on WhatsApp with your order reference as soon as possible. Changes to the label are free before you approve the design. After approval, production starts, so changes may not be possible.',
   },
   {
-    q: 'Can I add a drawstring bag?',
-    a: `Yes. Small colourful drawstring bags cost ${cedi(ADD_ONS.bag)} per piece, in pink, navy, white, gold or mixed colours. If you order more than one product, each guest's favours are packed together in one bag.`,
+    q: 'Can I add a drawstring organza bag?',
+    a: `Yes. Sheer drawstring organza bags cost ${cedi(ADD_ONS.bag)} per piece, in pink, navy, white, gold or mixed colours. If you order more than one product, each guest's favours are packed together in one organza bag.`,
   },
   {
     q: 'Can I choose the colours of the tubs and lids?',
