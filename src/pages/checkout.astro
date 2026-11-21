@@ -45,7 +45,7 @@ import { url } from '../lib/url';
 
   function details(l: CartLine) {
     return [l.size, l.scent, l.container, l.lid && `${l.lid} lid`, labelSummary(l), l.themeColours?.length && `Colours: ${l.themeColours.join(', ')}`,
-      l.bag && `Bag: ${l.bagColour}`, l.card && `Card: ${l.cardShape}`, l.tag && 'Thank you tag']
+      l.bag && 'Organza bag', l.card && `Card: ${[l.cardDesign, l.cardShape].filter(Boolean).join(', ')}`, l.tag && 'Thank you tag']
       .filter(Boolean).join(' · ');
   }
 

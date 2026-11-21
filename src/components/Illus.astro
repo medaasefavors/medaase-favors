@@ -1,0 +1,78 @@
+---
+// Simple line illustrations for the guided order steps (presentation, card designs, card shapes).
+// Navy lines, pink accents, on a light navy tint. Decorative: the option label carries the meaning.
+interface Props { name: string }
+const { name } = Astro.props;
+const N = '#1B2A4E', P = '#E8508A', S = '#FFB8D1', W = '#FFFFFF', T = '#EEF1F8';
+---
+<svg viewBox="0 0 160 120" width="160" height="120" aria-hidden="true" class="illus">
+  <rect width="160" height="120" rx="14" fill={T} />
+  {name === 'pres-none' && (
+    <g stroke={N} stroke-width="2.5" fill={W} stroke-linejoin="round">
+      <rect x="52" y="36" width="56" height="16" rx="5" fill={N} />
+      <path d="M54 52 h52 v34 a6 6 0 0 1 -6 6 h-40 a6 6 0 0 1 -6 -6 z" />
+      <rect x="60" y="60" width="40" height="18" rx="3" fill={W} stroke={S} />
+    </g>
+  )}
+  {name === 'pres-organza' && (
+    <g stroke-linejoin="round">
+      <path d="M48 44 Q80 34 112 44 L118 96 Q80 104 42 96 Z" fill={S} fill-opacity="0.35" stroke={P} stroke-width="2" />
+      <rect x="62" y="58" width="36" height="10" rx="3" fill={N} />
+      <path d="M63 68 h34 v20 a4 4 0 0 1 -4 4 h-26 a4 4 0 0 1 -4 -4 z" fill={W} stroke={N} stroke-width="2" />
+      <path d="M48 44 Q80 54 112 44" fill="none" stroke={P} stroke-width="2" />
+      <path d="M80 47 q-14 -14 -18 -4 q4 8 18 4 q14 -14 18 -4 q-4 8 -18 4 l-8 14 M80 47 l8 14" fill="none" stroke={P} stroke-width="2.5" stroke-linecap="round" />
+      <g stroke={W} stroke-opacity="0.8" stroke-width="1.2"><path d="M52 60 l60 -4 M50 74 l64 -2 M49 88 l66 0" /></g>
+    </g>
+  )}
+  {name === 'pres-card' && (
+    <g stroke-linejoin="round">
+      <rect x="44" y="18" width="72" height="88" rx="6" fill={W} stroke={N} stroke-width="2.5" />
+      <rect x="72" y="34" width="16" height="44" rx="4" fill={W} stroke={N} stroke-width="2" />
+      <rect x="72" y="30" width="16" height="10" rx="3" fill={N} />
+      <g stroke={N} stroke-width="2" stroke-linecap="round"><path d="M60 88 h40 M66 96 h28" /></g>
+    </g>
+  )}
+  {name === 'design-wax-seal' && (
+    <g stroke-linejoin="round">
+      <rect x="40" y="12" width="80" height="96" rx="5" fill={W} stroke={N} stroke-width="2.5" />
+      <circle cx="64" cy="34" r="11" fill="#9B2C3E" />
+      <path d="M64 39 l-5 -5 a3 3 0 0 1 5 -4 a3 3 0 0 1 5 4 z" fill="none" stroke={S} stroke-width="1.5" />
+      <g stroke={N} stroke-width="2" stroke-linecap="round"><path d="M54 56 h20 M58 64 h12 M54 72 h20 M52 86 h24 M55 93 h18" /></g>
+      <rect x="92" y="26" width="12" height="70" rx="6" fill={W} stroke={N} stroke-width="2" />
+      <rect x="92" y="20" width="12" height="12" rx="2" fill="#C9A227" />
+    </g>
+  )}
+  {name === 'design-calendar' && (
+    <g stroke-linejoin="round">
+      <rect x="40" y="12" width="80" height="96" rx="5" fill={W} stroke={N} stroke-width="2.5" />
+      <g fill={N}>
+        {[0, 1, 2, 3, 4, 5, 6].map((i) => <rect x={50 + i * 9} y="22" width="5" height="4" rx="1" />)}
+        {[0, 1, 2, 3, 4, 5].map((i) => <rect x={50 + i * 9} y="31" width="5" height="4" rx="1" />)}
+      </g>
+      <path d="M106 37 l-5 -5 a3 3 0 0 1 5 -4 a3 3 0 0 1 5 4 z" fill="none" stroke={P} stroke-width="2" />
+      <text x="84" y="70" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#C9A227">M H</text>
+      <g stroke={N} stroke-width="2" stroke-linecap="round"><path d="M64 82 h40 M70 90 h28 M66 98 h36" /></g>
+      <rect x="52" y="52" width="12" height="26" rx="3" fill={W} stroke={N} stroke-width="2" />
+      <rect x="53" y="46" width="10" height="8" rx="2" fill="#C9A227" />
+      <path d="M58 56 q-8 -6 -9 0 q2 4 9 0 q8 -6 9 0 q-2 4 -9 0 l-4 9 M58 56 l4 9" fill="none" stroke="#2E5E4E" stroke-width="2" stroke-linecap="round" />
+    </g>
+  )}
+  {name === 'design-ribbon' && (
+    <g stroke-linejoin="round">
+      <rect x="36" y="12" width="88" height="96" rx="4" fill={W} stroke={N} stroke-width="2" />
+      <g stroke={S} stroke-width="4">
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => <path d={`M${42 + i * 8} 14 v92`} />)}
+      </g>
+      <path d="M50 30 q0 -8 8 -8 h44 q8 0 8 8 v62 q0 8 -8 8 h-44 q-8 0 -8 -8 z" fill={W} stroke={N} stroke-width="2" />
+      <path d="M80 26 q-12 -10 -15 -2 q3 6 15 2 q12 -10 15 -2 q-3 6 -15 2 l-7 13 M80 26 l7 13" fill="none" stroke={P} stroke-width="2.5" stroke-linecap="round" />
+      <g stroke={N} stroke-width="2" stroke-linecap="round"><path d="M64 48 h32 M70 56 h20" /></g>
+      <rect x="58" y="66" width="44" height="14" rx="7" fill={W} stroke={N} stroke-width="2" />
+      <g stroke={N} stroke-width="1.5" stroke-linecap="round"><path d="M64 90 h32" /></g>
+    </g>
+  )}
+  {name === 'shape-rect' && <rect x="50" y="16" width="60" height="88" rx="5" fill={W} stroke={N} stroke-width="2.5" />}
+  {name === 'shape-circle' && <circle cx="80" cy="60" r="44" fill={W} stroke={N} stroke-width="2.5" />}
+  {name === 'shape-custom' && (
+    <path d="M80 14 q8 14 22 10 q-2 16 12 22 q-12 10 -4 24 q-16 2 -18 18 q-14 -8 -24 4 q-8 -14 -24 -10 q2 -16 -12 -22 q12 -10 4 -24 q16 -2 18 -18 q14 8 26 -4 z" fill={W} stroke={N} stroke-width="2.5" stroke-dasharray="6 4" />
+  )}
+</svg>

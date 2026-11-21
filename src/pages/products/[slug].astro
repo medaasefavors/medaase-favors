@@ -4,8 +4,9 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ProductVisual from '../../components/ProductVisual.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import FaqList from '../../components/FaqList.astro';
+import Illus from '../../components/Illus.astro';
 import {
-  PRODUCTS, ADD_ONS, BAG_COLOURS, CARD_SHAPES, sizesOf, startsFrom, highestUnit, containerName, type Product,
+  PRODUCTS, ADD_ONS, CARD_SHAPES, CARD_DESIGNS, sizesOf, startsFrom, highestUnit, containerName, type Product,
 } from '../../data/products';
 import { SITE } from '../../data/site';
 import { cedi } from '../../lib/format';
@@ -84,125 +85,166 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
             <li class="pill">Ready in {SITE.turnaround}</li>
           </ul>
 
-          <form class="opts" data-form data-slug={p.slug} data-card-sizes={JSON.stringify(p.cardMountSizes)} novalidate>
-            <fieldset>
-              <legend>Size</legend>
-              <div class="opts__row">
+          <form class="opts flow" data-form data-slug={p.slug} data-card-sizes={JSON.stringify(p.cardMount ? p.cardMountSizes : [])} novalidate>
+            <p class="flow__intro">Let's make your favours. A few quick questions and you're done.</p>
+
+            <section class="step" data-step="size" aria-labelledby="q-size">
+              <h2 class="step__q" id="q-size">Which size would you like?</h2>
+              <p class="step__a" data-answer hidden><span data-answer-text></span> <button type="button" class="step__change" data-change>Change</button></p>
+              <div class="step__body opts__row" role="radiogroup" aria-labelledby="q-size">
                 {sizes.map((s, i) => (
-                  <label class="opt"><input type="radio" name="size" value={s.size} checked={i === 0} /><span>{s.size}<b>{cedi(s.price)}</b></span></label>
+                  <label class="opt"><input type="radio" name="size" value={s.size} checked={i === 0} /><span>{s.size}<b>{cedi(s.price)} each</b></span></label>
                 ))}
               </div>
-            </fieldset>
+            </section>
 
             {p.scents.length > 0 && (
-              <fieldset>
-                <legend>Scent</legend>
-                <div class="opts__row">
+              <section class="step" data-step="scent" aria-labelledby="q-scent">
+                <h2 class="step__q" id="q-scent">Which scent?</h2>
+                <p class="step__a" data-answer hidden><span data-answer-text></span> <button type="button" class="step__change" data-change>Change</button></p>
+                <div class="step__body opts__row" role="radiogroup" aria-labelledby="q-scent">
                   {p.scents.map((s, i) => <label class="opt"><input type="radio" name="scent" value={s} checked={i === 0} /><span>{s}</span></label>)}
                 </div>
-              </fieldset>
+              </section>
             )}
 
             {p.packaging.length > 1 && (
-              <fieldset>
-                <legend>Packaging</legend>
-                <div class="opts__row">
+              <section class="step" data-step="packaging" aria-labelledby="q-pack">
+                <h2 class="step__q" id="q-pack">What should it come in?</h2>
+                <p class="step__a" data-answer hidden><span data-answer-text></span> <button type="button" class="step__change" data-change>Change</button></p>
+                <div class="step__body opts__row" role="radiogroup" aria-labelledby="q-pack">
                   {p.packaging.map((pk, i) => <label class="opt"><input type="radio" name="packaging" value={pk.type} data-label-style={pk.labelStyle} checked={i === 0} /><span>{pk.type}</span></label>)}
                 </div>
-              </fieldset>
+              </section>
             )}
 
-            {p.packaging.map((pk, i) => (
-              <fieldset data-for-pack={pk.type} hidden={i !== 0}>
-                <legend>{p.packaging.length > 1 ? `${pk.type} colour` : 'Colour'}</legend>
-                <div class="opts__row">
-                  {pk.colours.map((c) => {
-                    const out = (pk.outOfStock ?? []).includes(c);
-                    const firstIn = pk.colours.find((x) => !(pk.outOfStock ?? []).includes(x));
-                    return <label class:list={['opt', { 'is-disabled': out }]}><input type="radio" name="container" value={containerName(pk, c)} data-pack={pk.type} data-label-style={pk.labelStyle} checked={i === 0 && c === firstIn} disabled={out} /><span>{c}{out && <small>Out of stock</small>}</span></label>;
-                  })}
-                </div>
-                {pk.lids.length > 0 && (
-                  <>
-                    <p class="opts__sub">Lid</p>
-                    <div class="opts__row">
-                      {pk.lids.map((l, j) => <label class="opt"><input type="radio" name="lid" value={l} checked={j === 0} disabled={i !== 0} /><span>{l}</span></label>)}
+            <section class="step" data-step="colour" aria-labelledby="q-colour">
+              <h2 class="step__q" id="q-colour">Which colour?</h2>
+              <p class="step__a" data-answer hidden><span data-answer-text></span> <button type="button" class="step__change" data-change>Change</button></p>
+              <div class="step__body">
+                {p.packaging.map((pk, i) => (
+                  <div data-for-pack={pk.type} hidden={i !== 0}>
+                    <div class="opts__row" role="radiogroup" aria-labelledby="q-colour">
+                      {pk.colours.map((c) => {
+                        const out = (pk.outOfStock ?? []).includes(c);
+                        const firstIn = pk.colours.find((x) => !(pk.outOfStock ?? []).includes(x));
+                        return <label class:list={['opt', { 'is-disabled': out }]}><input type="radio" name="container" value={containerName(pk, c)} data-pack={pk.type} data-colour={c} data-label-style={pk.labelStyle} checked={i === 0 && c === firstIn} disabled={out} /><span>{c}{out && <small>Out of stock</small>}</span></label>;
+                      })}
                     </div>
-                  </>
-                )}
-                {pk.labelStyle === 'lid' && <p class="field__hint">Labels on aluminium jars are round and go on the lid.</p>}
-              </fieldset>
-            ))}
-
-            <fieldset>
-              <legend>Label</legend>
-              <div class="opts__row opts__row--big">
-                <label class="opt opt--big"><input type="radio" name="label" value="none" checked /><span><strong>No label</strong>Plain product.</span></label>
-                <label class="opt opt--big"><input type="radio" name="label" value="yes" /><span><strong>Add label</strong>Names or logo, date below. +{cedi(ADD_ONS.label)} each</span></label>
+                    {pk.lids.length > 0 && (
+                      <>
+                        <p class="opts__sub">And the lid?</p>
+                        <div class="opts__row">
+                          {pk.lids.map((l, j) => <label class="opt"><input type="radio" name="lid" value={l} checked={j === 0} disabled={i !== 0} /><span>{l}</span></label>)}
+                        </div>
+                      </>
+                    )}
+                    {pk.labelStyle === 'lid' && <p class="field__hint">Labels on aluminium jars are round and go on the lid.</p>}
+                  </div>
+                ))}
               </div>
-              <div class="opts__label" data-label-fields>
-                <div class="opts__row" role="radiogroup" aria-label="Front of the label">
-                  <label class="opt"><input type="radio" name="front" value="text" checked /><span>Type text</span></label>
-                  <label class="opt"><input type="radio" name="front" value="logo" /><span>Upload logo</span></label>
-                </div>
-                <label class="field" data-front-text>Front text (up to 32 characters)
-                  <input type="text" name="frontText" maxlength="32" placeholder="Esi & Kwame" autocomplete="off" />
-                </label>
-                <label class="field" data-front-logo hidden>Logo (PNG, JPG, SVG or PDF, up to 5 MB)
-                  <input type="file" name="logo" accept=".png,.jpg,.jpeg,.svg,.pdf,image/png,image/jpeg,image/svg+xml,application/pdf" />
-                  <span class="field__logo" data-logo-preview hidden></span>
-                </label>
-                <label class="field">Event date (printed as 12.12.2026)
-                  <input type="date" name="eventDate" />
-                </label>
-                <div class="field theme" data-theme>
-                  <span>Event theme colours (optional, up to 3)</span>
-                  <div class="theme__list" data-theme-list></div>
-                  <button type="button" class="theme__add" data-theme-add>+ Add a colour</button>
-                  <template data-theme-row>
-                    <div class="theme__row">
-                      <input type="color" class="theme__pick" value="#1B2A4E" />
-                      <input type="text" class="theme__hex" value="#1B2A4E" maxlength="7" spellcheck="false" autocomplete="off" inputmode="text" />
-                      <button type="button" class="theme__rm">Remove</button>
-                    </div>
-                  </template>
-                </div>
-                <p class="field__err" data-err="label" hidden></p>
-              </div>
-            </fieldset>
+            </section>
 
-            <fieldset>
-              <legend>Add ons (per piece)</legend>
-              <label class="opt opt--line"><input type="checkbox" name="bag" /><span>Drawstring bag <b>+{cedi(ADD_ONS.bag)}</b></span></label>
-              <label class="field field--sub" data-bag-colour hidden>Bag colour
-                <select name="bagColour">{BAG_COLOURS.map((c) => <option>{c}</option>)}</select>
-              </label>
-              {p.cardMount && (
-                <>
-                  <label class="opt opt--line" data-card-opt><input type="checkbox" name="card" /><span>Mount on a printed card <b>+{cedi(ADD_ONS.card)}</b><small data-card-note>{p.cardMountSizes.length < sizes.length ? `${p.cardMountSizes.join(', ')} only` : ''}</small></span></label>
-                  <label class="field field--sub" data-card-shape hidden>Card shape
-                    <select name="cardShape">{CARD_SHAPES.map((c) => <option value={c}>{c === 'Custom shape' ? `Custom shape (+${cedi(ADD_ONS.shape)})` : c}</option>)}</select>
+            <section class="step" data-step="label" aria-labelledby="q-label">
+              <h2 class="step__q" id="q-label">Would you like a label with your names or logo?</h2>
+              <p class="step__a" data-answer hidden><span data-answer-text></span> <button type="button" class="step__change" data-change>Change</button></p>
+              <div class="step__body">
+                <div class="opts__row opts__row--big" role="radiogroup" aria-labelledby="q-label">
+                  <label class="opt opt--big"><input type="radio" name="label" value="yes" /><span><strong>Yes, add a label</strong>Names or logo, with the date. +{cedi(ADD_ONS.label)} each</span></label>
+                  <label class="opt opt--big"><input type="radio" name="label" value="none" checked /><span><strong>No label</strong>Just the product.</span></label>
+                </div>
+                <div class="opts__label" data-label-fields>
+                  <div class="opts__row" role="radiogroup" aria-label="Front of the label">
+                    <label class="opt"><input type="radio" name="front" value="text" checked /><span>Type names</span></label>
+                    <label class="opt"><input type="radio" name="front" value="logo" /><span>Upload a logo</span></label>
+                  </div>
+                  <label class="field" data-front-text>What should the label say? (up to 32 characters)
+                    <input type="text" name="frontText" maxlength="32" placeholder="Esi & Kwame" autocomplete="off" />
                   </label>
-                </>
-              )}
-              <label class="opt opt--line"><input type="checkbox" name="tag" /><span>Thank you tag, printed with your label text <b>+{cedi(ADD_ONS.tag)}</b></span></label>
-            </fieldset>
-
-            <fieldset>
-              <legend>Quantity</legend>
-              <div class="qty">
-                <button type="button" class="qty__btn" data-qty="-1" aria-label={`${SITE.qtyStep} fewer`}>−</button>
-                <input type="number" name="qty" min={SITE.minPerItem} step={SITE.qtyStep} value={SITE.minPerItem} inputmode="numeric" aria-label="Number of pieces" />
-                <button type="button" class="qty__btn" data-qty="1" aria-label={`${SITE.qtyStep} more`}>+</button>
+                  <label class="field" data-front-logo hidden>Your logo (PNG, JPG, SVG or PDF, up to 5 MB)
+                    <input type="file" name="logo" accept=".png,.jpg,.jpeg,.svg,.pdf,image/png,image/jpeg,image/svg+xml,application/pdf" />
+                    <span class="field__logo" data-logo-preview hidden></span>
+                  </label>
+                  <label class="field">When is the event? (printed as 12.12.2026)
+                    <input type="date" name="eventDate" />
+                  </label>
+                  <div class="field theme" data-theme>
+                    <span>Your event colours (optional, up to 3)</span>
+                    <div class="theme__list" data-theme-list></div>
+                    <button type="button" class="theme__add" data-theme-add>+ Add a colour</button>
+                    <template data-theme-row>
+                      <div class="theme__row">
+                        <input type="color" class="theme__pick" value="#1B2A4E" />
+                        <input type="text" class="theme__hex" value="#1B2A4E" maxlength="7" spellcheck="false" autocomplete="off" inputmode="text" />
+                        <button type="button" class="theme__rm">Remove</button>
+                      </div>
+                    </template>
+                  </div>
+                  <p class="field__err" data-err="label" hidden></p>
+                  <button type="button" class="btn" data-next="label">Continue</button>
+                </div>
               </div>
-              <p class="field__hint">Minimum {SITE.minPerItem}, in steps of {SITE.qtyStep}.</p>
-              <p class="field__err" data-err="qty" hidden></p>
-            </fieldset>
+            </section>
 
-            <div class="bar" data-price-bar>
-              <p class="bar__price"><span data-unit>{cedi(from)} each</span> · <span data-total>{cedi(from * SITE.minPerItem)} for {SITE.minPerItem}</span></p>
-              <button class="btn" type="submit" data-add>Add to order</button>
-            </div>
+            <section class="step" data-step="presentation" aria-labelledby="q-pres">
+              <h2 class="step__q" id="q-pres">How should we present each favour?</h2>
+              <p class="step__a" data-answer hidden><span data-answer-text></span> <button type="button" class="step__change" data-change>Change</button></p>
+              <div class="step__body">
+                <div class="tiles" role="radiogroup" aria-labelledby="q-pres">
+                  <label class="tile"><input type="radio" name="presentation" value="none" checked /><span><Illus name="pres-none" /><strong>On its own</strong><small>No extra cost</small></span></label>
+                  <label class="tile"><input type="radio" name="presentation" value="organza" /><span><Illus name="pres-organza" /><strong>Organza bag</strong><small>+{cedi(ADD_ONS.bag)} each</small></span></label>
+                  {p.cardMount && (
+                    <label class="tile" data-card-tile><input type="radio" name="presentation" value="card" /><span><Illus name="pres-card" /><strong>Mounted on a card</strong><small data-card-note>+{cedi(ADD_ONS.card)} each{p.cardMountSizes.length < sizes.length ? ` · ${p.cardMountSizes.join(', ')} only` : ''}</small></span></label>
+                  )}
+                </div>
+                {p.cardMount && (
+                  <div class="card-opts" data-card-fields hidden>
+                    <p class="opts__sub">Pick a card design</p>
+                    <div class="tiles">
+                      {CARD_DESIGNS.map((d) => (
+                        <label class="tile"><input type="radio" name="cardDesign" value={d.name} /><span><Illus name={`design-${d.id}`} /><strong>{d.name}</strong><small>{d.note}</small></span></label>
+                      ))}
+                    </div>
+                    <p class="opts__sub">And the card shape</p>
+                    <div class="tiles tiles--small">
+                      {CARD_SHAPES.map((s) => (
+                        <label class="tile"><input type="radio" name="cardShape" value={s} /><span><Illus name={s === 'Rectangle' ? 'shape-rect' : s === 'Circle' ? 'shape-circle' : 'shape-custom'} /><strong>{s}</strong><small>{s === 'Custom shape' ? `+${cedi(ADD_ONS.shape)} each` : 'Included'}</small></span></label>
+                      ))}
+                    </div>
+                    <p class="field__hint">We design your card to match your label and send it with your label designs.</p>
+                    <p class="field__err" data-err="card" hidden></p>
+                    <button type="button" class="btn" data-next="presentation">Continue</button>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            <section class="step" data-step="tag" aria-labelledby="q-tag">
+              <h2 class="step__q" id="q-tag">Add a printed thank-you tag?</h2>
+              <p class="step__a" data-answer hidden><span data-answer-text></span> <button type="button" class="step__change" data-change>Change</button></p>
+              <div class="step__body opts__row" role="radiogroup" aria-labelledby="q-tag">
+                <label class="opt"><input type="radio" name="tag" value="yes" /><span>Yes, add a tag<b>+{cedi(ADD_ONS.tag)} each</b></span></label>
+                <label class="opt"><input type="radio" name="tag" value="no" checked /><span>No thanks</span></label>
+              </div>
+            </section>
+
+            <section class="step" data-step="qty" aria-labelledby="q-qty">
+              <h2 class="step__q" id="q-qty">How many pieces do you need?</h2>
+              <div class="step__body">
+                <div class="qty">
+                  <button type="button" class="qty__btn" data-qty="-1" aria-label={`${SITE.qtyStep} fewer`}>−</button>
+                  <input type="number" name="qty" min={SITE.minPerItem} step={SITE.qtyStep} value={SITE.minPerItem} inputmode="numeric" aria-label="Number of pieces" />
+                  <button type="button" class="qty__btn" data-qty="1" aria-label={`${SITE.qtyStep} more`}>+</button>
+                </div>
+                <p class="field__hint">Minimum {SITE.minPerItem}, in steps of {SITE.qtyStep}.</p>
+                <p class="field__err" data-err="qty" hidden></p>
+                <div class="bar" data-price-bar>
+                  <p class="bar__price"><span data-unit>{cedi(from)} each</span> · <span data-total>{cedi(from * SITE.minPerItem)} for {SITE.minPerItem}</span></p>
+                  <button class="btn" type="submit" data-add>Add to order</button>
+                </div>
+              </div>
+            </section>
+
             <div class="added" data-added role="status" hidden>
               <p><strong>Added to your order.</strong> <span data-added-msg></span></p>
               <div class="btn-row">
@@ -280,7 +322,8 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
     dateInput.min = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
 
     function read() {
-      const card = box('card');
+      const pres = checked('presentation') || 'none';
+      const card = pres === 'card';
       return {
         size: checked('size')!,
         scent: checked('scent'),
@@ -294,11 +337,12 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
           .filter((v) => /^#[0-9A-F]{6}$/.test(v)),
         frontText: textInput.value.trim(),
         eventDate: dateInput.value,
-        bag: box('bag'),
-        bagColour: field<HTMLSelectElement>('bagColour')?.value,
+        pres,
+        bag: pres === 'organza',
         card,
-        cardShape: card ? field<HTMLSelectElement>('cardShape')?.value : undefined,
-        tag: box('tag'),
+        cardShape: card ? checked('cardShape') : undefined,
+        cardDesign: card ? checked('cardDesign') : undefined,
+        tag: checked('tag') === 'yes',
         qty: Number(qtyInput.value) || 0,
       };
     }
@@ -357,14 +401,12 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       $('[data-label-fields]')!.hidden = !o.label;
       $('[data-front-text]')!.hidden = o.front !== 'text';
       $('[data-front-logo]')!.hidden = o.front !== 'logo';
-      $('[data-bag-colour]')!.hidden = !o.bag;
-      const cardBox = field('card');
-      if (cardBox) {
-        const allowed = cardSizes.includes(o.size);
-        cardBox.disabled = !allowed;
-        if (!allowed && cardBox.checked) cardBox.checked = false;
-        $('[data-card-opt]')!.classList.toggle('is-disabled', !allowed);
-        $('[data-card-shape]')!.hidden = !(allowed && cardBox.checked);
+      const cardInput = form.querySelector<HTMLInputElement>('input[name="presentation"][value="card"]');
+      if (cardInput) {
+        const allowed = !o.size || cardSizes.includes(o.size);
+        cardInput.disabled = !allowed;
+        cardInput.closest('.tile')!.classList.toggle('is-disabled', !allowed);
+        $('[data-card-fields]')!.hidden = checked('presentation') !== 'card';
       }
       // label preview (HTML, always available)
       const lp = $('[data-labelprev]')!;
@@ -384,11 +426,134 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       // price bar
       const final = read();
       const unit = unitPrice(slug, final);
+      flow?.updateAnswers();
       const qty = Math.max(final.qty, 0);
       $('[data-unit]')!.textContent = `${cedi(unit)} each`;
       $('[data-total]')!.textContent = `${cedi(unit * qty)} for ${qty}`;
       $('[data-added]')!.hidden = true;
     }
+
+    // ---- guided flow: one question at a time ------------------------------------
+    const flow = (() => {
+      const steps = Array.from(form.querySelectorAll<HTMLElement>('[data-step]'));
+      if (!steps.length) return null;
+      form.classList.add('is-guided');
+      // Nothing is pre-chosen: the customer answers each question.
+      ['size', 'scent', 'packaging', 'container', 'lid', 'label', 'presentation', 'cardDesign', 'cardShape', 'tag']
+        .forEach((n) => form.querySelectorAll<HTMLInputElement>(`input[name="${n}"]`).forEach((i) => (i.checked = false)));
+      const done = new Set<string>();
+      let open = steps[0].dataset.step!;
+      const id = (s: HTMLElement) => s.dataset.step!;
+      const stepEl = (k: string) => steps.find((s) => id(s) === k);
+
+      function answer(k: string) {
+        const o = read();
+        switch (k) {
+          case 'size': return o.size;
+          case 'scent': return o.scent;
+          case 'packaging': return o.pack;
+          case 'colour': {
+            const c = form.querySelector<HTMLInputElement>('input[name="container"]:checked');
+            return c ? [c.dataset.colour, o.lid && `${o.lid} lid`].filter(Boolean).join(', ') : '';
+          }
+          case 'label':
+            if (!o.label) return 'No label';
+            return [o.front === 'logo' ? `Logo${logoFile ? `: ${logoFile.name}` : ''}` : o.frontText, labelDate(o.eventDate)].filter(Boolean).join(' · ');
+          case 'presentation':
+            return o.pres === 'organza' ? 'Organza bag' : o.pres === 'card' ? ['Card', o.cardDesign, o.cardShape].filter(Boolean).join(' · ') : 'On its own';
+          case 'tag': return o.tag ? 'Thank-you tag' : 'No tag';
+        }
+        return '';
+      }
+
+      function render(scroll = false) {
+        steps.forEach((s) => {
+          const k = id(s);
+          const isOpen = k === open;
+          s.hidden = !(isOpen || done.has(k));
+          s.classList.toggle('is-open', isOpen);
+          s.classList.toggle('is-done', done.has(k) && !isOpen);
+          const a = s.querySelector<HTMLElement>('[data-answer]');
+          if (a) {
+            a.hidden = isOpen || !done.has(k);
+            a.querySelector('[data-answer-text]')!.textContent = answer(k) || '';
+          }
+        });
+        if (scroll) {
+          const el = stepEl(open);
+          if (el) requestAnimationFrame(() => el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' }));
+        }
+      }
+
+      function complete(k: string) {
+        done.add(k);
+        const i = steps.findIndex((s) => id(s) === k);
+        const next = steps.slice(i + 1).find((s) => !done.has(id(s))) ?? steps.find((s) => !done.has(id(s)));
+        open = next ? id(next) : 'qty';
+        render(true);
+      }
+
+      function undo(k: string) {
+        done.delete(k);
+      }
+
+      steps.forEach((s) => s.querySelector('[data-change]')?.addEventListener('click', () => {
+        open = id(s);
+        render(true);
+      }));
+
+      // Answer handling: most questions move on as soon as they are answered.
+      form.addEventListener('change', (e) => {
+        const n = (e.target as HTMLInputElement).name;
+        const o = read();
+        if (n === 'cardDesign' || n === 'cardShape') $('[data-err="card"]')!.hidden = true;
+        if (n === 'size') {
+          // a card is only possible for some sizes: if it no longer fits, ask again
+          const card = form.querySelector<HTMLInputElement>('input[name="presentation"][value="card"]');
+          if (card?.checked && !cardSizes.includes(o.size)) {
+            card.checked = false;
+            done.delete('presentation');
+          }
+        }
+        if (n === 'size' || n === 'scent' || n === 'tag') complete(n);
+        if (n === 'packaging') {
+          form.querySelectorAll<HTMLInputElement>('input[name="container"], input[name="lid"]').forEach((i) => (i.checked = false));
+          done.delete('colour');
+          complete('packaging');
+        }
+        if (n === 'container' || n === 'lid') {
+          const needsLid = !!form.querySelector('input[name="lid"]:not(:disabled)');
+          if (checked('container') && (!needsLid || o.lid)) complete('colour');
+        }
+        if (n === 'label' && !o.label) complete('label');
+        if (n === 'presentation' && o.pres !== 'card') complete('presentation');
+      });
+
+      form.querySelectorAll<HTMLButtonElement>('[data-next]').forEach((b) => b.addEventListener('click', () => {
+        const k = b.dataset.next!;
+        const o = read();
+        if (k === 'label') {
+          $('[data-err="label"]')!.hidden = true;
+          if (o.front === 'text' && !o.frontText) return showErr('label', 'Please type the names or text for your label.', textInput);
+          if (o.front === 'logo' && !logoFile) return showErr('label', 'Please upload your logo.', fileInput);
+          if (!o.eventDate) return showErr('label', 'Please choose your event date.', dateInput);
+        }
+        if (k === 'presentation') {
+          $('[data-err="card"]')!.hidden = true;
+          if (!o.cardDesign) return showErr('card', 'Please pick a card design.');
+          if (!o.cardShape) return showErr('card', 'Please pick a card shape.');
+        }
+        complete(k);
+      }));
+
+      render();
+      return {
+        updateAnswers: () => render(),
+        undo,
+        firstMissing: () => steps.find((s) => id(s) !== 'qty' && !done.has(id(s))),
+        openStep: (k: string) => { open = k; render(true); },
+      };
+    })();
 
     form.addEventListener('change', (e) => {
       if ((e.target as HTMLElement).getAttribute('name') === 'qty') normaliseQty();
@@ -485,6 +650,11 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       e.preventDefault();
       form.querySelectorAll<HTMLElement>('[data-err]').forEach((el) => (el.hidden = true));
       normaliseQty();
+      const missing = flow?.firstMissing();
+      if (missing) {
+        flow!.openStep(missing.dataset.step!);
+        return;
+      }
       const o = read();
       if (o.label) {
         if (o.front === 'text' && !o.frontText) return showErr('label', 'Please type the names or text for the front of your label.', textInput);
@@ -500,8 +670,8 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
         logoName: o.label && o.front === 'logo' ? logoFile?.name : undefined,
         eventDate: o.label ? o.eventDate : undefined,
         themeColours: o.label && o.themeColours.length ? o.themeColours : undefined,
-        bag: o.bag, bagColour: o.bag ? o.bagColour : undefined,
-        card: o.card, cardShape: o.card ? o.cardShape : undefined,
+        bag: o.bag,
+        card: o.card, cardShape: o.card ? o.cardShape : undefined, cardDesign: o.card ? o.cardDesign : undefined,
         tag: o.tag,
       };
       if (line.logoName && logoFile) await saveLogo(id, logoFile);
@@ -533,6 +703,31 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   .theme__hex { width: 130px !important; font-family: ui-monospace, Menlo, monospace !important; text-transform: uppercase; }
   .theme__hex.is-bad { border-color: #b3123f !important; }
   .theme__rm, .theme__add { background: none; border: 0; padding: 10px 4px; color: var(--navy); font: 700 0.95rem var(--body); text-decoration: underline; cursor: pointer; justify-self: start; }
+  /* ---- guided flow ---- */
+  .flow__intro { font-family: var(--display); font-size: 1.35rem; margin: 8px 0 18px; }
+  .step { margin: 0 0 14px; padding: 20px 22px; border-radius: var(--radius); background: var(--white); border: 1px solid var(--line); }
+  .step__q { font-family: var(--display); font-size: clamp(1.25rem, 2.4vw, 1.5rem); margin: 0 0 14px; }
+  .step__a { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; font-weight: 700; }
+  .step__change { background: none; border: 0; padding: 8px 0; color: var(--navy); font: 500 0.95rem var(--body); text-decoration: underline; cursor: pointer; }
+  .is-guided .step.is-open { box-shadow: var(--shadow); border-color: var(--navy); animation: stepIn 0.35s ease both; }
+  .is-guided .step.is-done { padding: 12px 22px; background: var(--tint); }
+  .is-guided .step.is-done .step__q { font-family: var(--body); font-size: 0.85rem; font-weight: 500; color: var(--muted); margin: 0 0 2px; }
+  .is-guided .step.is-done .step__body { display: none; }
+  @keyframes stepIn { from { opacity: 0; transform: translateY(14px); } }
+  .tiles { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
+  .tiles--small { grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr)); }
+  .tile { position: relative; cursor: pointer; }
+  .tile input { position: absolute; opacity: 0; inset: 0; }
+  .tile > span { display: flex; flex-direction: column; gap: 4px; height: 100%; padding: 10px; border: 2px solid var(--line); border-radius: 18px; background: var(--white); text-align: center; }
+  .tile :global(.illus) { width: 100%; height: auto; }
+  .tile strong { font-size: 1rem; }
+  .tile small { color: var(--muted); font-size: 0.85rem; line-height: 1.35; }
+  .tile input:checked + span { border-color: var(--navy); box-shadow: 0 0 0 2px var(--navy) inset; }
+  .tile input:focus-visible + span { outline: 3px solid var(--hot); outline-offset: 2px; }
+  .tile.is-disabled { opacity: 0.45; cursor: not-allowed; }
+  .card-opts { margin-top: 16px; display: grid; gap: 10px; }
+  .card-opts .btn, .opts__label .btn { justify-self: start; margin-top: 6px; }
+  .step .bar { position: static; margin-top: 16px; }
   .pp__paint { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 6%; background: #fff; }
   .pp__lpcap { margin: 16px 0 6px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
   .opts__sub { margin: 14px 0 8px; font-weight: 700; font-size: 0.95rem; }

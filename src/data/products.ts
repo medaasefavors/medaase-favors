@@ -20,7 +20,7 @@ export const PER_PIECE_CHARGE = 1.5;
 
 export const ADD_ONS = {
   label: 1.5, // Label (front text or logo + date)
-  bag: 2.5, // Drawstring bag
+  bag: 2.5, // Organza bag
   card: 3, // Mount on printed card
   shape: 3, // Custom shape (extra)
   tag: 2, // Thank you tag
@@ -63,8 +63,13 @@ export function containerName(p: Packaging, colour: string) {
   return `${p.type} · ${colour}`;
 }
 
-export const BAG_COLOURS = ['Pink', 'Navy', 'White', 'Gold', 'Mixed colours'];
-export const CARD_SHAPES = ['Rectangle', 'Circle', 'Heart', 'Custom shape'];
+// Presentation: how each favour is handed out.
+export const CARD_SHAPES = ['Rectangle', 'Circle', 'Custom shape'];
+export const CARD_DESIGNS = [
+  { id: 'wax-seal', name: 'Wax seal', note: 'A wax seal above your names, date and a thank-you line' },
+  { id: 'calendar', name: 'Save the date', note: 'A calendar with your date circled, your initials and a ribbon' },
+  { id: 'ribbon', name: 'Ribbon and stripes', note: 'A striped border, a framed panel and a bow on top' },
+];
 
 export interface Product {
   slug: Slug;

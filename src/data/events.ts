@@ -107,7 +107,7 @@ export const EVENT_PAGES: EventPage[] = [
       { q: 'Planning a surprise?', a: 'Tell us and we will keep everything quiet.' },
     ],
     cta: 'Design your birthday favours',
-    imageAlt: 'Birthday party favours: shimmer oil and lip balms in a pink drawstring bag',
+    imageAlt: 'Birthday party favours: shimmer oil and lip balms in organza bags',
   },
   {
     slug: 'church-events',
