@@ -2,6 +2,11 @@
 // time; metadata (including location) was stripped before they were added.
 import type { ImageMetadata } from 'astro';
 import LABEL_AREAS from './label-areas.json';
+import catalogue from './catalogue.json';
+
+// Photos published from the admin sheet are downloaded into src/assets/cms at build time.
+const CMS = import.meta.glob<{ default: ImageMetadata }>('../assets/cms/*.{jpg,jpeg,png,webp}', { eager: true });
+const cmsPhoto = (file?: string) => (file ? CMS[`../assets/cms/${file}`]?.default : undefined);
 import amberDroppers from '../assets/photos/amber-dropper-bottles-shimmer-oil.jpg';
 import sheaTubs from '../assets/photos/pure-shea-butter-black-tubs.jpg';
 import thankYouCard from '../assets/photos/lip-balm-thank-you-card.jpg';
@@ -67,7 +72,7 @@ export const PHOTOS = {
 } satisfies Record<string, Photo>;
 
 /** Main photo per product. Products without one show the brand placeholder until photos arrive. */
-export const PRODUCT_PHOTOS: Partial<Record<string, Photo>> = {
+const BUILT_IN_PRODUCT_PHOTOS: Partial<Record<string, Photo>> = {
   'shimmer-oil': PHOTOS.amberDroppers,
   'pure-african-shea-butter': PHOTOS.sheaTubs,
   'lip-balm': PHOTOS.brideSquadCard,
@@ -75,6 +80,13 @@ export const PRODUCT_PHOTOS: Partial<Record<string, Photo>> = {
   'hand-cream': { src: handCreamFilled, alt: 'Rows of freshly filled hand cream bottles' },
   'hand-wash-gel': { src: gelPhoto, alt: 'A bottle of hand wash gel with a clear flip cap' },
 };
+
+/** Main photo per product: the one published from the admin sheet if there is one, otherwise the built-in photo. */
+export const PRODUCT_PHOTOS: Partial<Record<string, Photo>> = { ...BUILT_IN_PRODUCT_PHOTOS };
+for (const p of catalogue.products) {
+  const src = cmsPhoto(p.photo);
+  if (src) PRODUCT_PHOTOS[p.slug] = { src, alt: p.imageAlt || p.name };
+}
 
 export interface Work {
   photo: Photo;
@@ -129,8 +141,11 @@ export type LabelArea =
 export function packshotsFor(slug: string, containers: string[]) {
   const areas = LABEL_AREAS as Record<string, LabelArea>;
   const out: { container: string; photo: Photo; area?: LabelArea }[] = [];
+  const rows = catalogue.products.find((p) => p.slug === slug)?.packaging ?? [];
   for (const c of containers) {
-    const ph = PACKSHOTS[`${slug}|${c}`] ?? PACKSHOTS[c];
+    const row = rows.find((r) => `${r.type} · ${r.colour}` === c);
+    const published = cmsPhoto(row?.photo);
+    const ph = published ? { src: published, alt: c } : PACKSHOTS[`${slug}|${c}`] ?? PACKSHOTS[c];
     if (ph) out.push({ container: c, photo: ph, area: areas[`${slug}|${c}`] ?? areas[c] });
   }
   return out;

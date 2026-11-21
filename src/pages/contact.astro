@@ -4,6 +4,9 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { SITE, emailLink } from '../data/site';
 import { cedi } from '../lib/format';
 import { breadcrumbs } from '../lib/schema';
+import { url } from '../lib/url';
+import catalogue from '../data/catalogue.json';
+const docs = (catalogue.documents ?? []).filter((d) => d.show !== false && d.file);
 const crumbs = [{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }];
 ---
 <Base title="Contact Medaase Favors | Custom Souvenirs in Ghana" description="Email Medaase Favors about custom souvenirs for your event. Office hours, pickup times and delivery across Ghana." path="/contact" schema={[breadcrumbs(crumbs)]}>
@@ -31,6 +34,12 @@ const crumbs = [{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact'
           <p>Within Accra: {SITE.deliveryAccra}.<br />Outside Accra: {cedi(SITE.deliveryFeeOutsideAccra)} flat.</p>
         </div>
       </div>
+      {docs.length > 0 && (
+        <div class="card" style="margin-top:28px">
+          <h2 style="font-size:1.5rem">Downloads</h2>
+          <ul>{docs.map((d) => <li><a href={url(`/docs/${d.file}`)} download>{d.title}</a> (PDF)</li>)}</ul>
+        </div>
+      )}
     </div>
   </section>
 </Base>

@@ -4,7 +4,9 @@
 // and the whole site updates; no component holds its own copy.
 // ---------------------------------------------------------------------------
 
-export const SITE = {
+import catalogue from './catalogue.json';
+
+const DEFAULTS = {
   name: 'Medaase Favors',
   tagline: "Say medaase in a way they'll remember",
   description:
@@ -30,6 +32,9 @@ export const SITE = {
   designRounds: 1,
   googleReviewUrl: '', // TBD: once the Google Business Profile exists
 };
+
+/** Site settings: defaults above, overridden by whatever the admin sheet publishes. */
+export const SITE: typeof DEFAULTS = { ...DEFAULTS, ...(catalogue.settings as Partial<typeof DEFAULTS>) };
 
 // Ghana public holidays (YYYY-MM-DD), excluded from working-day counts. TBD: confirm each year.
 export const PUBLIC_HOLIDAYS: string[] = [

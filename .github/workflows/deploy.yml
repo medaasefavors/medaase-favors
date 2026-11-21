@@ -3,7 +3,11 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  # "Publish website" in the admin sheet starts this straight away;
+  # the schedule is a safety net that picks up anything published.
   workflow_dispatch:
+  schedule:
+    - cron: '7,37 * * * *'
 
 permissions:
   contents: read

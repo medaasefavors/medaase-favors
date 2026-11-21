@@ -1,0 +1,545 @@
+{
+ "version": 1,
+ "publishedAt": null,
+ "settings": {
+  "email": "hello@medaasefavors.com",
+  "instagram": "https://instagram.com/medaase.favors",
+  "instagramHandle": "@medaase.favors",
+  "pickupArea": "Accra",
+  "businessHours": "Monday to Friday, 9am to 5pm",
+  "pickupHours": "Monday to Friday, 9:30am to 4:30pm, except public holidays",
+  "deliveryAccra": "by Yango or Uber, priced by your location",
+  "deliveryFeeOutsideAccra": 60,
+  "minPerItem": 25,
+  "qtyStep": 5,
+  "turnaround": "5 to 7 working days",
+  "designRounds": 1,
+  "rushRate": 0.2,
+  "rushWorkingDays": 7,
+  "blockWorkingDays": 5,
+  "perPieceCharge": 1.5,
+  "bundleDiscount": 0.05
+ },
+ "charges": [
+  {
+   "key": "label",
+   "name": "Label (names or logo and date)",
+   "price": 1.5
+  },
+  {
+   "key": "bag",
+   "name": "Organza bag",
+   "price": 2.5
+  },
+  {
+   "key": "card",
+   "name": "Mounted on a card",
+   "price": 3
+  },
+  {
+   "key": "shape",
+   "name": "Custom card shape (extra)",
+   "price": 3
+  },
+  {
+   "key": "tag",
+   "name": "Thank-you tag",
+   "price": 2
+  }
+ ],
+ "cardDesigns": [
+  {
+   "name": "Design 1",
+   "note": "A wax seal above your names, date and a thank-you line",
+   "illustration": "wax-seal",
+   "show": true
+  },
+  {
+   "name": "Design 2",
+   "note": "A calendar with your date circled, your initials and a ribbon",
+   "illustration": "calendar",
+   "show": true
+  },
+  {
+   "name": "Design 3",
+   "note": "A striped border, a framed panel and a bow on top",
+   "illustration": "ribbon",
+   "show": true
+  }
+ ],
+ "cardShapes": [
+  {
+   "name": "Rectangle",
+   "extra": false,
+   "show": true
+  },
+  {
+   "name": "Circle",
+   "extra": false,
+   "show": true
+  },
+  {
+   "name": "Custom shape",
+   "extra": true,
+   "show": true
+  }
+ ],
+ "products": [
+  {
+   "slug": "pure-african-shea-butter",
+   "show": true,
+   "name": "100% Pure African Shea Butter",
+   "shortName": "Shea Butter",
+   "category": "butters",
+   "blurb": "Pure, unrefined shea, dressed in your colours and names.",
+   "description": "Pure, unrefined shea, soft enough to scoop and rich enough for elbows, heels and dry hands. We dress each jar in your colours and names, so it stays on the dressing table long after the party.",
+   "kicker": "The favour every auntie actually uses.",
+   "why": [
+    "Shea butter is the favour Ghanaian guests actually use: on dry hands, heels and a baby's skin after the bath. So your jar ends up on the dressing table, not in a drawer.",
+    "Ours is always 100% pure and unrefined. Small jars suit guests; large jars make a proper thank you for bridesmaids, chief mourners and helpers."
+   ],
+   "photo": "",
+   "imageAlt": "Small jar of 100% pure African shea butter with a custom wedding label",
+   "sizes": [
+    {
+     "size": "Small 50g",
+     "price": 19,
+     "cardMount": true
+    },
+    {
+     "size": "Medium 100g",
+     "price": 25,
+     "cardMount": false
+    },
+    {
+     "size": "Large 250g",
+     "price": 45,
+     "cardMount": false
+    }
+   ],
+   "scents": [
+    "Plain Jane",
+    "Choco",
+    "Caramel",
+    "Strawberry"
+   ],
+   "shades": [],
+   "packaging": [
+    {
+     "type": "Plastic jar",
+     "colour": "Clear",
+     "lids": [
+      "Black",
+      "White"
+     ],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Plastic jar",
+     "colour": "White",
+     "lids": [
+      "Black",
+      "White"
+     ],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Plastic jar",
+     "colour": "Black",
+     "lids": [
+      "Black",
+      "White"
+     ],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Aluminium jar",
+     "colour": "Black",
+     "lids": [],
+     "labelStyle": "lid",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Aluminium jar",
+     "colour": "Silver",
+     "lids": [],
+     "labelStyle": "lid",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Aluminium jar",
+     "colour": "Gold",
+     "lids": [],
+     "labelStyle": "lid",
+     "inStock": true,
+     "photo": ""
+    }
+   ]
+  },
+  {
+   "slug": "body-butter",
+   "show": true,
+   "name": "Body Butter",
+   "shortName": "Body Butter",
+   "category": "butters",
+   "blurb": "Whipped light and melting, a little indulgent every day.",
+   "description": "Whipped light in the jar, melting into skin with a soft finish that lasts through the evening. A gift that feels a little indulgent and gets used every single day.",
+   "kicker": "",
+   "why": [
+    "Whipped soft and airy, it glides on and sinks in without feeling sticky. Guests open the jar, smell it, and it instantly feels special.",
+    "Lovely for weddings, milestone birthdays and bridal showers, and as a thank you to the women who helped you plan."
+   ],
+   "photo": "",
+   "imageAlt": "Jar of whipped body butter with a white lid and a personalised label",
+   "sizes": [
+    {
+     "size": "Small 50g",
+     "price": 27,
+     "cardMount": false
+    },
+    {
+     "size": "Medium 100g",
+     "price": 41,
+     "cardMount": false
+    },
+    {
+     "size": "Large 250g",
+     "price": 86,
+     "cardMount": false
+    }
+   ],
+   "scents": [
+    "Plain Jane",
+    "Choco",
+    "Caramel",
+    "Strawberry"
+   ],
+   "shades": [],
+   "packaging": [
+    {
+     "type": "Plastic jar",
+     "colour": "Clear",
+     "lids": [
+      "Black",
+      "White"
+     ],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Plastic jar",
+     "colour": "White",
+     "lids": [
+      "Black",
+      "White"
+     ],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Plastic jar",
+     "colour": "Black",
+     "lids": [
+      "Black",
+      "White"
+     ],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Aluminium jar",
+     "colour": "Black",
+     "lids": [],
+     "labelStyle": "lid",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Aluminium jar",
+     "colour": "Silver",
+     "lids": [],
+     "labelStyle": "lid",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Aluminium jar",
+     "colour": "Gold",
+     "lids": [],
+     "labelStyle": "lid",
+     "inStock": true,
+     "photo": ""
+    }
+   ]
+  },
+  {
+   "slug": "shimmer-oil",
+   "show": true,
+   "name": "Shimmer Oil",
+   "shortName": "Shimmer Oil",
+   "category": "oils",
+   "blurb": "Silky body oil with a fine golden shimmer.",
+   "description": "Silky body oil with a fine golden shimmer that catches the light on shoulders and collarbones. For the guest who plans to shine at the after party.",
+   "kicker": "",
+   "why": [
+    "A few drops on the shoulders and skin catches the light with a fine golden glow. Silky, never sticky, and never glittery or loud.",
+    "Pair it with a lip balm and a small body butter for The Glow Set."
+   ],
+   "photo": "",
+   "imageAlt": "Amber dropper bottle of golden shimmer oil with a custom label",
+   "sizes": [
+    {
+     "size": "Small 30ml",
+     "price": 25,
+     "cardMount": false
+    },
+    {
+     "size": "Medium 50ml",
+     "price": 33,
+     "cardMount": false
+    },
+    {
+     "size": "Large 100ml",
+     "price": 52,
+     "cardMount": false
+    }
+   ],
+   "scents": [
+    "Plain Jane",
+    "Choco",
+    "Caramel",
+    "Strawberry"
+   ],
+   "shades": [
+    {
+     "name": "Pure Blend",
+     "note": "Our signature oil blend, no shimmer colour",
+     "swatch": "#F3E3B5"
+    },
+    {
+     "name": "Golden Bronze",
+     "note": "A warm golden shimmer",
+     "swatch": "#D7A861"
+    },
+    {
+     "name": "Chocolate Bronze",
+     "note": "A warm chocolate-bronze shimmer",
+     "swatch": "#AD724F"
+    }
+   ],
+   "packaging": [
+    {
+     "type": "Dropper bottle",
+     "colour": "Clear",
+     "lids": [],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Dropper bottle",
+     "colour": "Amber",
+     "lids": [],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    }
+   ]
+  },
+  {
+   "slug": "hand-cream",
+   "show": true,
+   "name": "Hand Cream",
+   "shortName": "Hand Cream",
+   "category": "hand-care",
+   "blurb": "Light, quick to sink in, never greasy.",
+   "description": "Light and quick to sink in, with no greasy feel. Kind to the hands that hugged you all day.",
+   "kicker": "",
+   "why": [
+    "It slips into a handbag, sits on a desk and gets used every day, so your names are seen again and again.",
+    "A polished choice for corporate gifts and church events, and a gentle one for funerals."
+   ],
+   "photo": "",
+   "imageAlt": "White bottle of hand cream with a gold pump and a personalised label",
+   "sizes": [
+    {
+     "size": "Small 30ml",
+     "price": 21,
+     "cardMount": false
+    },
+    {
+     "size": "Medium 50ml",
+     "price": 28,
+     "cardMount": false
+    },
+    {
+     "size": "Large 100ml",
+     "price": 43,
+     "cardMount": false
+    }
+   ],
+   "scents": [
+    "Plain Jane",
+    "Choco",
+    "Caramel",
+    "Strawberry"
+   ],
+   "shades": [],
+   "packaging": [
+    {
+     "type": "Bottle",
+     "colour": "Clear",
+     "lids": [],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Bottle",
+     "colour": "Black",
+     "lids": [],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Bottle",
+     "colour": "White",
+     "lids": [],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    }
+   ]
+  },
+  {
+   "slug": "hand-wash-gel",
+   "show": true,
+   "name": "Hand Wash Gel",
+   "shortName": "Hand Wash Gel",
+   "category": "hand-care",
+   "blurb": "A gentle, practical keepsake for every sink.",
+   "description": "A gentle gel that leaves hands clean and soft. A practical keepsake that brings your celebration to mind at every sink.",
+   "kicker": "",
+   "why": [
+    "The souvenir that never gets wasted: it goes straight to the sink, and your names are seen every time someone washes their hands.",
+    "Practical for funerals and church events, and affordable for large corporate orders."
+   ],
+   "photo": "",
+   "imageAlt": "Clear bottle of hand wash gel with a white pump and a custom label",
+   "sizes": [
+    {
+     "size": "Small 30ml",
+     "price": 19,
+     "cardMount": false
+    },
+    {
+     "size": "Medium 50ml",
+     "price": 25,
+     "cardMount": false
+    },
+    {
+     "size": "Large 100ml",
+     "price": 37,
+     "cardMount": false
+    }
+   ],
+   "scents": [],
+   "shades": [],
+   "packaging": [
+    {
+     "type": "Bottle",
+     "colour": "Clear",
+     "lids": [],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Bottle",
+     "colour": "Black",
+     "lids": [],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Bottle",
+     "colour": "White",
+     "lids": [],
+     "labelStyle": "wrap",
+     "inStock": true,
+     "photo": ""
+    }
+   ]
+  },
+  {
+   "slug": "lip-balm",
+   "show": true,
+   "name": "Lip Balm",
+   "shortName": "Lip Balm",
+   "category": "lip",
+   "blurb": "Pocket sized and always welcome.",
+   "description": "Pocket sized and always welcome. A smooth, nourishing balm that slips into any clutch, and looks especially sweet mounted on a card in the shape of your choice.",
+   "kicker": "",
+   "why": [
+    "Small, affordable and loved by everyone from grandma to the cousins. It goes everywhere in a pocket or clutch.",
+    "Mount it on a printed card in a rectangle, circle, heart or a custom shape for an extra special touch."
+   ],
+   "photo": "",
+   "imageAlt": "Pink lip balm tube mounted on a heart shaped printed card",
+   "sizes": [
+    {
+     "size": "One size 5g",
+     "price": 13,
+     "cardMount": true
+    }
+   ],
+   "scents": [
+    "Plain Jane",
+    "Choco",
+    "Caramel",
+    "Strawberry"
+   ],
+   "shades": [],
+   "packaging": [
+    {
+     "type": "Tube",
+     "colour": "Clear",
+     "lids": [],
+     "labelStyle": "tube",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Tube",
+     "colour": "Black",
+     "lids": [],
+     "labelStyle": "tube",
+     "inStock": true,
+     "photo": ""
+    },
+    {
+     "type": "Tube",
+     "colour": "White",
+     "lids": [],
+     "labelStyle": "tube",
+     "inStock": true,
+     "photo": ""
+    }
+   ]
+  }
+ ],
+ "documents": []
+}

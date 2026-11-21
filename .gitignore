@@ -4,3 +4,9 @@ dist/
 .env
 .env.*
 .DS_Store
+
+# Files published from the admin sheet (downloaded at build time)
+src/assets/cms/*
+!src/assets/cms/.gitkeep
+public/docs/*
+!public/docs/.gitkeep
