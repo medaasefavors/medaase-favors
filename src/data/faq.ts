@@ -39,7 +39,7 @@ export const FAQS: { cat: FaqCategory; q: string; a: string }[] = [
   {
     cat: 'design',
     q: 'Is the label design free?',
-    a: `Yes, matched to your theme, with ${designRoundsText()} free.`,
+    a: `Yes. We send two designs to choose from, matched to your theme, with ${designRoundsText()} free.`,
   },
   {
     cat: 'design',
@@ -99,12 +99,12 @@ export const FAQS: { cat: FaqCategory; q: string; a: string }[] = [
   {
     cat: 'design',
     q: 'Can I choose the container colour?',
-    a: 'Yes. Jars come in black, white or clear with a black or white lid. Bottles come in clear, black or white.',
+    a: 'Yes. Plastic jars come in clear, white or black with a black or white lid. Aluminium jars come in black, silver or gold, with a round label on the lid. Bottles come in clear, black or white.',
   },
   {
     cat: 'design',
     q: 'How will I know my design is right before you print?',
-    a: 'We email it within 24 hours. Nothing is printed until you approve it.',
+    a: 'We email you two designs within 24 hours. Nothing is printed until you approve one.',
   },
 ];
 

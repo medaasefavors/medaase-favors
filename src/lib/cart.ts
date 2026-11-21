@@ -1,6 +1,6 @@
 // Order (cart) state, pricing and storage. Runs in the browser only.
 // Lines live in localStorage; uploaded logos live in IndexedDB (too big for localStorage).
-import { PRICES, ADD_ONS, BUNDLE_DISCOUNT, type Slug } from '../data/products';
+import { PRICES, ADD_ONS, BUNDLE_DISCOUNT, PER_PIECE_CHARGE, type Slug } from '../data/products';
 
 export interface LineOptions {
   size: string;
@@ -29,7 +29,7 @@ const KEY = 'mf-cart';
 
 export function unitPrice(slug: Slug, o: LineOptions) {
   const sizes = PRICES[slug] as Record<string, number>;
-  let u = sizes[o.size] ?? Math.min(...Object.values(sizes));
+  let u = (sizes[o.size] ?? Math.min(...Object.values(sizes))) + PER_PIECE_CHARGE;
   if (o.label) u += ADD_ONS.label;
   if (o.bag) u += ADD_ONS.bag;
   if (o.card) u += ADD_ONS.card + (o.cardShape === 'Custom shape' ? ADD_ONS.shape : 0);

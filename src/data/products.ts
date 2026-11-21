@@ -14,6 +14,10 @@ export const PRICES = {
   'lip-balm': { 'One size 5g': 13 },
 } as const;
 
+// Added to every piece of every product (owner's costing for PDF materials).
+// Built into all prices customers see; not shown as a separate line.
+export const PER_PIECE_CHARGE = 1.5;
+
 export const ADD_ONS = {
   label: 1.5, // Label (front text or logo + date)
   bag: 2.5, // Drawstring bag
@@ -37,11 +41,25 @@ export const CATEGORIES: { id: Category | 'all'; label: string }[] = [
 
 // Confirmed by the owner.
 const SCENTS = ['Plain Jane', 'Choco', 'Caramel', 'Strawberry'];
-const JARS = ['Black jar', 'White jar', 'Clear jar'];
-const JAR_LIDS = ['Black', 'White'];
+// Packaging. Each product offers one or more packaging types, each with its colours.
+// labelStyle: 'wrap' = label around the body, 'lid' = round label on the lid,
+// 'tube' = label around the tube, read horizontally.
+export interface Packaging {
+  type: string;
+  colours: string[];
+  lids: string[];
+  labelStyle: 'wrap' | 'lid' | 'tube';
+}
+const PLASTIC_JAR: Packaging = { type: 'Plastic jar', colours: ['Clear', 'White', 'Black'], lids: ['Black', 'White'], labelStyle: 'wrap' };
+const ALUMINIUM_JAR: Packaging = { type: 'Aluminium jar', colours: ['Black', 'Silver', 'Gold'], lids: [], labelStyle: 'lid' };
 // Bottles and tubes come as one colour, body and cap together.
-const BOTTLES = ['Clear', 'Black', 'White'];
-const TUBES = ['Clear', 'Black', 'White']; // TBD: confirm lip balm tube colours
+const BOTTLE: Packaging = { type: 'Bottle', colours: ['Clear', 'Black', 'White'], lids: [], labelStyle: 'wrap' };
+const TUBE: Packaging = { type: 'Tube', colours: ['Clear', 'Black', 'White'], lids: [], labelStyle: 'tube' }; // TBD: confirm tube colours
+
+/** "Aluminium jar · Gold" */
+export function containerName(p: Packaging, colour: string) {
+  return `${p.type} · ${colour}`;
+}
 
 export const BAG_COLOURS = ['Pink', 'Navy', 'White', 'Gold', 'Mixed colours'];
 export const CARD_SHAPES = ['Rectangle', 'Circle', 'Heart', 'Custom shape'];
@@ -55,15 +73,12 @@ export interface Product {
   description: string;
   kicker?: string;
   scents: string[];
-  containers: string[];
-  lids: string[];
-  lidLabel: string;
+  packaging: Packaging[];
   cardMount: boolean; // which sizes allow mounting on a printed card
   cardMountSizes: string[];
   faqs: { q: string; a: string }[];
   longCopy: string[];
   imageAlt: string;
-  model: { kind: 'jar' | 'bottle' | 'tube'; fill: string }; // 3D preview shape and contents colour
 }
 
 export const PRODUCTS: Product[] = [
@@ -77,9 +92,7 @@ export const PRODUCTS: Product[] = [
       'Pure, unrefined shea, soft enough to scoop and rich enough for elbows, heels and dry hands. We dress each jar in your colours and names, so it stays on the dressing table long after the party.',
     kicker: 'The favour every auntie actually uses.',
     scents: SCENTS,
-    containers: JARS,
-    lids: JAR_LIDS,
-    lidLabel: 'Lid',
+    packaging: [PLASTIC_JAR, ALUMINIUM_JAR],
     cardMount: true,
     cardMountSizes: ['Small 50g'],
     longCopy: [
@@ -91,7 +104,6 @@ export const PRODUCTS: Product[] = [
       { q: 'Which size is best for wedding guests?', a: 'Most couples choose the small 50g jar for guests and the large 250g jar for the bridal party and parents.' },
       { q: 'Will it melt in the heat?', a: 'Shea butter softens in strong heat and firms up again when it cools. Keep boxes out of direct sun at the venue and it will look its best.' },
     ],
-    model: { kind: 'jar', fill: '#EFD77F' },
     imageAlt: 'Small jar of 100% pure African shea butter with a custom wedding label',
   },
   {
@@ -103,9 +115,7 @@ export const PRODUCTS: Product[] = [
     description:
       'Whipped light in the jar, melting into skin with a soft finish that lasts through the evening. A gift that feels a little indulgent and gets used every single day.',
     scents: SCENTS,
-    containers: JARS,
-    lids: JAR_LIDS,
-    lidLabel: 'Lid',
+    packaging: [PLASTIC_JAR, ALUMINIUM_JAR],
     cardMount: false,
     cardMountSizes: [],
     longCopy: [
@@ -116,7 +126,6 @@ export const PRODUCTS: Product[] = [
       { q: 'How is body butter different from shea butter?', a: 'Our shea butter is pure and firm. Body butter is whipped to a lighter, fluffier texture that spreads more easily and feels more like a pampering treat.' },
       { q: 'Does it leave skin greasy?', a: 'No. It melts in and leaves a soft finish that lasts through the evening.' },
     ],
-    model: { kind: 'jar', fill: '#F5ECDC' },
     imageAlt: 'Jar of whipped body butter with a white lid and a personalised label',
   },
   {
@@ -128,9 +137,7 @@ export const PRODUCTS: Product[] = [
     description:
       'Silky body oil with a fine golden shimmer that catches the light on shoulders and collarbones. For the guest who plans to shine at the after party.',
     scents: SCENTS,
-    containers: BOTTLES,
-    lids: [],
-    lidLabel: 'Cap',
+    packaging: [BOTTLE],
     cardMount: false,
     cardMountSizes: [],
     longCopy: [
@@ -142,7 +149,6 @@ export const PRODUCTS: Product[] = [
       { q: 'Which bottle looks most premium?', a: 'The amber dropper bottle with a black dropper is the most popular. Frosted bottles look soft and modern.' },
       { q: 'Can men use it?', a: 'Of course. Choose Plain Jane for no added scent.' },
     ],
-    model: { kind: 'bottle', fill: '#D4A24A' },
     imageAlt: 'Amber dropper bottle of golden shimmer oil with a custom label',
   },
   {
@@ -154,9 +160,7 @@ export const PRODUCTS: Product[] = [
     description:
       'Light and quick to sink in, with no greasy feel. Kind to the hands that hugged you all day.',
     scents: SCENTS,
-    containers: BOTTLES,
-    lids: [],
-    lidLabel: 'Pump or cap',
+    packaging: [BOTTLE],
     cardMount: false,
     cardMountSizes: [],
     longCopy: [
@@ -167,7 +171,6 @@ export const PRODUCTS: Product[] = [
       { q: 'Is it good for corporate gifts?', a: 'Yes. It is practical, used daily, and looks smart with a company logo on the label.' },
       { q: 'Will it feel greasy?', a: 'No. It is a light cream that sinks in quickly.' },
     ],
-    model: { kind: 'bottle', fill: '#F7F3EC' },
     imageAlt: 'White bottle of hand cream with a gold pump and a personalised label',
   },
   {
@@ -179,9 +182,7 @@ export const PRODUCTS: Product[] = [
     description:
       'A gentle gel that leaves hands clean and soft. A practical keepsake that brings your celebration to mind at every sink.',
     scents: [], // TBD: confirm whether hand wash gel has scent options
-    containers: BOTTLES,
-    lids: [],
-    lidLabel: 'Pump or cap',
+    packaging: [BOTTLE],
     cardMount: false,
     cardMountSizes: [],
     longCopy: [
@@ -192,7 +193,6 @@ export const PRODUCTS: Product[] = [
       { q: 'Is the hand wash gel gentle on skin?', a: 'Yes. It cleans without leaving hands tight or dry.' },
       { q: 'Is it a good funeral souvenir?', a: 'Many families choose it because it is practical and used daily, a quiet way for guests to remember your loved one.' },
     ],
-    model: { kind: 'bottle', fill: '#DCE8F0' },
     imageAlt: 'Clear bottle of hand wash gel with a white pump and a custom label',
   },
   {
@@ -204,9 +204,7 @@ export const PRODUCTS: Product[] = [
     description:
       'Pocket sized and always welcome. A smooth, nourishing balm that slips into any clutch, and looks especially sweet mounted on a card in the shape of your choice.',
     scents: SCENTS,
-    containers: TUBES,
-    lids: [], // TBD: confirm cap colour options
-    lidLabel: 'Cap',
+    packaging: [TUBE],
     cardMount: true,
     cardMountSizes: ['One size 5g'],
     longCopy: [
@@ -216,7 +214,6 @@ export const PRODUCTS: Product[] = [
     faqs: [
       { q: 'Is it good for children\'s parties?', a: 'Yes. It is small, safe to carry and a hit with all ages.' },
     ],
-    model: { kind: 'tube', fill: '#F1E2C4' },
     imageAlt: 'Pink lip balm tube mounted on a heart shaped printed card',
   },
 ];
@@ -250,22 +247,22 @@ export function getProduct(slug: string) {
 }
 
 export function sizesOf(slug: Slug): { size: string; price: number }[] {
-  return Object.entries(PRICES[slug]).map(([size, price]) => ({ size, price }));
+  return Object.entries(PRICES[slug]).map(([size, price]) => ({ size, price: price + PER_PIECE_CHARGE }));
 }
 
 /** Lowest possible unit price: smallest size, no label, no add ons. */
 export function startsFrom(slug: Slug) {
-  return Math.min(...Object.values(PRICES[slug]));
+  return Math.min(...Object.values(PRICES[slug])) + PER_PIECE_CHARGE;
 }
 
 export function highestUnit(slug: Slug) {
   const p = getProduct(slug)!;
-  const top = Math.max(...Object.values(PRICES[slug]));
+  const top = Math.max(...Object.values(PRICES[slug])) + PER_PIECE_CHARGE;
   const card = p.cardMount ? ADD_ONS.card + ADD_ONS.shape : 0;
   return top + ADD_ONS.label + ADD_ONS.bag + ADD_ONS.tag + card;
 }
 
 export function bundleStartsFrom(items: { slug: Slug; size: string }[]) {
-  const sum = items.reduce((t, i) => t + (PRICES[i.slug] as Record<string, number>)[i.size], 0);
+  const sum = items.reduce((t, i) => t + (PRICES[i.slug] as Record<string, number>)[i.size] + PER_PIECE_CHARGE, 0);
   return sum * (1 - BUNDLE_DISCOUNT);
 }

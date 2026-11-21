@@ -5,13 +5,14 @@ import ProductVisual from '../../components/ProductVisual.astro';
 import ProductCard from '../../components/ProductCard.astro';
 import FaqList from '../../components/FaqList.astro';
 import {
-  PRODUCTS, ADD_ONS, BAG_COLOURS, CARD_SHAPES, sizesOf, startsFrom, highestUnit, type Product,
+  PRODUCTS, ADD_ONS, BAG_COLOURS, CARD_SHAPES, sizesOf, startsFrom, highestUnit, containerName, type Product,
 } from '../../data/products';
 import { SITE } from '../../data/site';
 import { cedi } from '../../lib/format';
 import { absolute, url } from '../../lib/url';
 import { breadcrumbs, faqPage } from '../../lib/schema';
-import { PRODUCT_PHOTOS } from '../../data/photos';
+import { PRODUCT_PHOTOS, packshotsFor } from '../../data/photos';
+import { Picture } from 'astro:assets';
 
 export function getStaticPaths() {
   return PRODUCTS.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
@@ -26,6 +27,8 @@ const crumbs = [
   { name: 'All products', path: '/products' },
   { name: p.name, path },
 ];
+const allContainers = p.packaging.flatMap((pk) => pk.colours.map((c) => containerName(pk, c)));
+const shots = packshotsFor(p.slug, allContainers);
 const others = PRODUCTS.filter((x) => x.slug !== p.slug).slice(0, 3);
 const productSchema = {
   '@context': 'https://schema.org',
@@ -55,14 +58,14 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       <div class="pp__grid">
         <div class="pp__media">
           <div class="pp__stage card" data-stage>
-            <div class="pp__photo" data-photo><ProductVisual slug={p.slug} alt={p.imageAlt} tall eager /></div>
-            <canvas class="pp__canvas" data-canvas aria-hidden="true" hidden></canvas>
-            <div class="pp__views" data-views hidden>
-              <button type="button" class="pp__view" data-view="3d" aria-pressed="true">3D preview</button>
-              {PRODUCT_PHOTOS[p.slug] && <button type="button" class="pp__view" data-view="photo" aria-pressed="false">Photo</button>}
-            </div>
-            <p class="pp__hint" data-hint hidden>Drag to turn</p>
+            <div class="pp__shot is-on" data-shot=""><ProductVisual slug={p.slug} alt={p.imageAlt} tall eager /></div>
+            {shots.map((s) => (
+              <div class="pp__shot pp__shot--pack" data-shot={s.container}>
+                <Picture src={s.photo.src} alt={s.photo.alt} formats={['avif', 'webp']} widths={[480, 800]} sizes="(min-width: 960px) 560px, 100vw" loading="lazy" class="pv-photo pv-photo--tall" />
+              </div>
+            ))}
           </div>
+          <p class="pp__lpcap" data-lpcap hidden>Your label</p>
           <div class="pp__labelprev" data-labelprev aria-live="polite" hidden>
             <span class="pp__lp-front" data-lp-front>Your names</span>
             <span class="pp__lp-date" data-lp-date></span>
@@ -80,7 +83,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
             <li class="pill">Ready in {SITE.turnaround}</li>
           </ul>
 
-          <form class="opts" data-form data-slug={p.slug} data-kind={p.model.kind} data-fill={p.model.fill} data-card-sizes={JSON.stringify(p.cardMountSizes)} novalidate>
+          <form class="opts" data-form data-slug={p.slug} data-card-sizes={JSON.stringify(p.cardMountSizes)} novalidate>
             <fieldset>
               <legend>Size</legend>
               <div class="opts__row">
@@ -99,21 +102,32 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
               </fieldset>
             )}
 
-            <fieldset>
-              <legend>{p.lids.length ? 'Jar' : 'Colour'}</legend>
-              <div class="opts__row">
-                {p.containers.map((s, i) => <label class="opt"><input type="radio" name="container" value={s} checked={i === 0} /><span>{s}</span></label>)}
-              </div>
-            </fieldset>
-
-            {p.lids.length > 0 && (
+            {p.packaging.length > 1 && (
               <fieldset>
-                <legend>{p.lidLabel}</legend>
+                <legend>Packaging</legend>
                 <div class="opts__row">
-                  {p.lids.map((s, i) => <label class="opt"><input type="radio" name="lid" value={s} checked={i === 0} /><span>{s}</span></label>)}
+                  {p.packaging.map((pk, i) => <label class="opt"><input type="radio" name="packaging" value={pk.type} data-label-style={pk.labelStyle} checked={i === 0} /><span>{pk.type}</span></label>)}
                 </div>
               </fieldset>
             )}
+
+            {p.packaging.map((pk, i) => (
+              <fieldset data-for-pack={pk.type} hidden={i !== 0}>
+                <legend>{p.packaging.length > 1 ? `${pk.type} colour` : 'Colour'}</legend>
+                <div class="opts__row">
+                  {pk.colours.map((c, j) => <label class="opt"><input type="radio" name="container" value={containerName(pk, c)} data-pack={pk.type} data-label-style={pk.labelStyle} checked={i === 0 && j === 0} /><span>{c}</span></label>)}
+                </div>
+                {pk.lids.length > 0 && (
+                  <>
+                    <p class="opts__sub">Lid</p>
+                    <div class="opts__row">
+                      {pk.lids.map((l, j) => <label class="opt"><input type="radio" name="lid" value={l} checked={j === 0} disabled={i !== 0} /><span>{l}</span></label>)}
+                    </div>
+                  </>
+                )}
+                {pk.labelStyle === 'lid' && <p class="field__hint">Labels on aluminium jars are round and go on the lid.</p>}
+              </fieldset>
+            ))}
 
             <fieldset>
               <legend>Label</legend>
@@ -224,14 +238,11 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   import { cedi } from '../../lib/format';
   import { SITE } from '../../data/site';
   import { getProduct, type Slug } from '../../data/products';
-  import type { PreviewState, Kind } from '../../lib/preview3d';
 
   const form = document.querySelector<HTMLFormElement>('[data-form]');
   if (form) {
     const slug = form.dataset.slug as Slug;
     const product = getProduct(slug)!;
-    const kind = form.dataset.kind as Kind;
-    const fill = form.dataset.fill || '#ffffff';
     const cardSizes: string[] = JSON.parse(form.dataset.cardSizes || '[]');
     const $ = <T extends Element = HTMLElement>(s: string) => form.querySelector<T>(s) ?? document.querySelector<T>(s);
     const checked = (name: string) => form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)?.value;
@@ -255,7 +266,8 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
         size: checked('size')!,
         scent: checked('scent'),
         container: checked('container')!,
-        lid: checked('lid'),
+        lid: form.querySelector<HTMLInputElement>('input[name="lid"]:checked:not(:disabled)')?.value,
+        pack: checked('packaging'),
         label: checked('label') === 'yes',
         front: (checked('front') as 'text' | 'logo') || 'text',
         frontText: textInput.value.trim(),
@@ -269,73 +281,30 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       };
     }
 
-    // ---- 3D preview ---------------------------------------------------------
-    let preview: { update(s: PreviewState): void } | null = null;
-    const stage = $('[data-stage]')!;
-    const canvas = $<HTMLCanvasElement>('[data-canvas]')!;
-    const photo = $('[data-photo]')!;
-    const views = $('[data-views]')!;
-
-    function previewState(): PreviewState {
-      const o = read();
-      return {
-        container: o.container,
-        lid: o.lid,
-        label: o.label,
-        frontText: o.front === 'text' ? o.frontText : '',
-        logo: o.front === 'logo' ? logoImg : null,
-        date: labelDate(o.eventDate),
-        fill,
-      };
-    }
-
-    function canDo3D() {
-      try { if (localStorage.getItem('mf-fx') === 'off') return false; } catch { /* ignore */ }
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
-      const n = navigator as Navigator & { connection?: { saveData?: boolean }; deviceMemory?: number };
-      if (n.connection?.saveData) return false;
-      if (n.deviceMemory && n.deviceMemory <= 2) return false;
-      if (n.hardwareConcurrency && n.hardwareConcurrency <= 4) return false;
-      try {
-        const c = document.createElement('canvas');
-        return !!(c.getContext('webgl2') || c.getContext('webgl'));
-      } catch { return false; }
-    }
-
-    function showView(v: '3d' | 'photo') {
-      canvas.hidden = v !== '3d';
-      photo.hidden = v === '3d';
-      $('[data-hint]')!.hidden = v !== '3d';
-      views.querySelectorAll('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === v)));
-    }
-
-    if (canDo3D()) {
-      const start = () => {
-        import('../../lib/preview3d').then(({ mountPreview }) => {
-          canvas.hidden = false;
-          preview = mountPreview(canvas, kind, previewState());
-          views.hidden = false;
-          showView('3d');
-        }).catch(() => { canvas.hidden = true; });
-      };
-      const io = new IntersectionObserver((entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          io.disconnect();
-          if ('requestIdleCallback' in window) window.requestIdleCallback(start, { timeout: 1500 });
-          else window.setTimeout(start, 200);
-        }
-      });
-      io.observe(stage);
-      views.addEventListener('click', (e) => {
-        const v = (e.target as HTMLElement).closest('[data-view]')?.getAttribute('data-view');
-        if (v === '3d' || v === 'photo') showView(v);
-      });
-    }
-
     // ---- live UI -------------------------------------------------------------
-    let t: number | undefined;
+    function syncPackaging() {
+      const pack = checked('packaging');
+      if (!pack) return;
+      form.querySelectorAll<HTMLFieldSetElement>('[data-for-pack]').forEach((fs) => {
+        const on = fs.dataset.forPack === pack;
+        fs.hidden = !on;
+        fs.querySelectorAll<HTMLInputElement>('input[name="lid"]').forEach((i) => (i.disabled = !on));
+      });
+      const current = form.querySelector<HTMLInputElement>('input[name="container"]:checked');
+      if (!current || current.dataset.pack !== pack) {
+        const first = form.querySelector<HTMLInputElement>(`input[name="container"][data-pack="${pack}"]`);
+        if (first) first.checked = true;
+      }
+    }
+
     function refresh(debounce = false) {
+      syncPackaging();
       const o = read();
+      // photo of the chosen packaging, when we have one
+      const shots = document.querySelectorAll<HTMLElement>('[data-shot]');
+      const match = Array.from(shots).find((s) => s.dataset.shot === o.container);
+      shots.forEach((s) => s.classList.toggle('is-on', match ? s === match : s.dataset.shot === ''));
+      const style = form.querySelector<HTMLInputElement>('input[name="container"]:checked')?.dataset.labelStyle || 'wrap';
       // dependent fields
       $('[data-label-fields]')!.hidden = !o.label;
       $('[data-front-text]')!.hidden = o.front !== 'text';
@@ -352,6 +321,8 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       // label preview (HTML, always available)
       const lp = $('[data-labelprev]')!;
       lp.hidden = !o.label;
+      $('[data-lpcap]')!.hidden = !o.label;
+      lp.dataset.style = style;
       const lpFront = $('[data-lp-front]')!;
       if (o.front === 'logo' && logoImg) {
         lpFront.replaceChildren(logoImg.cloneNode());
@@ -368,12 +339,6 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       const qty = Math.max(final.qty, 0);
       $('[data-unit]')!.textContent = `${cedi(unit)} each`;
       $('[data-total]')!.textContent = `${cedi(unit * qty)} for ${qty}`;
-      // 3D
-      if (preview) {
-        window.clearTimeout(t);
-        if (debounce) t = window.setTimeout(() => preview!.update(previewState()), 120);
-        else preview.update(previewState());
-      }
       $('[data-added]')!.hidden = true;
     }
 
@@ -475,13 +440,15 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
 <style>
   .pp__grid { display: grid; gap: clamp(24px, 4vw, 56px); }
   .pp__stage { position: relative; padding: 0; overflow: hidden; }
-  .pp__canvas { display: block; width: 100%; aspect-ratio: 400 / 520; touch-action: pan-y; cursor: grab; background: radial-gradient(70% 60% at 50% 40%, #fff, var(--pink-soft)); }
-  .pp__canvas:active { cursor: grabbing; }
-  .pp__views { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; }
-  .pp__view { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.9); color: var(--navy); font: 500 0.92rem var(--body); cursor: pointer; }
-  .pp__view[aria-pressed='true'] { background: var(--navy); color: var(--white); }
-  .pp__hint { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); margin: 0; padding: 4px 12px; border-radius: 999px; background: rgba(255,255,255,0.85); font-size: 0.85rem; color: var(--muted); pointer-events: none; }
-  .pp__labelprev { margin-top: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 110px; padding: 16px; border: 2px solid var(--navy); border-radius: 14px; background: var(--white); text-align: center; }
+  .pp__stage { aspect-ratio: 400 / 520; }
+  .pp__shot { position: absolute; inset: 0; opacity: 0; transition: opacity 0.35s ease; background: var(--white); }
+  .pp__shot.is-on { opacity: 1; position: relative; }
+  .pp__shot--pack :global(img) { object-fit: contain !important; padding: 6%; background: #fff; }
+  .pp__lpcap { margin: 16px 0 6px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .opts__sub { margin: 14px 0 8px; font-weight: 700; font-size: 0.95rem; }
+  .pp__labelprev[data-style='lid'] { width: 200px; height: 200px; min-height: 0; border-radius: 50%; margin-inline: auto; }
+  .pp__labelprev[data-style='tube'] { min-height: 70px; border-radius: 8px; }
+  .pp__labelprev { margin-top: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 110px; padding: 16px; border: 2px solid var(--navy); border-radius: 14px; background: var(--white); text-align: center; }
   .pp__lp-front { font-family: var(--display); font-size: 1.5rem; line-height: 1.15; overflow-wrap: anywhere; }
   .pp__lp-front.is-empty { opacity: 0.35; }
   .pp__lp-front :global(img) { max-height: 64px; width: auto; }

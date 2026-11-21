@@ -8,6 +8,10 @@ import kissCard from '../assets/photos/lip-balm-kiss-congratulations-card.jpg';
 import kissInHand from '../assets/photos/lip-balm-kiss-in-hand.jpg';
 import brideSquadCard from '../assets/photos/lip-balm-bride-squad-card.jpg';
 import brideSquadRow from '../assets/photos/lip-balms-bride-squad-row.jpg';
+import aluBlack from '../assets/packshots/aluminium-jar-black.jpg';
+import aluGold from '../assets/packshots/aluminium-jar-gold.jpg';
+import aluSilver from '../assets/packshots/aluminium-jar-silver.jpg';
+import dropperClear from '../assets/packshots/dropper-clear-black.jpg';
 
 export interface Photo { src: ImageMetadata; alt: string }
 
@@ -69,3 +73,20 @@ export const WORKS: Work[] = [
 ];
 
 export const HERO_SLIDES = WORKS.slice(0, 5);
+
+/** Single product photos per packaging choice, keyed "<container name>" or "<slug>|<container name>". */
+const PACKSHOTS: Record<string, Photo> = {
+  'Aluminium jar · Black': { src: aluBlack, alt: 'Black aluminium jar with screw lid' },
+  'Aluminium jar · Gold': { src: aluGold, alt: 'Gold aluminium jar with screw lid' },
+  'Aluminium jar · Silver': { src: aluSilver, alt: 'Silver aluminium jar with screw lid' },
+  'shimmer-oil|Bottle · Clear': { src: dropperClear, alt: 'Clear glass dropper bottle with black dropper' },
+};
+
+export function packshotsFor(slug: string, containers: string[]) {
+  const out: { container: string; photo: Photo }[] = [];
+  for (const c of containers) {
+    const ph = PACKSHOTS[`${slug}|${c}`] ?? PACKSHOTS[c];
+    if (ph) out.push({ container: c, photo: ph });
+  }
+  return out;
+}
