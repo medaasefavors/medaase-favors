@@ -14,8 +14,13 @@ import aluGold from '../assets/packshots/aluminium-jar-gold.jpg';
 import aluSilver from '../assets/packshots/aluminium-jar-silver.jpg';
 import dropperClear from '../assets/packshots/dropper-clear-black.jpg';
 import flipClear from '../assets/packshots/flip-bottle-clear.jpg';
-import gelPink from '../assets/packshots/gel-bottle-pink.jpg';
-import gelPhoto from '../assets/photos/hand-wash-gel-pink.jpg';
+import gelClearFilled from '../assets/packshots/gel-bottle-clear-filled.jpg';
+import gelPhoto from '../assets/photos/hand-wash-gel-bottle.jpg';
+import bodyButterWhipped from '../assets/photos/body-butter-whipped.jpg';
+import handCreamFilled from '../assets/photos/hand-cream-bottles-filled.jpg';
+import pumpsBoxed from '../assets/photos/pump-bottles-and-jars-boxed.jpg';
+import blackCaps from '../assets/photos/lotion-and-wash-black-caps.jpg';
+import whippedJars from '../assets/photos/whipped-butter-clear-jars.jpg';
 import flipBlack from '../assets/packshots/flip-bottle-black.jpg';
 import flipWhite from '../assets/packshots/flip-bottle-white.jpg';
 import lotionOrder from '../assets/photos/lotion-and-hand-wash-order.jpg';
@@ -65,7 +70,9 @@ export const PRODUCT_PHOTOS: Partial<Record<string, Photo>> = {
   'shimmer-oil': PHOTOS.amberDroppers,
   'pure-african-shea-butter': PHOTOS.sheaTubs,
   'lip-balm': PHOTOS.brideSquadCard,
-  'hand-wash-gel': { src: gelPhoto, alt: 'A bottle of pink hand wash gel with a clear flip cap' },
+  'body-butter': { src: bodyButterWhipped, alt: 'Freshly whipped body butter, soft and glossy' },
+  'hand-cream': { src: handCreamFilled, alt: 'Rows of freshly filled hand cream bottles' },
+  'hand-wash-gel': { src: gelPhoto, alt: 'A bottle of hand wash gel with a clear flip cap' },
 };
 
 export interface Work {
@@ -84,7 +91,10 @@ export const WORKS: Work[] = [
   { photo: PHOTOS.brideSquadRow, title: 'The whole squad', occasion: 'Wedding', note: 'Twelve matching lip balms, lined up and ready for the bridal train.', product: 'lip-balm' },
   { photo: PHOTOS.sheaTubs, title: 'Pure shea, freshly poured', occasion: 'In the making', note: '100% pure African shea butter, poured into black jars before labelling.', product: 'pure-african-shea-butter' },
   { photo: { src: lotionOrder, alt: 'A box of finished hand lotion and hand wash bottles with custom labels, packed for delivery' }, title: 'Lotion and hand wash', occasion: 'Packed and ready', note: 'Labelled bottles of hand lotion and hand wash, boxed for delivery.', product: 'hand-cream' },
-  { photo: { src: bottlesFilled, alt: 'Rows of freshly filled hand lotion and pink hand wash gel bottles' }, title: 'Freshly filled', occasion: 'In the making', note: 'Hand lotion and pink hand wash gel, filled and waiting for their labels.', product: 'hand-wash-gel' },
+  { photo: { src: bottlesFilled, alt: 'Rows of freshly filled hand lotion and hand wash gel bottles' }, title: 'Freshly filled', occasion: 'In the making', note: 'Hand lotion and hand wash gel, filled and waiting for their labels.', product: 'hand-wash-gel' },
+  { photo: { src: whippedJars, alt: 'Clear jars filled with whipped body butter' }, title: 'Whipped to order', occasion: 'In the making', note: 'Soft whipped body butter, piped into clear jars.', product: 'body-butter' },
+  { photo: { src: blackCaps, alt: 'Bottles of hand lotion and hand wash gel with black flip caps' }, title: 'Lotion and wash, side by side', occasion: 'In the making', note: 'Hand lotion and hand wash gel with black flip caps, ready for labels.', product: 'hand-wash-gel' },
+  { photo: { src: pumpsBoxed, alt: 'Black pump bottles and black jars packed in a box' }, title: 'Boxed and ready', occasion: 'Packed and ready', note: 'Black pump bottles and jars, boxed for a client.', product: 'body-butter' },
   { photo: PHOTOS.kissInHand, title: 'Pocket sized', occasion: 'Bridal shower', note: 'Small enough for any clutch, pretty enough to keep.', product: 'lip-balm' },
   { photo: PHOTOS.amberDroppers, title: 'Shimmer oil, ready to dress', occasion: 'In the making', note: 'Amber dropper bottles of golden shimmer oil, waiting for their labels.', product: 'shimmer-oil' },
 ];
@@ -102,7 +112,7 @@ const PACKSHOTS: Record<string, Photo> = {
   'lip-balm|Tube · White': { src: tubeWhite, alt: 'White lip balm tube' },
   'lip-balm|Tube · Black': { src: tubeBlack, alt: 'Black lip balm tube' },
   'Dropper bottle · Clear': { src: dropperClear, alt: 'Clear glass dropper bottle' },
-  'hand-wash-gel|Bottle · Clear': { src: gelPink, alt: 'Clear bottle of pink hand wash gel with a flip cap' },
+  'hand-wash-gel|Bottle · Clear': { src: gelClearFilled, alt: 'Clear bottle of hand wash gel with a flip cap' },
   'Bottle · Clear': { src: flipClear, alt: 'Clear bottle with a flip cap' },
   'Bottle · Black': { src: flipBlack, alt: 'Black bottle with a flip cap' },
   'Bottle · White': { src: flipWhite, alt: 'White bottle with a flip cap' },
