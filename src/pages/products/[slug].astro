@@ -129,7 +129,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
             )}
 
             <section class="step" data-step="colour" aria-labelledby="q-colour">
-              <h2 class="step__q" id="q-colour">Which colour?</h2>
+              <h2 class="step__q" id="q-colour" data-colour-q>{p.packaging.length === 1 ? `Which ${p.packaging[0].type.toLowerCase()} colour?` : `Which ${p.packaging[0].type.toLowerCase().split(' ').pop()} colour?`}</h2>
               <p class="step__a" data-answer hidden><span data-answer-text></span> <button type="button" class="step__change" data-change>Change</button></p>
               <div class="step__body">
                 {p.packaging.map((pk, i) => (
@@ -362,6 +362,8 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
     function syncPackaging() {
       const pack = checked('packaging');
       if (!pack) return;
+      const q = form.querySelector<HTMLElement>('[data-colour-q]');
+      if (q) q.textContent = `Which ${pack.toLowerCase()} colour?`;
       form.querySelectorAll<HTMLFieldSetElement>('[data-for-pack]').forEach((fs) => {
         const on = fs.dataset.forPack === pack;
         fs.hidden = !on;
