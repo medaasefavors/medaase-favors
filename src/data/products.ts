@@ -56,6 +56,7 @@ const PLASTIC_JAR: Packaging = { type: 'Plastic jar', colours: ['Clear', 'White'
 const ALUMINIUM_JAR: Packaging = { type: 'Aluminium jar', colours: ['Black', 'Silver', 'Gold'], lids: [], labelStyle: 'lid' };
 // Bottles and tubes come as one colour, body and cap together.
 const BOTTLE: Packaging = { type: 'Bottle', colours: ['Clear', 'Black', 'White'], lids: [], labelStyle: 'wrap' };
+const DROPPER: Packaging = { type: 'Dropper bottle', colours: ['Clear, black dropper', 'Clear, gold collar', 'Amber'], lids: [], labelStyle: 'wrap' };
 const TUBE: Packaging = { type: 'Tube', colours: ['Clear', 'Black', 'White'], lids: [], labelStyle: 'tube' }; // TBD: confirm tube colours
 
 /** "Aluminium jar · Gold" */
@@ -66,9 +67,9 @@ export function containerName(p: Packaging, colour: string) {
 // Presentation: how each favour is handed out.
 export const CARD_SHAPES = ['Rectangle', 'Circle', 'Custom shape'];
 export const CARD_DESIGNS = [
-  { id: 'wax-seal', name: 'Wax seal', note: 'A wax seal above your names, date and a thank-you line' },
-  { id: 'calendar', name: 'Save the date', note: 'A calendar with your date circled, your initials and a ribbon' },
-  { id: 'ribbon', name: 'Ribbon and stripes', note: 'A striped border, a framed panel and a bow on top' },
+  { id: 'wax-seal', name: 'Design 1', note: 'A wax seal above your names, date and a thank-you line' },
+  { id: 'calendar', name: 'Design 2', note: 'A calendar with your date circled, your initials and a ribbon' },
+  { id: 'ribbon', name: 'Design 3', note: 'A striped border, a framed panel and a bow on top' },
 ];
 
 export interface Product {
@@ -151,7 +152,7 @@ export const PRODUCTS: Product[] = [
       { name: 'Golden Bronze', note: 'A warm golden shimmer', swatch: '#D7A861' },
       { name: 'Chocolate Bronze', note: 'A warm chocolate-bronze shimmer', swatch: '#AD724F' },
     ],
-    packaging: [BOTTLE],
+    packaging: [DROPPER],
     cardMount: false,
     cardMountSizes: [],
     longCopy: [

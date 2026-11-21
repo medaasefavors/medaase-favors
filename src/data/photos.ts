@@ -13,6 +13,8 @@ import aluBlack from '../assets/packshots/aluminium-jar-black.jpg';
 import aluGold from '../assets/packshots/aluminium-jar-gold.jpg';
 import aluSilver from '../assets/packshots/aluminium-jar-silver.jpg';
 import dropperClear from '../assets/packshots/dropper-clear-black.jpg';
+import dropperGold from '../assets/packshots/dropper-clear-gold.jpg';
+import dropperAmber from '../assets/packshots/dropper-amber-black.jpg';
 import plasticClear from '../assets/packshots/plastic-jar-clear-black-lid.jpg';
 import plasticWhite from '../assets/packshots/plastic-jar-white.jpg';
 import plasticBlack from '../assets/packshots/plastic-jar-black.jpg';
@@ -90,7 +92,9 @@ const PACKSHOTS: Record<string, Photo> = {
   'Plastic jar · Black': { src: plasticBlack, alt: 'Black plastic jar with screw lid' },
   'lip-balm|Tube · White': { src: tubeWhite, alt: 'White lip balm tube' },
   'lip-balm|Tube · Black': { src: tubeBlack, alt: 'Black lip balm tube' },
-  'shimmer-oil|Bottle · Clear': { src: dropperClear, alt: 'Clear glass dropper bottle with black dropper' },
+  'Dropper bottle · Clear, black dropper': { src: dropperClear, alt: 'Clear glass dropper bottle with a black dropper' },
+  'Dropper bottle · Clear, gold collar': { src: dropperGold, alt: 'Clear glass dropper bottle with a gold collar' },
+  'Dropper bottle · Amber': { src: dropperAmber, alt: 'Amber glass dropper bottle with a black dropper' },
 };
 
 export type LabelArea =
