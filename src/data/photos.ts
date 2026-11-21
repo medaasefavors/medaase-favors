@@ -17,6 +17,7 @@ import flipClear from '../assets/packshots/flip-bottle-clear.jpg';
 import gelClearFilled from '../assets/packshots/gel-bottle-clear-filled.jpg';
 import gelPhoto from '../assets/photos/hand-wash-gel-bottle.jpg';
 import bodyButterWhipped from '../assets/photos/body-butter-whipped.jpg';
+import bodyButterJars from '../assets/photos/body-butter-white-jars.jpg';
 import handCreamFilled from '../assets/photos/hand-cream-bottles-filled.jpg';
 import pumpsBoxed from '../assets/photos/pump-bottles-and-jars-boxed.jpg';
 import blackCaps from '../assets/photos/lotion-and-wash-black-caps.jpg';
@@ -70,7 +71,7 @@ export const PRODUCT_PHOTOS: Partial<Record<string, Photo>> = {
   'shimmer-oil': PHOTOS.amberDroppers,
   'pure-african-shea-butter': PHOTOS.sheaTubs,
   'lip-balm': PHOTOS.brideSquadCard,
-  'body-butter': { src: bodyButterWhipped, alt: 'Freshly whipped body butter, soft and glossy' },
+  'body-butter': { src: bodyButterJars, alt: 'Rows of white jars filled with creamy body butter' },
   'hand-cream': { src: handCreamFilled, alt: 'Rows of freshly filled hand cream bottles' },
   'hand-wash-gel': { src: gelPhoto, alt: 'A bottle of hand wash gel with a clear flip cap' },
 };
@@ -92,6 +93,7 @@ export const WORKS: Work[] = [
   { photo: PHOTOS.sheaTubs, title: 'Pure shea, freshly poured', occasion: 'In the making', note: '100% pure African shea butter, poured into black jars before labelling.', product: 'pure-african-shea-butter' },
   { photo: { src: lotionOrder, alt: 'A box of finished hand lotion and hand wash bottles with custom labels, packed for delivery' }, title: 'Lotion and hand wash', occasion: 'Packed and ready', note: 'Labelled bottles of hand lotion and hand wash, boxed for delivery.', product: 'hand-cream' },
   { photo: { src: bottlesFilled, alt: 'Rows of freshly filled hand lotion and hand wash gel bottles' }, title: 'Freshly filled', occasion: 'In the making', note: 'Hand lotion and hand wash gel, filled and waiting for their labels.', product: 'hand-wash-gel' },
+  { photo: { src: bodyButterWhipped, alt: 'Freshly whipped body butter, soft and glossy' }, title: 'Freshly whipped', occasion: 'In the making', note: 'Body butter straight from the mixer, light and glossy.', product: 'body-butter' },
   { photo: { src: whippedJars, alt: 'Clear jars filled with whipped body butter' }, title: 'Whipped to order', occasion: 'In the making', note: 'Soft whipped body butter, piped into clear jars.', product: 'body-butter' },
   { photo: { src: blackCaps, alt: 'Bottles of hand lotion and hand wash gel with black flip caps' }, title: 'Lotion and wash, side by side', occasion: 'In the making', note: 'Hand lotion and hand wash gel with black flip caps, ready for labels.', product: 'hand-wash-gel' },
   { photo: { src: pumpsBoxed, alt: 'Black pump bottles and black jars packed in a box' }, title: 'Boxed and ready', occasion: 'Packed and ready', note: 'Black pump bottles and jars, boxed for a client.', product: 'body-butter' },
