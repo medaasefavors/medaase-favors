@@ -18,7 +18,8 @@
   "rushWorkingDays": 7,
   "blockWorkingDays": 5,
   "perPieceCharge": 1.5,
-  "bundleDiscount": 0.05
+  "bundleDiscount": 0.05,
+  "publicHolidays": "2026-12-04, 2026-12-25, 2026-12-26, 2027-01-01, 2027-01-07, 2027-03-06"
  },
  "charges": [
   {

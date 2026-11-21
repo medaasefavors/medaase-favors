@@ -40,6 +40,7 @@ import { url } from '../lib/url';
   import { getProduct } from '../data/products';
   import { cedi } from '../lib/format';
   import { SITE } from '../data/site';
+  import { url } from '../lib/url';
 
   const $ = (s: string) => document.querySelector<HTMLElement>(s)!;
 
@@ -63,6 +64,7 @@ import { url } from '../lib/url';
         <p class="co__det"></p>
         <div class="co__row">
           <label class="co__qty">Pieces <input type="number" min="${SITE.minPerItem}" step="${SITE.qtyStep}" inputmode="numeric" /></label>
+          <a class="co__link" href="${url('/products/' + l.slug)}?edit=${l.id}">Edit</a>
           <button type="button" class="co__link co__rm">Remove</button>
         </div>`;
       li.querySelector('h2')!.textContent = p.name;

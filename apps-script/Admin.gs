@@ -46,6 +46,7 @@ const SETTING_NOTES = {
   blockWorkingDays: 'Customers must email first under this many working days',
   perPieceCharge: 'Added to every piece of every product (GH₵), built into prices',
   bundleDiscount: 'Bundle discount for 2+ different products (0.05 = 5%)',
+  publicHolidays: 'Public holidays, YYYY-MM-DD separated by commas (not counted as working days)',
 };
 
 const NUMBER_SETTINGS = ['deliveryFeeOutsideAccra', 'minPerItem', 'qtyStep', 'designRounds', 'rushRate', 'rushWorkingDays', 'blockWorkingDays', 'perPieceCharge', 'bundleDiscount'];

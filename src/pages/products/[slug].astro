@@ -256,13 +256,14 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
             </section>
 
             <div class="added" data-added role="status" hidden>
-              <p><strong>Added to your order.</strong> <span data-added-msg></span></p>
+              <p><strong data-added-title>Added to your order.</strong> <span data-added-msg></span></p>
               <div class="btn-row">
                 <a class="btn" href={url('/checkout')}>View order</a>
                 <a class="btn btn--ghost" href={url('/products')}>Add another product</a>
               </div>
             </div>
           </form>
+          <div class="bp card" data-bundle-panel hidden></div>
         </div>
       </div>
     </div>
@@ -306,7 +307,9 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   import { unitPrice, loadCart, saveCart, newId, saveLogo, labelDate, type CartLine } from '../../lib/cart';
   import { cedi } from '../../lib/format';
   import { SITE } from '../../data/site';
-  import { getProduct, type Slug } from '../../data/products';
+  import { getProduct, SUGGESTED_BUNDLES, type Slug } from '../../data/products';
+  import { openBundlePanel } from '../../lib/bundlePanel';
+  import { getLogo } from '../../lib/cart';
   import { paint } from '../../lib/labelPreview';
   import type { LabelArea } from '../../data/photos';
 
@@ -562,6 +565,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
 
       render();
       return {
+        fillAll: () => { steps.forEach((s) => { if (id(s) !== 'qty') done.add(id(s)); }); open = 'qty'; render(); },
         updateAnswers: () => render(),
         undo,
         firstMissing: () => steps.find((s) => id(s) !== 'qty' && !done.has(id(s))),
@@ -675,7 +679,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
         if (o.front === 'logo' && !logoFile) return showErr('label', 'Please upload your logo.', fileInput);
         if (!o.eventDate) return showErr('label', 'Please choose your event date for the label.', dateInput);
       }
-      const id = newId();
+      const id = editing?.id ?? newId();
       const line: CartLine = {
         id, slug, qty: o.qty, size: o.size, shade: o.shade, scent: o.scent, container: o.container, lid: o.lid,
         label: o.label,
@@ -690,14 +694,75 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       };
       if (line.logoName && logoFile) await saveLogo(id, logoFile);
       const cart = loadCart();
-      cart.push(line);
+      const at = editing ? cart.findIndex((l) => l.id === editing!.id) : -1;
+      if (at >= 0) cart[at] = line; else cart.push(line);
       saveCart(cart);
       const unit = unitPrice(slug, line);
+      $('[data-added-title]')!.textContent = editing ? 'Your order is updated.' : 'Added to your order.';
       $('[data-added-msg]')!.textContent = `${line.qty} × ${product.shortName} · ${cedi(unit * line.qty)}`;
       const added = $('[data-added]')!;
       added.hidden = false;
-      added.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (!editing) {
+        const panel = document.querySelector<HTMLElement>('[data-bundle-panel]')!;
+        const pre = bundle ? bundle.items.filter((i) => i.slug !== slug) : [];
+        openBundlePanel(panel, line, pre);
+        if (panel.hidden) added.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else added.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
+
+    // ---- suggested bundle (?bundle=...) and editing a line (?edit=...) ---------
+    const params = new URLSearchParams(location.search);
+    const bundle = SUGGESTED_BUNDLES.find((b) => b.id === params.get('bundle'));
+    const editing = loadCart().find((l) => l.id === params.get('edit') && l.slug === slug);
+    if (bundle) {
+      const intro = form.querySelector<HTMLElement>('.flow__intro');
+      if (intro) intro.textContent = `Let's start ${bundle.name} with your ${product.shortName}. We'll add the rest right after.`;
+    }
+    if (editing) {
+      const tick = (name: string, value?: string) => {
+        if (value === undefined) return;
+        const i = form.querySelector<HTMLInputElement>(`input[name="${name}"][value="${CSS.escape(value)}"]`);
+        if (i) i.checked = true;
+      };
+      tick('size', editing.size);
+      tick('shade', editing.shade);
+      tick('scent', editing.scent);
+      tick('packaging', editing.container.split(' · ')[0]);
+      syncPackaging();
+      tick('container', editing.container);
+      tick('lid', editing.lid);
+      tick('label', editing.label ? 'yes' : 'none');
+      tick('front', editing.front || 'text');
+      textInput.value = editing.frontText || '';
+      dateInput.value = editing.eventDate || '';
+      (editing.themeColours || []).forEach((hex) => {
+        themeAdd.click();
+        const h = themeList.lastElementChild!.querySelector<HTMLInputElement>('.theme__hex')!;
+        h.value = hex;
+        h.dispatchEvent(new Event('input'));
+      });
+      tick('presentation', editing.card ? 'card' : editing.bag ? 'organza' : 'none');
+      tick('cardDesign', editing.cardDesign);
+      tick('cardShape', editing.cardShape);
+      tick('tag', editing.tag ? 'yes' : 'no');
+      qtyInput.value = String(editing.qty);
+      if (editing.logoName) {
+        getLogo(editing.id).then((blob) => {
+          if (!blob) return;
+          logoFile = new File([blob], editing.logoName!, { type: blob.type });
+          const prev = $('[data-logo-preview]')!;
+          if (blob.type.startsWith('image/')) {
+            const img = new Image();
+            img.onload = () => { logoImg = img; prev.replaceChildren(img.cloneNode()); prev.hidden = false; refresh(); };
+            img.src = URL.createObjectURL(blob);
+          } else { prev.textContent = editing.logoName!; prev.hidden = false; refresh(); }
+        });
+      }
+      flow?.fillAll();
+      const intro = form.querySelector<HTMLElement>('.flow__intro');
+      if (intro) intro.textContent = 'Editing your order. Change anything below, then save.';
+      $('[data-add]')!.textContent = 'Save changes';
+    }
 
     refresh();
   }
@@ -717,6 +782,22 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   .theme__hex { width: 130px !important; font-family: ui-monospace, Menlo, monospace !important; text-transform: uppercase; }
   .theme__hex.is-bad { border-color: #b3123f !important; }
   .theme__rm, .theme__add { background: none; border: 0; padding: 10px 4px; color: var(--navy); font: 700 0.95rem var(--body); text-decoration: underline; cursor: pointer; justify-self: start; }
+  /* ---- bundle panel ---- */
+  .bp { margin-top: 16px; display: grid; gap: 14px; border-color: var(--navy); }
+  .bp :global(.bp__title) { font-size: clamp(1.3rem, 2.6vw, 1.6rem); margin: 0; }
+  .bp :global(.bp__sub) { margin: 6px 0 0; color: var(--muted); }
+  .bp :global(.bp__list) { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .bp :global(.bp__item) { border: 1px solid var(--line); border-radius: 18px; padding: 12px 14px; background: var(--white); }
+  .bp :global(.bp__pick) { display: flex; align-items: center; gap: 12px; cursor: pointer; min-height: 44px; }
+  .bp :global(.bp__pick input) { width: 22px; height: 22px; accent-color: var(--navy); }
+  .bp :global(.bp__name) { display: grid; }
+  .bp :global(.bp__name small) { color: var(--muted); }
+  .bp :global(.bp__opts) { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .bp :global(.bp__field) { display: grid; gap: 4px; font-size: 0.9rem; font-weight: 500; }
+  .bp :global(.bp__field select) { min-height: 44px; padding: 8px 12px; border-radius: 12px; border: 2px solid var(--line); font: 1rem var(--body); background: var(--white); color: var(--ink); }
+  .bp :global(.bp__saving) { font-weight: 700; margin: 0; }
+  .bp :global(.bp__done) { font-weight: 700; margin: 0; }
+  .bp :global(button[disabled]) { opacity: 0.5; cursor: not-allowed; transform: none; }
   /* ---- guided flow ---- */
   .flow__intro { font-family: var(--display); font-size: 1.35rem; margin: 8px 0 18px; }
   .step { margin: 0 0 14px; padding: 20px 22px; border-radius: var(--radius); background: var(--white); border: 1px solid var(--line); }

@@ -36,15 +36,11 @@ const DEFAULTS = {
 /** Site settings: defaults above, overridden by whatever the admin sheet publishes. */
 export const SITE: typeof DEFAULTS = { ...DEFAULTS, ...(catalogue.settings as Partial<typeof DEFAULTS>) };
 
-// Ghana public holidays (YYYY-MM-DD), excluded from working-day counts. TBD: confirm each year.
-export const PUBLIC_HOLIDAYS: string[] = [
-  '2026-12-04', // Farmers' Day
-  '2026-12-25', // Christmas Day
-  '2026-12-26', // Boxing Day
-  '2027-01-01', // New Year's Day
-  '2027-01-07', // Constitution Day
-  '2027-03-06', // Independence Day
-];
+// Ghana public holidays (YYYY-MM-DD), excluded from working-day counts. Edited in the admin sheet (Settings → publicHolidays).
+export const PUBLIC_HOLIDAYS: string[] = String((SITE as { publicHolidays?: string }).publicHolidays ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter((s) => /^\d{4}-\d{2}-\d{2}$/.test(s));
 
 export const EVENTS = [
   { slug: 'weddings', name: 'Weddings', short: 'Weddings' },

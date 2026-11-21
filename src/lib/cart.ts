@@ -1,6 +1,7 @@
 // Order (cart) state, pricing and storage. Runs in the browser only.
 // Lines live in localStorage; uploaded logos live in IndexedDB (too big for localStorage).
 import { PRICES, ADD_ONS, BUNDLE_DISCOUNT, PER_PIECE_CHARGE, type Slug } from '../data/products';
+import { SITE, PUBLIC_HOLIDAYS } from '../data/site';
 
 export interface LineOptions {
   size: string;
@@ -44,10 +45,46 @@ export function lineTotal(l: CartLine) {
 }
 
 export function cartTotals(lines: CartLine[]) {
-  const subtotal = lines.reduce((t, l) => t + lineTotal(l), 0);
+  const subtotal = Math.round(lines.reduce((t, l) => t + lineTotal(l), 0) * 100) / 100;
   const distinct = new Set(lines.map((l) => l.slug)).size;
   const discount = distinct >= 2 ? Math.round(subtotal * BUNDLE_DISCOUNT * 100) / 100 : 0;
   return { subtotal, discount, total: subtotal - discount, distinct };
+}
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
+
+export type Delivery = 'pickup' | 'accra' | 'outside';
+
+/** Today's date in Ghana (UTC) as YYYY-MM-DD. */
+export function todayIso(now = new Date()) {
+  return now.toISOString().slice(0, 10);
+}
+
+/**
+ * Working days (Monday to Friday, not public holidays) from tomorrow up to,
+ * but not including, the event date. The order script uses the same rule.
+ */
+export function workingDaysUntil(eventIso: string, fromIso = todayIso()) {
+  const start = Date.UTC(+fromIso.slice(0, 4), +fromIso.slice(5, 7) - 1, +fromIso.slice(8, 10));
+  const end = Date.UTC(+eventIso.slice(0, 4), +eventIso.slice(5, 7) - 1, +eventIso.slice(8, 10));
+  let n = 0;
+  for (let t = start + 864e5; t < end; t += 864e5) {
+    const d = new Date(t);
+    const day = d.getUTCDay();
+    if (day !== 0 && day !== 6 && !PUBLIC_HOLIDAYS.includes(d.toISOString().slice(0, 10))) n++;
+  }
+  return n;
+}
+
+/** Everything the customer pays. Mirrors orderTotals_ in the order script. */
+export function orderTotals(lines: CartLine[], opts: { eventDate?: string; delivery?: Delivery; fromIso?: string } = {}) {
+  const { subtotal, discount, distinct } = cartTotals(lines);
+  const wd = opts.eventDate ? workingDaysUntil(opts.eventDate, opts.fromIso) : Infinity;
+  const blocked = wd < SITE.blockWorkingDays;
+  const rush = !blocked && wd < SITE.rushWorkingDays ? round2((subtotal - discount) * SITE.rushRate) : 0;
+  const deliveryFee = opts.delivery === 'outside' ? Number(SITE.deliveryFeeOutsideAccra) : 0;
+  const total = round2(subtotal - discount + rush + deliveryFee);
+  return { subtotal: round2(subtotal), discount, rush, deliveryFee, total, distinct, workingDays: wd, blocked };
 }
 
 /** "12.12.2026" from "2026-12-12". */
