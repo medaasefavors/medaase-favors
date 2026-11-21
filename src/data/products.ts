@@ -148,8 +148,8 @@ export const PRODUCTS: Product[] = [
     scents: SCENTS,
     shades: [
       { name: 'Plain Jane', note: 'Our signature oil blend, no shimmer colour', swatch: '#F3E3B5' },
-      { name: 'Golden Bronze', note: 'A warm golden shimmer', swatch: '#C08A3E' },
-      { name: 'Chocolate Bronze', note: 'A deep chocolate shimmer', swatch: '#6B3F26' },
+      { name: 'Golden Bronze', note: 'A warm golden shimmer', swatch: '#D7A861' },
+      { name: 'Chocolate Bronze', note: 'A warm chocolate-bronze shimmer', swatch: '#AD724F' },
     ],
     packaging: [BOTTLE],
     cardMount: false,
