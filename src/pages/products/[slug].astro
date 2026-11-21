@@ -340,7 +340,6 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
               text: o.front === 'text' ? o.frontText : '',
               logo: o.front === 'logo' ? logoImg : null,
               date: labelDate(o.eventDate),
-              colours: o.themeColours,
             });
             cv.hidden = false;
             img.style.visibility = 'hidden';
@@ -381,9 +380,6 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
         lpFront.textContent = o.frontText || 'Your names';
       }
       lpFront.classList.toggle('is-empty', o.front === 'text' && !o.frontText);
-      lp.style.borderColor = o.themeColours[0] || '';
-      lpFront.style.color = o.themeColours[1] || '';
-      ($('[data-lp-date]') as HTMLElement).style.color = o.themeColours[2] || o.themeColours[1] || '';
       $('[data-lp-date]')!.textContent = labelDate(o.eventDate);
       // price bar
       const final = read();
