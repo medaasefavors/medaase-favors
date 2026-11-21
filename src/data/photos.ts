@@ -1,6 +1,7 @@
 // Real photos of Medaase Favors work. Astro converts these to AVIF/WebP at build
 // time; metadata (including location) was stripped before they were added.
 import type { ImageMetadata } from 'astro';
+import LABEL_AREAS from './label-areas.json';
 import amberDroppers from '../assets/photos/amber-dropper-bottles-shimmer-oil.jpg';
 import sheaTubs from '../assets/photos/pure-shea-butter-black-tubs.jpg';
 import thankYouCard from '../assets/photos/lip-balm-thank-you-card.jpg';
@@ -92,11 +93,17 @@ const PACKSHOTS: Record<string, Photo> = {
   'shimmer-oil|Bottle · Clear': { src: dropperClear, alt: 'Clear glass dropper bottle with black dropper' },
 };
 
+export type LabelArea =
+  | { kind: 'band'; xs: number[]; top: number[]; bot: number[] }
+  | { kind: 'ellipse'; cx: number; cy: number; rx: number; ry: number };
+
+/** Packaging photos for a product, each with the label area the owner marked on it. */
 export function packshotsFor(slug: string, containers: string[]) {
-  const out: { container: string; photo: Photo }[] = [];
+  const areas = LABEL_AREAS as Record<string, LabelArea>;
+  const out: { container: string; photo: Photo; area?: LabelArea }[] = [];
   for (const c of containers) {
     const ph = PACKSHOTS[`${slug}|${c}`] ?? PACKSHOTS[c];
-    if (ph) out.push({ container: c, photo: ph });
+    if (ph) out.push({ container: c, photo: ph, area: areas[c] });
   }
   return out;
 }
