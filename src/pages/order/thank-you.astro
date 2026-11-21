@@ -23,7 +23,7 @@ import { SITE, designRoundsText } from '../../data/site';
   <script is:inline>
     (function () {
       var ref = new URLSearchParams(location.search).get('ref');
-      if (ref && /^MF-[A-Z0-9-]+$/i.test(ref)) document.querySelector('[data-ref]').textContent = ref;
+      if (ref && /^MF[A-Z0-9-]+$/i.test(ref)) document.querySelector('[data-ref]').textContent = ref;
     })();
   </script>
 </Base>

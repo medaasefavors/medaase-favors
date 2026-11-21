@@ -12,7 +12,7 @@
  */
 
 const ORDER_HEAD = ['Reference', 'Created', 'Status', 'Customer', 'Phone', 'Email', 'Event type', 'Event date', 'Delivery', 'Address', 'Notes', 'Items', 'Subtotal', 'Bundle discount', 'Rush fee', 'Delivery fee', 'Total', 'Amount paid', 'Paystack reference', 'Paid at', 'Logo links'];
-const LINE_HEAD = ['Reference', 'Product', 'Size', 'Shade', 'Scent', 'Packaging', 'Lid', 'Label', 'Front text', 'Logo link', 'Date on label', 'Theme colours', 'Presentation', 'Card design', 'Card shape', 'Thank-you tag', 'Qty', 'Unit (GH₵)', 'Line total (GH₵)'];
+const LINE_HEAD = ['Reference', 'Product', 'Size', 'Shade', 'Scent', 'Packaging', 'Lid', 'Label', 'Front text', 'Logo link', 'Date on label', 'Theme colours', 'Presentation', 'Card design', 'Card shape', 'Thank-you tag', 'Qty', 'Unit (GH₵)', 'Line total (GH₵)', 'Line ID'];
 const MAX_LOGO_BYTES = 5 * 1024 * 1024;
 
 function doPost(e) {
@@ -33,7 +33,17 @@ function doPost(e) {
 
 const round2_ = (n) => Math.round(n * 100) / 100;
 const prop_ = (k) => PropertiesService.getScriptProperties().getProperty(k);
-const validRef_ = (r) => /^MF-[A-Z0-9]{6,12}-[A-Z0-9]{4}$/.test(String(r || ''));
+const validRef_ = (r) => /^MF\d{7,}$/.test(String(r || ''));
+
+/** Next order number: MF2026001, MF2026002 … starting again at 001 each year. Call inside the script lock. */
+function nextRef_() {
+  const year = Utilities.formatDate(new Date(), 'Africa/Accra', 'yyyy');
+  const props = PropertiesService.getScriptProperties();
+  const key = 'ORDER_COUNT_' + year;
+  const n = Number(props.getProperty(key) || 0) + 1;
+  props.setProperty(key, String(n));
+  return 'MF' + year + String(n).padStart(3, '0');
+}
 
 function catalogue_() {
   const f = publishedFile();
@@ -107,6 +117,8 @@ function tab_(name, head) {
     sh.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight('bold').setBackground('#1B2A4E').setFontColor('#FFFFFF');
     sh.setFrozenRows(1);
   }
+  const have = sh.getRange(1, 1, 1, head.length).getValues()[0];
+  if (have.join('|') !== head.join('|')) sh.getRange(1, 1, 1, head.length).setValues([head]).setFontWeight('bold').setBackground('#1B2A4E').setFontColor('#FFFFFF');
   return sh;
 }
 
@@ -141,12 +153,24 @@ function uploadLogo_(b) {
   const type = String(b.mimeType || '');
   if (['image/png', 'image/jpeg', 'image/svg+xml', 'application/pdf'].indexOf(type) < 0) throw new Error('Logo must be PNG, JPG, SVG or PDF');
   const name = String(b.name || 'logo').replace(/[^\w.\- ]+/g, '_').slice(0, 80);
-  const file = folder_(['Logos', b.ref]).createFile(Utilities.newBlob(bytes, type, (b.lineId || '') + '-' + name));
-  return { ok: true, url: file.getUrl() };
+  const found = findOrderRow_(b.ref);
+  if (!found) throw new Error('Order not found');
+  const file = folder_(['Logos', b.ref]).createFile(Utilities.newBlob(bytes, type, name));
+  const url = file.getUrl();
+  // Put the link on the matching line and on the order
+  const lines = tab_('Lines', LINE_HEAD);
+  if (lines.getLastRow() > 1) {
+    const vals = lines.getRange(2, 1, lines.getLastRow() - 1, LINE_HEAD.length).getValues();
+    vals.forEach((r, i) => {
+      if (r[0] === b.ref && r[LINE_HEAD.indexOf('Line ID')] === b.lineId) lines.getRange(i + 2, LINE_HEAD.indexOf('Logo link') + 1).setValue(url);
+    });
+  }
+  const cell = found.sh.getRange(found.row, ORDER_HEAD.indexOf('Logo links') + 1);
+  cell.setValue([cell.getValue(), url].filter(String).join('\n'));
+  return { ok: true, url: url };
 }
 
 function createOrder_(b) {
-  if (!validRef_(b.ref)) throw new Error('Bad reference');
   const c = b.customer || {}, ev = b.event || {}, del = b.delivery || {};
   if (!String(c.name || '').trim()) throw new Error('Name is missing');
   if (!/^\S+@\S+\.\S+$/.test(String(c.email || ''))) throw new Error('Email is not valid');
@@ -162,29 +186,30 @@ function createOrder_(b) {
 
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
+  let ref;
   try {
-    if (findOrderRow_(b.ref)) throw new Error('This order was already placed');
-    const logos = b.logos || {};
+    ref = nextRef_();
+    b.ref = ref;
     const items = b.lines.map((l, i) => t.priced[i].product.name + ' × ' + l.qty).join(', ');
     tab_('Orders', ORDER_HEAD).appendRow([
       b.ref, new Date(), 'Pending payment', String(c.name).trim(), c.phone, c.email, ev.type || '', ev.date,
       { pickup: 'Pickup', accra: 'Accra (Yango or Uber)', outside: 'Outside Accra' }[del.method], del.address || '', b.notes || '',
       items, t.subtotal, t.discount, t.rush, t.deliveryFee, t.total, '', '', '',
-      Object.keys(logos).map((k) => logos[k]).join('\n'),
+      '',
     ]);
     const lines = tab_('Lines', LINE_HEAD);
     b.lines.forEach((l, i) => {
       const pres = l.card ? 'Card' : l.bag ? 'Organza bag' : 'On its own';
       lines.appendRow([
         b.ref, t.priced[i].product.name, l.size, l.shade || '', l.scent || '', l.container, l.lid || '',
-        l.label ? 'Yes' : 'No', l.frontText || '', logos[l.id] || '', l.eventDate || '', (l.themeColours || []).join(', '),
-        pres, l.cardDesign || '', l.cardShape || '', l.tag ? 'Yes' : 'No', l.qty, t.priced[i].unit, t.priced[i].total,
+        l.label ? 'Yes' : 'No', l.frontText || '', l.logoName ? '(uploading…)' : '', l.eventDate || '', (l.themeColours || []).join(', '),
+        pres, l.cardDesign || '', l.cardShape || '', l.tag ? 'Yes' : 'No', l.qty, t.priced[i].unit, t.priced[i].total, String(l.id || ''),
       ]);
     });
   } finally {
     lock.releaseLock();
   }
-  return { ok: true, ref: b.ref, total: t.total, amount: Math.round(t.total * 100), currency: 'GHS' };
+  return { ok: true, ref: ref, total: t.total, amount: Math.round(t.total * 100), currency: 'GHS' };
 }
 
 function verifyPayment_(b) {

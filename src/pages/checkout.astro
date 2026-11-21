@@ -251,28 +251,27 @@ import { url } from '../lib/url';
     if (t.blocked) return;
     try { localStorage.setItem('mf-details', JSON.stringify({ name, phone: f('phone').value, email })); } catch { /* ignore */ }
 
-    const ref = `MF-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase().padEnd(4, 'X')}`;
     payBtn.disabled = true;
     const say = (m: string) => { payMsg.textContent = m; payMsg.hidden = false; };
+    let ref = '';
     try {
-      // 1. Logos first
-      const logos: Record<string, string> = {};
-      for (const l of lines.filter((x) => x.logoName)) {
-        say('Uploading your logo…');
-        const blob = await getLogo(l.id);
-        if (!blob) throw new Error(`Please upload the logo for ${getProduct(l.slug)!.shortName} again (Edit that item).`);
-        const up = await post({ action: 'upload', ref, lineId: l.id, name: l.logoName, mimeType: blob.type, data: await blobToBase64(blob) });
-        logos[l.id] = up.url;
-      }
-      // 2. The order (priced again by the server)
+      // 1. Save the order; the sheet gives it the next number (MF2026001 …) and prices it again
       say('Saving your order…');
       const order = await post({
-        action: 'order', ref, lines, logos,
+        action: 'order', lines,
         customer: { name, phone, email },
         event: { type: eventType, date: eventDate },
         delivery: { method: del, address },
         notes: (form.querySelector('[name="notes"]') as HTMLTextAreaElement).value.trim(),
       });
+      ref = order.ref;
+      // 2. Logos, filed under the order number
+      for (const l of lines.filter((x) => x.logoName)) {
+        say('Uploading your logo…');
+        const blob = await getLogo(l.id);
+        if (!blob) throw new Error(`Please upload the logo for ${getProduct(l.slug)!.shortName} again (Edit that item).`);
+        await post({ action: 'upload', ref, lineId: l.id, name: l.logoName, mimeType: blob.type, data: await blobToBase64(blob) });
+      }
       // 3. Paystack
       say('Opening Paystack…');
       await loadPaystack();
