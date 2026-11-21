@@ -41,3 +41,22 @@ Without this, the website picks up what you publish within 30 minutes. For updat
 
 - **Medaase Favors → Check for problems** lists anything that would stop publishing (a price that isn't a number, a product with no sizes, a broken Drive link…). Nothing goes live until it's fixed.
 - If the website cannot reach the sheet, it keeps showing the last good version.
+
+## Orders and payments
+
+Orders use the same Apps Script project. Add `Orders.gs` next to `Admin.gs` (in Apps Script: **+ → Script**, name it `Orders`, paste the file).
+
+1. **Script properties** (Project Settings → Script properties):
+   - `PAYSTACK_SECRET_KEY`: your Paystack secret key (`sk_test_…` while testing, then `sk_live_…`). Never put this anywhere else.
+   - `OWNER_EMAIL`: where new-order alerts go.
+   - `DRIVE_FOLDER_ID` (optional): the Drive folder for customer logos. Without it, a "Medaase Favors" folder is created in your Drive.
+2. **Deploy → Manage deployments → Edit → New version → Deploy** so the web app includes the order code. The link stays the same.
+3. Send your developer your Paystack **public** key (`pk_test_…`, later `pk_live_…`). It goes in `src/data/admin.json` and is safe to be public.
+
+What happens when someone pays:
+
+1. Their logos are saved in Drive under **Medaase Favors / Logos / <order reference>**.
+2. The order is priced again here from the published catalogue (so nobody can change a price in their browser) and saved to the **Orders** and **Lines** tabs as *Pending payment*.
+3. Paystack opens. When the payment succeeds, this script asks Paystack to confirm the amount, marks the order **Paid**, and emails the customer and you.
+
+The **Orders** tab is yours to work from: add your own columns to the right (for example Design sent, Approved, Ready, Delivered).

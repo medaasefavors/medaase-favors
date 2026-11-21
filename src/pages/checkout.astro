@@ -16,19 +16,58 @@ import { url } from '../lib/url';
       </div>
 
       <div class="co" data-full hidden>
-        <ul class="co__lines" data-lines></ul>
+        <div class="co__main">
+          <ul class="co__lines" data-lines></ul>
+
+          <form class="card co__form" data-checkout novalidate>
+            <h2>Your details</h2>
+            <div class="co__grid">
+              <label class="co__f">Full name<input name="name" autocomplete="name" required /></label>
+              <label class="co__f">Phone number<input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="024 123 4567" required /></label>
+              <label class="co__f co__f--wide">Email<input name="email" type="email" autocomplete="email" required /></label>
+            </div>
+
+            <h2>Your event</h2>
+            <div class="co__grid">
+              <label class="co__f">What is the event?
+                <select name="eventType" required>
+                  <option value="">Choose…</option>
+                  <option>Wedding</option><option>Funeral</option><option>Naming ceremony</option><option>Birthday</option>
+                  <option>Church event</option><option>Corporate</option><option>Other</option>
+                </select>
+              </label>
+              <label class="co__f">Event date<input name="eventDate" type="date" required /></label>
+            </div>
+            <p class="co__alert" data-rush hidden></p>
+
+            <h2>Delivery</h2>
+            <div class="co__opts" role="radiogroup" aria-label="Delivery">
+              <label class="co__opt"><input type="radio" name="delivery" value="pickup" /><span><strong>Pickup</strong>Free · {SITE.pickupHours}</span></label>
+              <label class="co__opt"><input type="radio" name="delivery" value="accra" /><span><strong>Delivery in Accra</strong>By Yango or Uber, priced by your location</span></label>
+              <label class="co__opt"><input type="radio" name="delivery" value="outside" /><span><strong>Outside Accra</strong>{cedi(SITE.deliveryFeeOutsideAccra)} flat</span></label>
+            </div>
+            <label class="co__f co__f--wide" data-address hidden>Delivery address<textarea name="address" rows="2" autocomplete="street-address"></textarea></label>
+
+            <label class="co__f co__f--wide">Anything else we should know? (optional)<textarea name="notes" rows="2"></textarea></label>
+            <p class="co__err" data-form-err role="alert" hidden></p>
+          </form>
+        </div>
+
         <aside class="card co__sum">
           <h2>Summary</h2>
           <p class="co__nudge" data-nudge hidden>Add one more product and save 5% on everything. <a href={url('/products')}>Browse products</a></p>
           <dl>
             <div><dt>Subtotal</dt><dd data-subtotal></dd></div>
             <div data-discount-row hidden><dt>Bundle saving 5%</dt><dd data-discount></dd></div>
-            <div class="co__total"><dt>Total</dt><dd data-total></dd></div>
+            <div data-rush-row hidden><dt>Rush fee</dt><dd data-rush-fee></dd></div>
+            <div data-delivery-row hidden><dt>Delivery</dt><dd data-delivery-fee></dd></div>
+            <div class="co__total"><dt>Total to pay</dt><dd data-total></dd></div>
           </dl>
-          <p class="co__note">Delivery: free pickup, Yango or Uber within Accra (priced by your location), or {cedi(SITE.deliveryFeeOutsideAccra)} outside Accra. You choose at checkout.</p>
+          <p class="co__note" data-rider-note hidden>The Yango or Uber fee is paid to the rider on delivery.</p>
           <p class="co__note" data-bag-note hidden>Each guest's favours are packed together in one bag.</p>
-          <button class="btn" type="button" disabled>Checkout opens soon</button>
-          <p class="co__note">Online payment with Paystack (MoMo or card) is being set up.</p>
+          <button class="btn co__pay" type="button" data-pay>Pay</button>
+          <p class="co__note">Full payment upfront with Paystack: MTN MoMo, Telecel Cash, AirtelTigo Money or card.</p>
+          <p class="co__note" data-pay-msg role="status" hidden></p>
         </aside>
       </div>
     </div>
@@ -36,7 +75,9 @@ import { url } from '../lib/url';
 </Base>
 
 <script>
-  import { loadCart, saveCart, lineTotal, unitPrice, cartTotals, labelSummary, deleteLogo, type CartLine } from '../lib/cart';
+  import { loadCart, saveCart, lineTotal, unitPrice, orderTotals, labelSummary, deleteLogo, getLogo, todayIso, type CartLine, type Delivery } from '../lib/cart';
+  import admin from '../data/admin.json';
+  import { emailLink } from '../data/site';
   import { getProduct } from '../data/products';
   import { cedi } from '../lib/format';
   import { SITE } from '../data/site';
@@ -88,19 +129,213 @@ import { url } from '../lib/url';
       });
       return li;
     }));
-    const t = cartTotals(lines);
+    updateTotals();
+  }
+
+  // ---- checkout form ---------------------------------------------------------
+  const form = document.querySelector<HTMLFormElement>('[data-checkout]')!;
+  const f = (n: string) => form.querySelector<HTMLInputElement>(`[name="${n}"]`)!;
+  const payBtn = $('[data-pay]') as HTMLButtonElement;
+  const payMsg = $('[data-pay-msg]');
+  const payReady = !!(admin.apiUrl && admin.paystackPublicKey);
+  f('eventDate').min = todayIso();
+
+  // Prefill the event date from the first label date
+  const firstDate = loadCart().find((l) => l.eventDate)?.eventDate;
+  if (firstDate && !f('eventDate').value) f('eventDate').value = firstDate;
+  try {
+    const saved = JSON.parse(localStorage.getItem('mf-details') || '{}');
+    ['name', 'phone', 'email'].forEach((k) => { if (saved[k]) f(k).value = saved[k]; });
+  } catch { /* ignore */ }
+
+  const delivery = () => (form.querySelector<HTMLInputElement>('input[name="delivery"]:checked')?.value as Delivery) || undefined;
+
+  function updateTotals() {
+    const lines = loadCart();
+    const t = orderTotals(lines, { eventDate: f('eventDate').value || undefined, delivery: delivery() });
     $('[data-subtotal]').textContent = cedi(t.subtotal);
     $('[data-discount-row]').hidden = t.discount === 0;
     $('[data-discount]').textContent = `− ${cedi(t.discount)}`;
+    $('[data-rush-row]').hidden = t.rush === 0;
+    $('[data-rush-fee]').textContent = cedi(t.rush);
+    $('[data-delivery-row]').hidden = t.deliveryFee === 0;
+    $('[data-delivery-fee]').textContent = cedi(t.deliveryFee);
     $('[data-total]').textContent = cedi(t.total);
     $('[data-nudge]').hidden = !(lines.length > 0 && t.distinct < 2);
     $('[data-bag-note]').hidden = !(lines.some((l) => l.bag) && t.distinct >= 2);
+    $('[data-rider-note]').hidden = delivery() !== 'accra';
+    (form.querySelector('[data-address]') as HTMLElement).hidden = !(delivery() === 'accra' || delivery() === 'outside');
+    const rush = $('[data-rush]');
+    if (t.blocked) {
+      rush.innerHTML = `Your event is less than ${SITE.blockWorkingDays} working days away, which is too soon to order online. Please <a href="${emailLink('Rush order')}">email us</a> first and we'll tell you honestly what's possible.`;
+      rush.hidden = false;
+    } else if (t.rush > 0) {
+      rush.textContent = `Your event is less than ${SITE.rushWorkingDays} working days away, so a ${Math.round(SITE.rushRate * 100)}% rush fee applies.`;
+      rush.hidden = false;
+    } else rush.hidden = true;
+    payBtn.textContent = payReady ? `Pay ${cedi(t.total)} with Paystack` : 'Online payment opens soon';
+    payBtn.disabled = !payReady || t.blocked;
+    return t;
   }
+  form.addEventListener('input', updateTotals);
+  form.addEventListener('change', updateTotals);
   render();
+
+  if (!payReady) {
+    payMsg.textContent = 'Online payment is being switched on. You can still review your order here.';
+    payMsg.hidden = false;
+  }
+
+  function normalisePhone(v: string) {
+    const d = v.replace(/[^\d+]/g, '');
+    if (/^\+233\d{9}$/.test(d)) return d;
+    if (/^233\d{9}$/.test(d)) return '+' + d;
+    if (/^0\d{9}$/.test(d)) return '+233' + d.slice(1);
+    return '';
+  }
+
+  function fail(msg: string, field?: HTMLElement) {
+    const e = $('[data-form-err]');
+    e.textContent = msg;
+    e.hidden = false;
+    field?.focus();
+    e.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  async function post(body: unknown) {
+    const res = await fetch(admin.apiUrl, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) });
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Something went wrong');
+    return data;
+  }
+
+  function blobToBase64(b: Blob) {
+    return new Promise<string>((resolve, reject) => {
+      const r = new FileReader();
+      r.onload = () => resolve(String(r.result).split(',')[1] || '');
+      r.onerror = () => reject(r.error);
+      r.readAsDataURL(b);
+    });
+  }
+
+  function loadPaystack() {
+    return new Promise<void>((resolve, reject) => {
+      if ((window as any).PaystackPop) return resolve();
+      const s = document.createElement('script');
+      s.src = 'https://js.paystack.co/v2/inline.js';
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error('Could not load Paystack. Check your connection and try again.'));
+      document.head.appendChild(s);
+    });
+  }
+
+  payBtn.addEventListener('click', async () => {
+    $('[data-form-err]').hidden = true;
+    const lines = loadCart();
+    if (!lines.length) return;
+    const name = f('name').value.trim();
+    const phone = normalisePhone(f('phone').value);
+    const email = f('email').value.trim();
+    const eventType = (form.querySelector('[name="eventType"]') as HTMLSelectElement).value;
+    const eventDate = f('eventDate').value;
+    const del = delivery();
+    const address = (form.querySelector('[name="address"]') as HTMLTextAreaElement).value.trim();
+    if (!name) return fail('Please enter your full name.', f('name'));
+    if (!phone) return fail('Please enter a Ghana phone number, for example 024 123 4567.', f('phone'));
+    if (!/^\S+@\S+\.\S+$/.test(email)) return fail('Please enter a valid email address.', f('email'));
+    if (!eventType) return fail('Please tell us what the event is.', form.querySelector('[name="eventType"]') as HTMLElement);
+    if (!eventDate) return fail('Please choose your event date.', f('eventDate'));
+    if (!del) return fail('Please choose pickup or delivery.');
+    if (del !== 'pickup' && !address) return fail('Please enter the delivery address.', form.querySelector('[name="address"]') as HTMLElement);
+    const t = updateTotals();
+    if (t.blocked) return;
+    try { localStorage.setItem('mf-details', JSON.stringify({ name, phone: f('phone').value, email })); } catch { /* ignore */ }
+
+    const ref = `MF-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase().padEnd(4, 'X')}`;
+    payBtn.disabled = true;
+    const say = (m: string) => { payMsg.textContent = m; payMsg.hidden = false; };
+    try {
+      // 1. Logos first
+      const logos: Record<string, string> = {};
+      for (const l of lines.filter((x) => x.logoName)) {
+        say('Uploading your logo…');
+        const blob = await getLogo(l.id);
+        if (!blob) throw new Error(`Please upload the logo for ${getProduct(l.slug)!.shortName} again (Edit that item).`);
+        const up = await post({ action: 'upload', ref, lineId: l.id, name: l.logoName, mimeType: blob.type, data: await blobToBase64(blob) });
+        logos[l.id] = up.url;
+      }
+      // 2. The order (priced again by the server)
+      say('Saving your order…');
+      const order = await post({
+        action: 'order', ref, lines, logos,
+        customer: { name, phone, email },
+        event: { type: eventType, date: eventDate },
+        delivery: { method: del, address },
+        notes: (form.querySelector('[name="notes"]') as HTMLTextAreaElement).value.trim(),
+      });
+      // 3. Paystack
+      say('Opening Paystack…');
+      await loadPaystack();
+      const popup = new (window as any).PaystackPop();
+      popup.newTransaction({
+        key: admin.paystackPublicKey,
+        email,
+        amount: order.amount,
+        currency: 'GHS',
+        reference: ref,
+        metadata: { custom_fields: [
+          { display_name: 'Customer', variable_name: 'customer', value: name },
+          { display_name: 'Phone', variable_name: 'phone', value: phone },
+          { display_name: 'Event', variable_name: 'event', value: `${eventType} · ${eventDate}` },
+        ] },
+        onSuccess: async () => {
+          say('Payment received. Confirming…');
+          try {
+            await post({ action: 'verify', ref });
+          } catch {
+            // The payment went through; the order is checked again by the owner if this fails.
+          }
+          const ids = loadCart().map((l) => l.id);
+          saveCart([]);
+          ids.forEach((id) => deleteLogo(id));
+          location.href = `${url('/order/thank-you')}?ref=${encodeURIComponent(ref)}`;
+        },
+        onCancel: () => {
+          say('No money was taken. You can try again whenever you are ready.');
+          payBtn.disabled = false;
+        },
+        onError: (err: { message?: string }) => {
+          say(err?.message || 'Paystack could not start the payment. Please try again.');
+          payBtn.disabled = false;
+        },
+      });
+    } catch (err) {
+      say((err as Error).message || 'Something went wrong. No money was taken. Please try again.');
+      payBtn.disabled = false;
+    }
+  });
 </script>
 
 <style is:global>
   .co { display: grid; gap: 24px; }
+  .co__main { display: grid; gap: 18px; }
+  .co__form h2 { font-size: 1.35rem; margin: 18px 0 10px; }
+  .co__form h2:first-child { margin-top: 0; }
+  .co__grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); }
+  .co__f { display: grid; gap: 6px; font-weight: 500; margin-top: 4px; }
+  .co__f--wide { grid-column: 1 / -1; margin-top: 12px; }
+  .co__f input, .co__f select, .co__f textarea { font: 1rem var(--body); min-height: 48px; padding: 10px 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--white); color: var(--ink); width: 100%; }
+  .co__opts { display: grid; gap: 8px; }
+  .co__opt { position: relative; cursor: pointer; }
+  .co__opt input { position: absolute; opacity: 0; inset: 0; }
+  .co__opt > span { display: grid; gap: 2px; padding: 12px 16px; border: 2px solid var(--line); border-radius: 16px; background: var(--white); color: var(--muted); }
+  .co__opt strong { color: var(--ink); }
+  .co__opt input:checked + span { border-color: var(--navy); box-shadow: 0 0 0 2px var(--navy) inset; }
+  .co__opt input:focus-visible + span { outline: 3px solid var(--hot); outline-offset: 2px; }
+  .co__alert { background: #fff4e5; border: 1px solid #f0c27a; border-radius: 14px; padding: 12px 14px; margin: 12px 0 0; }
+  .co__err { color: #b3123f; font-weight: 700; margin: 12px 0 0; }
+  .co__pay { width: 100%; }
+
   .co__lines { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
   .co__line h2 { font-size: 1.35rem; margin: 0; }
   .co__head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline; }
@@ -113,6 +348,7 @@ import { url } from '../lib/url';
   .co__sum h2 { font-size: 1.5rem; }
   .co__sum dl { margin: 0 0 16px; }
   .co__sum dl div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .co__sum dl div[hidden] { display: none; }
   .co__sum dd { margin: 0; font-weight: 700; }
   .co__total { font-size: 1.3rem; }
   .co__nudge { background: var(--tint); border-radius: 14px; padding: 12px 14px; }
