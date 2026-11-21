@@ -63,6 +63,7 @@ export interface Product {
   faqs: { q: string; a: string }[];
   longCopy: string[];
   imageAlt: string;
+  model: { kind: 'jar' | 'bottle' | 'tube'; fill: string }; // 3D preview shape and contents colour
 }
 
 export const PRODUCTS: Product[] = [
@@ -90,6 +91,7 @@ export const PRODUCTS: Product[] = [
       { q: 'Which size is best for wedding guests?', a: 'Most couples choose the small 50g jar for guests and the large 250g jar for the bridal party and parents.' },
       { q: 'Will it melt in the heat?', a: 'Shea butter softens in strong heat and firms up again when it cools. Keep boxes out of direct sun at the venue and it will look its best.' },
     ],
+    model: { kind: 'jar', fill: '#EFD77F' },
     imageAlt: 'Small jar of 100% pure African shea butter with a custom wedding label',
   },
   {
@@ -114,6 +116,7 @@ export const PRODUCTS: Product[] = [
       { q: 'How is body butter different from shea butter?', a: 'Our shea butter is pure and firm. Body butter is whipped to a lighter, fluffier texture that spreads more easily and feels more like a pampering treat.' },
       { q: 'Does it leave skin greasy?', a: 'No. It melts in and leaves a soft finish that lasts through the evening.' },
     ],
+    model: { kind: 'jar', fill: '#F5ECDC' },
     imageAlt: 'Jar of whipped body butter with a white lid and a personalised label',
   },
   {
@@ -139,6 +142,7 @@ export const PRODUCTS: Product[] = [
       { q: 'Which bottle looks most premium?', a: 'The amber dropper bottle with a black dropper is the most popular. Frosted bottles look soft and modern.' },
       { q: 'Can men use it?', a: 'Of course. Choose Plain Jane for no added scent.' },
     ],
+    model: { kind: 'bottle', fill: '#D4A24A' },
     imageAlt: 'Amber dropper bottle of golden shimmer oil with a custom label',
   },
   {
@@ -163,6 +167,7 @@ export const PRODUCTS: Product[] = [
       { q: 'Is it good for corporate gifts?', a: 'Yes. It is practical, used daily, and looks smart with a company logo on the label.' },
       { q: 'Will it feel greasy?', a: 'No. It is a light cream that sinks in quickly.' },
     ],
+    model: { kind: 'bottle', fill: '#F7F3EC' },
     imageAlt: 'White bottle of hand cream with a gold pump and a personalised label',
   },
   {
@@ -187,6 +192,7 @@ export const PRODUCTS: Product[] = [
       { q: 'Is the hand wash gel gentle on skin?', a: 'Yes. It cleans without leaving hands tight or dry.' },
       { q: 'Is it a good funeral souvenir?', a: 'Many families choose it because it is practical and used daily, a quiet way for guests to remember your loved one.' },
     ],
+    model: { kind: 'bottle', fill: '#DCE8F0' },
     imageAlt: 'Clear bottle of hand wash gel with a white pump and a custom label',
   },
   {
@@ -210,6 +216,7 @@ export const PRODUCTS: Product[] = [
     faqs: [
       { q: 'Is it good for children\'s parties?', a: 'Yes. It is small, safe to carry and a hit with all ages.' },
     ],
+    model: { kind: 'tube', fill: '#F1E2C4' },
     imageAlt: 'Pink lip balm tube mounted on a heart shaped printed card',
   },
 ];

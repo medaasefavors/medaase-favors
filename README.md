@@ -43,8 +43,8 @@ The Paystack **secret** key never goes in this repo or the website. It lives onl
 ## Build phases
 
 1. **Foundation** (done): all pages, real HTML content, SEO tags, structured data, sitemap, robots.txt, llms.txt
-2. Hero preview: shader gradient, giant MEDAASE, floating 3D bottle
-3. Products and live 3D customiser
+2. Hero (done): photo slideshow of real work
+3. **Products and live 3D customiser** (done): live prices, label fields, 3D preview with the label, Add to order, order page with the 5% bundle rule
 4. Cart and bundles
 5. Checkout, Paystack and Apps Script backend
 6. Scroll story and polish

@@ -4,18 +4,120 @@ import { SITE } from '../data/site';
 import { cedi } from '../lib/format';
 import { url } from '../lib/url';
 ---
-<Base title="Checkout | Medaase Favors" description="Review your order and pay securely with Paystack." path="/checkout" noindex>
+<Base title="Your Order | Medaase Favors" description="Review your order and pay securely with Paystack." path="/checkout" noindex>
   <section class="section">
     <div class="wrap">
       <h1>Your order</h1>
+
       <div class="card" data-empty>
         <p class="lede">Your order is empty for now.</p>
-        <p>Choose your favours, add your names and date, and they will appear here. You pay the full amount upfront with Paystack: MTN MoMo, Telecel Cash, AirtelTigo Money or card.</p>
-        <div class="btn-row">
-          <a class="btn" href={url('/products')}>Shop all products</a>
-        </div>
+        <p>Choose your favours and add your names and date. They will appear here.</p>
+        <a class="btn" href={url('/products')}>Shop all products</a>
       </div>
-      <p style="margin-top:20px;font-size:0.95rem">Minimum {SITE.minPerItem} pieces per product. Free pickup, or delivery {SITE.deliveryAccra} within Accra and {cedi(SITE.deliveryFeeOutsideAccra)} outside Accra.</p>
+
+      <div class="co" data-full hidden>
+        <ul class="co__lines" data-lines></ul>
+        <aside class="card co__sum">
+          <h2>Summary</h2>
+          <p class="co__nudge" data-nudge hidden>Add one more product and save 5% on everything. <a href={url('/products')}>Browse products</a></p>
+          <dl>
+            <div><dt>Subtotal</dt><dd data-subtotal></dd></div>
+            <div data-discount-row hidden><dt>Bundle saving 5%</dt><dd data-discount></dd></div>
+            <div class="co__total"><dt>Total</dt><dd data-total></dd></div>
+          </dl>
+          <p class="co__note">Delivery: free pickup, Yango or Uber within Accra (priced by your location), or {cedi(SITE.deliveryFeeOutsideAccra)} outside Accra. You choose at checkout.</p>
+          <p class="co__note" data-bag-note hidden>Each guest's favours are packed together in one bag.</p>
+          <button class="btn" type="button" disabled>Checkout opens soon</button>
+          <p class="co__note">Online payment with Paystack (MoMo or card) is being set up.</p>
+        </aside>
+      </div>
     </div>
   </section>
 </Base>
+
+<script>
+  import { loadCart, saveCart, lineTotal, unitPrice, cartTotals, labelSummary, deleteLogo, type CartLine } from '../lib/cart';
+  import { getProduct } from '../data/products';
+  import { cedi } from '../lib/format';
+  import { SITE } from '../data/site';
+
+  const $ = (s: string) => document.querySelector<HTMLElement>(s)!;
+
+  function details(l: CartLine) {
+    return [l.size, l.scent, l.container, l.lid && `${l.lid} lid`, labelSummary(l),
+      l.bag && `Bag: ${l.bagColour}`, l.card && `Card: ${l.cardShape}`, l.tag && 'Thank you tag']
+      .filter(Boolean).join(' · ');
+  }
+
+  function render() {
+    const lines = loadCart();
+    $('[data-empty]').hidden = lines.length > 0;
+    $('[data-full]').hidden = lines.length === 0;
+    const ul = $('[data-lines]');
+    ul.replaceChildren(...lines.map((l) => {
+      const p = getProduct(l.slug)!;
+      const li = document.createElement('li');
+      li.className = 'card co__line';
+      li.innerHTML = `
+        <div class="co__head"><h2></h2><p class="co__price"></p></div>
+        <p class="co__det"></p>
+        <div class="co__row">
+          <label class="co__qty">Pieces <input type="number" min="${SITE.minPerItem}" step="${SITE.qtyStep}" inputmode="numeric" /></label>
+          <button type="button" class="co__link co__rm">Remove</button>
+        </div>`;
+      li.querySelector('h2')!.textContent = p.name;
+      li.querySelector('.co__price')!.textContent = `${cedi(lineTotal(l))}  (${cedi(unitPrice(l.slug, l))} each)`;
+      li.querySelector('.co__det')!.textContent = details(l);
+      const q = li.querySelector('input')!;
+      q.value = String(l.qty);
+      q.addEventListener('change', () => {
+        let n = Number(q.value) || SITE.minPerItem;
+        n = Math.max(SITE.minPerItem, Math.ceil(n / SITE.qtyStep) * SITE.qtyStep);
+        const all = loadCart();
+        const it = all.find((x) => x.id === l.id);
+        if (it) it.qty = n;
+        saveCart(all);
+        render();
+      });
+      li.querySelector('.co__rm')!.addEventListener('click', () => {
+        saveCart(loadCart().filter((x) => x.id !== l.id));
+        deleteLogo(l.id);
+        render();
+      });
+      return li;
+    }));
+    const t = cartTotals(lines);
+    $('[data-subtotal]').textContent = cedi(t.subtotal);
+    $('[data-discount-row]').hidden = t.discount === 0;
+    $('[data-discount]').textContent = `− ${cedi(t.discount)}`;
+    $('[data-total]').textContent = cedi(t.total);
+    $('[data-nudge]').hidden = !(lines.length > 0 && t.distinct < 2);
+    $('[data-bag-note]').hidden = !(lines.some((l) => l.bag) && t.distinct >= 2);
+  }
+  render();
+</script>
+
+<style is:global>
+  .co { display: grid; gap: 24px; }
+  .co__lines { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  .co__line h2 { font-size: 1.35rem; margin: 0; }
+  .co__head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .co__price { margin: 0; font-weight: 700; }
+  .co__det { color: var(--muted); margin: 8px 0 12px; }
+  .co__row { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+  .co__qty { display: flex; align-items: center; gap: 8px; font-weight: 500; }
+  .co__qty input { width: 96px; min-height: 44px; padding: 8px 12px; border-radius: 12px; border: 2px solid var(--line); font: 1rem var(--body); }
+  .co__link { background: none; border: 0; padding: 10px 0; color: var(--navy); font: 700 1rem var(--body); text-decoration: underline; cursor: pointer; }
+  .co__sum h2 { font-size: 1.5rem; }
+  .co__sum dl { margin: 0 0 16px; }
+  .co__sum dl div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .co__sum dd { margin: 0; font-weight: 700; }
+  .co__total { font-size: 1.3rem; }
+  .co__nudge { background: var(--pink-soft); border-radius: 14px; padding: 12px 14px; }
+  .co__note { font-size: 0.92rem; color: var(--muted); }
+  .co .btn[disabled] { opacity: 0.55; cursor: not-allowed; transform: none; }
+  @media (min-width: 960px) {
+    .co { grid-template-columns: 1.6fr 1fr; align-items: start; }
+    .co__sum { position: sticky; top: 92px; }
+  }
+</style>

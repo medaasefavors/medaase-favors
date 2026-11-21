@@ -54,8 +54,19 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       <Breadcrumbs items={crumbs} />
       <div class="pp__grid">
         <div class="pp__media">
-          <div class="pp__stage card"><ProductVisual slug={p.slug} alt={p.imageAlt} tall eager /></div>
-          <p class="pp__note">{PRODUCT_PHOTOS[p.slug] ? 'A live 3D preview with your own label is coming soon.' : 'Photos and a live 3D preview with your own label are coming soon.'}</p>
+          <div class="pp__stage card" data-stage>
+            <div class="pp__photo" data-photo><ProductVisual slug={p.slug} alt={p.imageAlt} tall eager /></div>
+            <canvas class="pp__canvas" data-canvas aria-hidden="true" hidden></canvas>
+            <div class="pp__views" data-views hidden>
+              <button type="button" class="pp__view" data-view="3d" aria-pressed="true">3D preview</button>
+              {PRODUCT_PHOTOS[p.slug] && <button type="button" class="pp__view" data-view="photo" aria-pressed="false">Photo</button>}
+            </div>
+            <p class="pp__hint" data-hint hidden>Drag to turn</p>
+          </div>
+          <div class="pp__labelprev" data-labelprev aria-live="polite" hidden>
+            <span class="pp__lp-front" data-lp-front>Your names</span>
+            <span class="pp__lp-date" data-lp-date></span>
+          </div>
         </div>
 
         <div class="pp__info">
@@ -69,7 +80,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
             <li class="pill">Ready in {SITE.turnaround}</li>
           </ul>
 
-          <form class="opts" data-product={p.slug} onsubmit="return false">
+          <form class="opts" data-form data-slug={p.slug} data-kind={p.model.kind} data-fill={p.model.fill} data-card-sizes={JSON.stringify(p.cardMountSizes)} novalidate>
             <fieldset>
               <legend>Size</legend>
               <div class="opts__row">
@@ -89,7 +100,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
             )}
 
             <fieldset>
-              <legend>Container</legend>
+              <legend>{p.lids.length ? 'Jar' : 'Colour'}</legend>
               <div class="opts__row">
                 {p.containers.map((s, i) => <label class="opt"><input type="radio" name="container" value={s} checked={i === 0} /><span>{s}</span></label>)}
               </div>
@@ -107,41 +118,66 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
             <fieldset>
               <legend>Label</legend>
               <div class="opts__row opts__row--big">
-                <label class="opt opt--big"><input type="radio" name="label" value="none" checked /><span><strong>No label</strong>Plain product. The simplest option.</span></label>
-                <label class="opt opt--big"><input type="radio" name="label" value="yes" /><span><strong>Add label</strong>Your names or logo, with the date below. +{cedi(ADD_ONS.label)} each</span></label>
+                <label class="opt opt--big"><input type="radio" name="label" value="none" checked /><span><strong>No label</strong>Plain product.</span></label>
+                <label class="opt opt--big"><input type="radio" name="label" value="yes" /><span><strong>Add label</strong>Names or logo, date below. +{cedi(ADD_ONS.label)} each</span></label>
               </div>
-              <div class="opts__label">
-                <label class="field">Front text (up to 32 characters)
-                  <input type="text" name="frontText" maxlength="32" placeholder="Esi & Kwame" />
+              <div class="opts__label" data-label-fields>
+                <div class="opts__row" role="radiogroup" aria-label="Front of the label">
+                  <label class="opt"><input type="radio" name="front" value="text" checked /><span>Type text</span></label>
+                  <label class="opt"><input type="radio" name="front" value="logo" /><span>Upload logo</span></label>
+                </div>
+                <label class="field" data-front-text>Front text (up to 32 characters)
+                  <input type="text" name="frontText" maxlength="32" placeholder="Esi & Kwame" autocomplete="off" />
                 </label>
-                <label class="field">Or upload a logo (PNG, JPG, SVG or PDF, up to 5 MB)
-                  <input type="file" name="logo" accept=".png,.jpg,.jpeg,.svg,.pdf" />
+                <label class="field" data-front-logo hidden>Logo (PNG, JPG, SVG or PDF, up to 5 MB)
+                  <input type="file" name="logo" accept=".png,.jpg,.jpeg,.svg,.pdf,image/png,image/jpeg,image/svg+xml,application/pdf" />
+                  <span class="field__logo" data-logo-preview hidden></span>
                 </label>
                 <label class="field">Event date (printed as 12.12.2026)
                   <input type="date" name="eventDate" />
                 </label>
+                <p class="field__err" data-err="label" hidden></p>
               </div>
             </fieldset>
 
             <fieldset>
               <legend>Add ons (per piece)</legend>
-              <label class="opt opt--line"><input type="checkbox" name="bag" /><span>Drawstring bag ({BAG_COLOURS.join(', ')}) <b>+{cedi(ADD_ONS.bag)}</b></span></label>
+              <label class="opt opt--line"><input type="checkbox" name="bag" /><span>Drawstring bag <b>+{cedi(ADD_ONS.bag)}</b></span></label>
+              <label class="field field--sub" data-bag-colour hidden>Bag colour
+                <select name="bagColour">{BAG_COLOURS.map((c) => <option>{c}</option>)}</select>
+              </label>
               {p.cardMount && (
-                <label class="opt opt--line"><input type="checkbox" name="card" /><span>Mount on a printed card ({CARD_SHAPES.join(', ')}; custom shape +{cedi(ADD_ONS.shape)}) <b>+{cedi(ADD_ONS.card)}</b></span></label>
+                <>
+                  <label class="opt opt--line" data-card-opt><input type="checkbox" name="card" /><span>Mount on a printed card <b>+{cedi(ADD_ONS.card)}</b><small data-card-note>{p.cardMountSizes.length < sizes.length ? `${p.cardMountSizes.join(', ')} only` : ''}</small></span></label>
+                  <label class="field field--sub" data-card-shape hidden>Card shape
+                    <select name="cardShape">{CARD_SHAPES.map((c) => <option value={c}>{c === 'Custom shape' ? `Custom shape (+${cedi(ADD_ONS.shape)})` : c}</option>)}</select>
+                  </label>
+                </>
               )}
               <label class="opt opt--line"><input type="checkbox" name="tag" /><span>Thank you tag, printed with your label text <b>+{cedi(ADD_ONS.tag)}</b></span></label>
             </fieldset>
 
             <fieldset>
               <legend>Quantity</legend>
-              <label class="field">Pieces (minimum {SITE.minPerItem}, in steps of {SITE.qtyStep})
-                <input type="number" name="qty" min={SITE.minPerItem} step={SITE.qtyStep} value={SITE.minPerItem} inputmode="numeric" />
-              </label>
+              <div class="qty">
+                <button type="button" class="qty__btn" data-qty="-1" aria-label={`${SITE.qtyStep} fewer`}>−</button>
+                <input type="number" name="qty" min={SITE.minPerItem} step={SITE.qtyStep} value={SITE.minPerItem} inputmode="numeric" aria-label="Number of pieces" />
+                <button type="button" class="qty__btn" data-qty="1" aria-label={`${SITE.qtyStep} more`}>+</button>
+              </div>
+              <p class="field__hint">Minimum {SITE.minPerItem}, in steps of {SITE.qtyStep}.</p>
+              <p class="field__err" data-err="qty" hidden></p>
             </fieldset>
 
             <div class="bar" data-price-bar>
               <p class="bar__price"><span data-unit>{cedi(from)} each</span> · <span data-total>{cedi(from * SITE.minPerItem)} for {SITE.minPerItem}</span></p>
               <button class="btn" type="submit" data-add>Add to order</button>
+            </div>
+            <div class="added" data-added role="status" hidden>
+              <p><strong>Added to your order.</strong> <span data-added-msg></span></p>
+              <div class="btn-row">
+                <a class="btn" href={url('/checkout')}>View order</a>
+                <a class="btn btn--ghost" href={url('/products')}>Add another product</a>
+              </div>
             </div>
           </form>
         </div>
@@ -183,9 +219,288 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   </section>
 </Base>
 
+<script>
+  import { unitPrice, loadCart, saveCart, newId, saveLogo, labelDate, type CartLine } from '../../lib/cart';
+  import { cedi } from '../../lib/format';
+  import { SITE } from '../../data/site';
+  import { getProduct, type Slug } from '../../data/products';
+  import type { PreviewState, Kind } from '../../lib/preview3d';
+
+  const form = document.querySelector<HTMLFormElement>('[data-form]');
+  if (form) {
+    const slug = form.dataset.slug as Slug;
+    const product = getProduct(slug)!;
+    const kind = form.dataset.kind as Kind;
+    const fill = form.dataset.fill || '#ffffff';
+    const cardSizes: string[] = JSON.parse(form.dataset.cardSizes || '[]');
+    const $ = <T extends Element = HTMLElement>(s: string) => form.querySelector<T>(s) ?? document.querySelector<T>(s);
+    const checked = (name: string) => form.querySelector<HTMLInputElement>(`input[name="${name}"]:checked`)?.value;
+    const box = (name: string) => !!form.querySelector<HTMLInputElement>(`input[name="${name}"]`)?.checked;
+    const field = <T extends HTMLElement = HTMLInputElement>(name: string) => form.querySelector<T>(`[name="${name}"]`);
+
+    const qtyInput = field('qty')!;
+    const dateInput = field('eventDate')!;
+    const textInput = field('frontText')!;
+    const fileInput = field('logo')!;
+    let logoFile: File | null = null;
+    let logoImg: HTMLImageElement | null = null;
+
+    // Event date cannot be in the past
+    const today = new Date();
+    dateInput.min = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+
+    function read() {
+      const card = box('card');
+      return {
+        size: checked('size')!,
+        scent: checked('scent'),
+        container: checked('container')!,
+        lid: checked('lid'),
+        label: checked('label') === 'yes',
+        front: (checked('front') as 'text' | 'logo') || 'text',
+        frontText: textInput.value.trim(),
+        eventDate: dateInput.value,
+        bag: box('bag'),
+        bagColour: field<HTMLSelectElement>('bagColour')?.value,
+        card,
+        cardShape: card ? field<HTMLSelectElement>('cardShape')?.value : undefined,
+        tag: box('tag'),
+        qty: Number(qtyInput.value) || 0,
+      };
+    }
+
+    // ---- 3D preview ---------------------------------------------------------
+    let preview: { update(s: PreviewState): void } | null = null;
+    const stage = $('[data-stage]')!;
+    const canvas = $<HTMLCanvasElement>('[data-canvas]')!;
+    const photo = $('[data-photo]')!;
+    const views = $('[data-views]')!;
+
+    function previewState(): PreviewState {
+      const o = read();
+      return {
+        container: o.container,
+        lid: o.lid,
+        label: o.label,
+        frontText: o.front === 'text' ? o.frontText : '',
+        logo: o.front === 'logo' ? logoImg : null,
+        date: labelDate(o.eventDate),
+        fill,
+      };
+    }
+
+    function canDo3D() {
+      try { if (localStorage.getItem('mf-fx') === 'off') return false; } catch { /* ignore */ }
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+      const n = navigator as Navigator & { connection?: { saveData?: boolean }; deviceMemory?: number };
+      if (n.connection?.saveData) return false;
+      if (n.deviceMemory && n.deviceMemory <= 2) return false;
+      if (n.hardwareConcurrency && n.hardwareConcurrency <= 4) return false;
+      try {
+        const c = document.createElement('canvas');
+        return !!(c.getContext('webgl2') || c.getContext('webgl'));
+      } catch { return false; }
+    }
+
+    function showView(v: '3d' | 'photo') {
+      canvas.hidden = v !== '3d';
+      photo.hidden = v === '3d';
+      $('[data-hint]')!.hidden = v !== '3d';
+      views.querySelectorAll('[data-view]').forEach((b) => b.setAttribute('aria-pressed', String(b.getAttribute('data-view') === v)));
+    }
+
+    if (canDo3D()) {
+      const start = () => {
+        import('../../lib/preview3d').then(({ mountPreview }) => {
+          canvas.hidden = false;
+          preview = mountPreview(canvas, kind, previewState());
+          views.hidden = false;
+          showView('3d');
+        }).catch(() => { canvas.hidden = true; });
+      };
+      const io = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          if ('requestIdleCallback' in window) window.requestIdleCallback(start, { timeout: 1500 });
+          else window.setTimeout(start, 200);
+        }
+      });
+      io.observe(stage);
+      views.addEventListener('click', (e) => {
+        const v = (e.target as HTMLElement).closest('[data-view]')?.getAttribute('data-view');
+        if (v === '3d' || v === 'photo') showView(v);
+      });
+    }
+
+    // ---- live UI -------------------------------------------------------------
+    let t: number | undefined;
+    function refresh(debounce = false) {
+      const o = read();
+      // dependent fields
+      $('[data-label-fields]')!.hidden = !o.label;
+      $('[data-front-text]')!.hidden = o.front !== 'text';
+      $('[data-front-logo]')!.hidden = o.front !== 'logo';
+      $('[data-bag-colour]')!.hidden = !o.bag;
+      const cardBox = field('card');
+      if (cardBox) {
+        const allowed = cardSizes.includes(o.size);
+        cardBox.disabled = !allowed;
+        if (!allowed && cardBox.checked) cardBox.checked = false;
+        $('[data-card-opt]')!.classList.toggle('is-disabled', !allowed);
+        $('[data-card-shape]')!.hidden = !(allowed && cardBox.checked);
+      }
+      // label preview (HTML, always available)
+      const lp = $('[data-labelprev]')!;
+      lp.hidden = !o.label;
+      const lpFront = $('[data-lp-front]')!;
+      if (o.front === 'logo' && logoImg) {
+        lpFront.replaceChildren(logoImg.cloneNode());
+      } else if (o.front === 'logo' && logoFile) {
+        lpFront.textContent = logoFile.name;
+      } else {
+        lpFront.textContent = o.frontText || 'Your names';
+      }
+      lpFront.classList.toggle('is-empty', o.front === 'text' && !o.frontText);
+      $('[data-lp-date]')!.textContent = labelDate(o.eventDate);
+      // price bar
+      const final = read();
+      const unit = unitPrice(slug, final);
+      const qty = Math.max(final.qty, 0);
+      $('[data-unit]')!.textContent = `${cedi(unit)} each`;
+      $('[data-total]')!.textContent = `${cedi(unit * qty)} for ${qty}`;
+      // 3D
+      if (preview) {
+        window.clearTimeout(t);
+        if (debounce) t = window.setTimeout(() => preview!.update(previewState()), 120);
+        else preview.update(previewState());
+      }
+      $('[data-added]')!.hidden = true;
+    }
+
+    form.addEventListener('change', (e) => {
+      if ((e.target as HTMLElement).getAttribute('name') === 'qty') normaliseQty();
+      refresh();
+    });
+    form.addEventListener('input', (e) => {
+      const n = (e.target as HTMLElement).getAttribute('name');
+      if (n === 'frontText' || n === 'qty') refresh(true);
+    });
+
+    function normaliseQty() {
+      let q = Number(qtyInput.value) || SITE.minPerItem;
+      q = Math.max(SITE.minPerItem, Math.ceil(q / SITE.qtyStep) * SITE.qtyStep);
+      qtyInput.value = String(q);
+    }
+    form.querySelectorAll<HTMLButtonElement>('[data-qty]').forEach((b) =>
+      b.addEventListener('click', () => {
+        const q = (Number(qtyInput.value) || SITE.minPerItem) + Number(b.dataset.qty) * SITE.qtyStep;
+        qtyInput.value = String(Math.max(SITE.minPerItem, q));
+        refresh();
+      }),
+    );
+
+    fileInput.addEventListener('change', () => {
+      const f = fileInput.files?.[0] || null;
+      const err = $('[data-err="label"]')!;
+      err.hidden = true;
+      logoFile = null;
+      logoImg = null;
+      const prev = $('[data-logo-preview]')!;
+      prev.hidden = true;
+      if (!f) return refresh();
+      const okType = /\.(png|jpe?g|svg|pdf)$/i.test(f.name);
+      if (!okType || f.size > 5 * 1024 * 1024) {
+        err.textContent = !okType ? 'Please choose a PNG, JPG, SVG or PDF file.' : 'That file is over 5 MB. Please choose a smaller one.';
+        err.hidden = false;
+        fileInput.value = '';
+        return refresh();
+      }
+      logoFile = f;
+      if (/\.pdf$/i.test(f.name)) {
+        prev.textContent = `${f.name} (PDF: we will place it on your label)`;
+        prev.hidden = false;
+        return refresh();
+      }
+      const img = new Image();
+      img.alt = 'Your logo';
+      img.onload = () => { logoImg = img; prev.replaceChildren(img.cloneNode()); prev.hidden = false; refresh(); };
+      img.src = URL.createObjectURL(f);
+    });
+
+    // ---- add to order --------------------------------------------------------
+    function showErr(which: string, msg: string, focus?: HTMLElement) {
+      const el = $(`[data-err="${which}"]`)!;
+      el.textContent = msg;
+      el.hidden = false;
+      focus?.focus();
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      form.querySelectorAll<HTMLElement>('[data-err]').forEach((el) => (el.hidden = true));
+      normaliseQty();
+      const o = read();
+      if (o.label) {
+        if (o.front === 'text' && !o.frontText) return showErr('label', 'Please type the names or text for the front of your label.', textInput);
+        if (o.front === 'logo' && !logoFile) return showErr('label', 'Please upload your logo.', fileInput);
+        if (!o.eventDate) return showErr('label', 'Please choose your event date for the label.', dateInput);
+      }
+      const id = newId();
+      const line: CartLine = {
+        id, slug, qty: o.qty, size: o.size, scent: o.scent, container: o.container, lid: o.lid,
+        label: o.label,
+        front: o.label ? o.front : undefined,
+        frontText: o.label && o.front === 'text' ? o.frontText : undefined,
+        logoName: o.label && o.front === 'logo' ? logoFile?.name : undefined,
+        eventDate: o.label ? o.eventDate : undefined,
+        bag: o.bag, bagColour: o.bag ? o.bagColour : undefined,
+        card: o.card, cardShape: o.card ? o.cardShape : undefined,
+        tag: o.tag,
+      };
+      if (line.logoName && logoFile) await saveLogo(id, logoFile);
+      const cart = loadCart();
+      cart.push(line);
+      saveCart(cart);
+      const unit = unitPrice(slug, line);
+      $('[data-added-msg]')!.textContent = `${line.qty} × ${product.shortName} · ${cedi(unit * line.qty)}`;
+      const added = $('[data-added]')!;
+      added.hidden = false;
+      added.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+
+    refresh();
+  }
+</script>
+
 <style>
   .pp__grid { display: grid; gap: clamp(24px, 4vw, 56px); }
-  .pp__stage { padding: 0; overflow: hidden; }
+  .pp__stage { position: relative; padding: 0; overflow: hidden; }
+  .pp__canvas { display: block; width: 100%; aspect-ratio: 400 / 520; touch-action: pan-y; cursor: grab; background: radial-gradient(70% 60% at 50% 40%, #fff, var(--pink-soft)); }
+  .pp__canvas:active { cursor: grabbing; }
+  .pp__views { position: absolute; top: 12px; left: 12px; display: flex; gap: 6px; }
+  .pp__view { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,0.9); color: var(--navy); font: 500 0.92rem var(--body); cursor: pointer; }
+  .pp__view[aria-pressed='true'] { background: var(--navy); color: var(--white); }
+  .pp__hint { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); margin: 0; padding: 4px 12px; border-radius: 999px; background: rgba(255,255,255,0.85); font-size: 0.85rem; color: var(--muted); pointer-events: none; }
+  .pp__labelprev { margin-top: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 110px; padding: 16px; border: 2px solid var(--navy); border-radius: 14px; background: var(--white); text-align: center; }
+  .pp__lp-front { font-family: var(--display); font-size: 1.5rem; line-height: 1.15; overflow-wrap: anywhere; }
+  .pp__lp-front.is-empty { opacity: 0.35; }
+  .pp__lp-front :global(img) { max-height: 64px; width: auto; }
+  .pp__lp-date { font-weight: 500; letter-spacing: 0.06em; }
+  .qty { display: inline-flex; align-items: stretch; border: 2px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--white); }
+  .qty__btn { width: 52px; min-height: 48px; border: 0; background: var(--pink-soft); color: var(--navy); font-size: 1.4rem; cursor: pointer; }
+  .qty input { width: 90px; border: 0; text-align: center; font: 700 1.1rem var(--body); color: var(--ink); -moz-appearance: textfield; }
+  .qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .field__hint { font-size: 0.92rem; color: var(--muted); margin: 8px 0 0; }
+  .field__err { color: #b3123f; font-weight: 500; margin: 8px 0 0; }
+  .field--sub { margin: -2px 0 12px 12px; }
+  .field select { font: 1rem var(--body); min-height: 48px; padding: 10px 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--white); color: var(--ink); }
+  .field__logo { display: flex; align-items: center; gap: 10px; font-size: 0.92rem; color: var(--muted); }
+  .field__logo :global(img) { max-height: 56px; width: auto; border-radius: 8px; border: 1px solid var(--line); }
+  .opt small { display: block; font-size: 0.82rem; color: var(--muted); }
+  .opt.is-disabled { opacity: 0.5; cursor: not-allowed; }
+  [data-label-fields][hidden], [hidden] { display: none !important; }
+  .added { margin-top: 14px; padding: 18px; border-radius: var(--radius); background: var(--pink-soft); border: 1px solid var(--line); }
+  .added p { margin: 0 0 12px; }
   .pp__stage :global(svg) { width: 100%; }
   .pp__note { font-size: 0.92rem; color: var(--muted); margin-top: 12px; }
   .pp__price { font-size: clamp(2rem, 5vw, 2.8rem); }
