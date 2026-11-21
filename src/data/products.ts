@@ -56,7 +56,7 @@ const PLASTIC_JAR: Packaging = { type: 'Plastic jar', colours: ['Clear', 'White'
 const ALUMINIUM_JAR: Packaging = { type: 'Aluminium jar', colours: ['Black', 'Silver', 'Gold'], lids: [], labelStyle: 'lid' };
 // Bottles and tubes come as one colour, body and cap together.
 const BOTTLE: Packaging = { type: 'Bottle', colours: ['Clear', 'Black', 'White'], lids: [], labelStyle: 'wrap' };
-const DROPPER: Packaging = { type: 'Dropper bottle', colours: ['Clear, black dropper', 'Clear, gold collar', 'Amber'], lids: [], labelStyle: 'wrap' };
+const DROPPER: Packaging = { type: 'Dropper bottle', colours: ['Clear', 'Amber'], lids: [], labelStyle: 'wrap' };
 const TUBE: Packaging = { type: 'Tube', colours: ['Clear', 'Black', 'White'], lids: [], labelStyle: 'tube' }; // TBD: confirm tube colours
 
 /** "Aluminium jar · Gold" */

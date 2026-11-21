@@ -13,7 +13,10 @@ import aluBlack from '../assets/packshots/aluminium-jar-black.jpg';
 import aluGold from '../assets/packshots/aluminium-jar-gold.jpg';
 import aluSilver from '../assets/packshots/aluminium-jar-silver.jpg';
 import dropperClear from '../assets/packshots/dropper-clear-black.jpg';
-import dropperGold from '../assets/packshots/dropper-clear-gold.jpg';
+import lotionWhite from '../assets/packshots/lotion-bottle-white.jpg';
+import gelClear from '../assets/packshots/gel-bottle-clear.jpg';
+import lotionOrder from '../assets/photos/lotion-and-hand-wash-order.jpg';
+import bottlesFilled from '../assets/photos/lotion-and-gel-bottles-filled.jpg';
 import dropperAmber from '../assets/packshots/dropper-amber-black.jpg';
 import plasticClear from '../assets/packshots/plastic-jar-clear-black-lid.jpg';
 import plasticWhite from '../assets/packshots/plastic-jar-white.jpg';
@@ -76,6 +79,8 @@ export const WORKS: Work[] = [
   { photo: PHOTOS.kissCard, title: 'Kiss the Miss goodbye', occasion: 'Bridal shower', note: 'Hot pink lip balms on "Congratulations!" cards for the bride\'s last night out.', product: 'lip-balm' },
   { photo: PHOTOS.brideSquadRow, title: 'The whole squad', occasion: 'Wedding', note: 'Twelve matching lip balms, lined up and ready for the bridal train.', product: 'lip-balm' },
   { photo: PHOTOS.sheaTubs, title: 'Pure shea, freshly poured', occasion: 'In the making', note: '100% pure African shea butter, poured into black jars before labelling.', product: 'pure-african-shea-butter' },
+  { photo: { src: lotionOrder, alt: 'A box of finished hand lotion and hand wash bottles with custom labels, packed for delivery' }, title: 'Lotion and hand wash', occasion: 'Packed and ready', note: 'Labelled bottles of hand lotion and hand wash, boxed for delivery.', product: 'hand-cream' },
+  { photo: { src: bottlesFilled, alt: 'Rows of freshly filled hand lotion and pink hand wash gel bottles' }, title: 'Freshly filled', occasion: 'In the making', note: 'Hand lotion and pink hand wash gel, filled and waiting for their labels.', product: 'hand-wash-gel' },
   { photo: PHOTOS.kissInHand, title: 'Pocket sized', occasion: 'Bridal shower', note: 'Small enough for any clutch, pretty enough to keep.', product: 'lip-balm' },
   { photo: PHOTOS.amberDroppers, title: 'Shimmer oil, ready to dress', occasion: 'In the making', note: 'Amber dropper bottles of golden shimmer oil, waiting for their labels.', product: 'shimmer-oil' },
 ];
@@ -92,8 +97,9 @@ const PACKSHOTS: Record<string, Photo> = {
   'Plastic jar · Black': { src: plasticBlack, alt: 'Black plastic jar with screw lid' },
   'lip-balm|Tube · White': { src: tubeWhite, alt: 'White lip balm tube' },
   'lip-balm|Tube · Black': { src: tubeBlack, alt: 'Black lip balm tube' },
-  'Dropper bottle · Clear, black dropper': { src: dropperClear, alt: 'Clear glass dropper bottle with a black dropper' },
-  'Dropper bottle · Clear, gold collar': { src: dropperGold, alt: 'Clear glass dropper bottle with a gold collar' },
+  'Dropper bottle · Clear': { src: dropperClear, alt: 'Clear glass dropper bottle' },
+  'hand-cream|Bottle · White': { src: lotionWhite, alt: 'White bottle of hand cream with a flip cap' },
+  'hand-wash-gel|Bottle · Clear': { src: gelClear, alt: 'Clear bottle of pink hand wash gel with a flip cap' },
   'Dropper bottle · Amber': { src: dropperAmber, alt: 'Amber glass dropper bottle with a black dropper' },
 };
 
@@ -107,7 +113,7 @@ export function packshotsFor(slug: string, containers: string[]) {
   const out: { container: string; photo: Photo; area?: LabelArea }[] = [];
   for (const c of containers) {
     const ph = PACKSHOTS[`${slug}|${c}`] ?? PACKSHOTS[c];
-    if (ph) out.push({ container: c, photo: ph, area: areas[c] });
+    if (ph) out.push({ container: c, photo: ph, area: areas[`${slug}|${c}`] ?? areas[c] });
   }
   return out;
 }
