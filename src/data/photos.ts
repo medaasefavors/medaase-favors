@@ -12,6 +12,11 @@ import aluBlack from '../assets/packshots/aluminium-jar-black.jpg';
 import aluGold from '../assets/packshots/aluminium-jar-gold.jpg';
 import aluSilver from '../assets/packshots/aluminium-jar-silver.jpg';
 import dropperClear from '../assets/packshots/dropper-clear-black.jpg';
+import plasticClear from '../assets/packshots/plastic-jar-clear-black-lid.jpg';
+import plasticWhite from '../assets/packshots/plastic-jar-white.jpg';
+import plasticBlack from '../assets/packshots/plastic-jar-black.jpg';
+import tubeWhite from '../assets/packshots/lip-balm-tube-white.jpg';
+import tubeBlack from '../assets/packshots/lip-balm-tube-black.jpg';
 
 export interface Photo { src: ImageMetadata; alt: string }
 
@@ -79,6 +84,11 @@ const PACKSHOTS: Record<string, Photo> = {
   'Aluminium jar · Black': { src: aluBlack, alt: 'Black aluminium jar with screw lid' },
   'Aluminium jar · Gold': { src: aluGold, alt: 'Gold aluminium jar with screw lid' },
   'Aluminium jar · Silver': { src: aluSilver, alt: 'Silver aluminium jar with screw lid' },
+  'Plastic jar · Clear': { src: plasticClear, alt: 'Clear plastic jar with screw lid' },
+  'Plastic jar · White': { src: plasticWhite, alt: 'White plastic jar with screw lid' },
+  'Plastic jar · Black': { src: plasticBlack, alt: 'Black plastic jar with screw lid' },
+  'lip-balm|Tube · White': { src: tubeWhite, alt: 'White lip balm tube' },
+  'lip-balm|Tube · Black': { src: tubeBlack, alt: 'Black lip balm tube' },
   'shimmer-oil|Bottle · Clear': { src: dropperClear, alt: 'Clear glass dropper bottle with black dropper' },
 };
 
