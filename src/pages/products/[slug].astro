@@ -98,6 +98,16 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
               </div>
             </section>
 
+            {p.shades && p.shades.length > 0 && (
+              <section class="step" data-step="shade" aria-labelledby="q-shade">
+                <h2 class="step__q" id="q-shade">Which shade?</h2>
+                <p class="step__a" data-answer hidden><span data-answer-text></span> <button type="button" class="step__change" data-change>Change</button></p>
+                <div class="step__body opts__row" role="radiogroup" aria-labelledby="q-shade">
+                  {p.shades.map((s) => <label class="opt opt--shade"><input type="radio" name="shade" value={s.name} /><span><i class="swatch" style={`background:${s.swatch}`} aria-hidden="true"></i>{s.name}<b>{s.note}</b></span></label>)}
+                </div>
+              </section>
+            )}
+
             {p.scents.length > 0 && (
               <section class="step" data-step="scent" aria-labelledby="q-scent">
                 <h2 class="step__q" id="q-scent">Which scent?</h2>
@@ -327,6 +337,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       return {
         size: checked('size')!,
         scent: checked('scent'),
+        shade: checked('shade'),
         container: checked('container')!,
         lid: form.querySelector<HTMLInputElement>('input[name="lid"]:checked:not(:disabled)')?.value,
         pack: checked('packaging'),
@@ -439,7 +450,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       if (!steps.length) return null;
       form.classList.add('is-guided');
       // Nothing is pre-chosen: the customer answers each question.
-      ['size', 'scent', 'packaging', 'container', 'lid', 'label', 'presentation', 'cardDesign', 'cardShape', 'tag']
+      ['size', 'shade', 'scent', 'packaging', 'container', 'lid', 'label', 'presentation', 'cardDesign', 'cardShape', 'tag']
         .forEach((n) => form.querySelectorAll<HTMLInputElement>(`input[name="${n}"]`).forEach((i) => (i.checked = false)));
       const done = new Set<string>();
       let open = steps[0].dataset.step!;
@@ -451,6 +462,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
         switch (k) {
           case 'size': return o.size;
           case 'scent': return o.scent;
+          case 'shade': return o.shade;
           case 'packaging': return o.pack;
           case 'colour': {
             const c = form.querySelector<HTMLInputElement>('input[name="container"]:checked');
@@ -515,7 +527,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
             done.delete('presentation');
           }
         }
-        if (n === 'size' || n === 'scent' || n === 'tag') complete(n);
+        if (n === 'size' || n === 'shade' || n === 'scent' || n === 'tag') complete(n);
         if (n === 'packaging') {
           form.querySelectorAll<HTMLInputElement>('input[name="container"], input[name="lid"]').forEach((i) => (i.checked = false));
           done.delete('colour');
@@ -663,7 +675,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       }
       const id = newId();
       const line: CartLine = {
-        id, slug, qty: o.qty, size: o.size, scent: o.scent, container: o.container, lid: o.lid,
+        id, slug, qty: o.qty, size: o.size, shade: o.shade, scent: o.scent, container: o.container, lid: o.lid,
         label: o.label,
         front: o.label ? o.front : undefined,
         frontText: o.label && o.front === 'text' ? o.frontText : undefined,
@@ -714,6 +726,9 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   .is-guided .step.is-done .step__q { font-family: var(--body); font-size: 0.85rem; font-weight: 500; color: var(--muted); margin: 0 0 2px; }
   .is-guided .step.is-done .step__body { display: none; }
   @keyframes stepIn { from { opacity: 0; transform: translateY(14px); } }
+  .opts .opt.opt--shade > span { display: grid; grid-template-columns: 22px auto; column-gap: 10px; align-items: center; text-align: left; }
+  .opts .opt.opt--shade b { grid-column: 2; }
+  .swatch { display: inline-block; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--white); box-shadow: 0 0 0 1px var(--line); }
   .tiles { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
   .tiles--small { grid-template-columns: repeat(auto-fit, minmax(min(100%, 120px), 1fr)); }
   .tile { position: relative; cursor: pointer; }

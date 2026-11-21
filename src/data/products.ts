@@ -80,6 +80,8 @@ export interface Product {
   description: string;
   kicker?: string;
   scents: string[];
+  /** Colour of the product itself (shimmer oil). */
+  shades?: { name: string; note: string; swatch: string }[];
   packaging: Packaging[];
   cardMount: boolean; // which sizes allow mounting on a printed card
   cardMountSizes: string[];
@@ -144,6 +146,11 @@ export const PRODUCTS: Product[] = [
     description:
       'Silky body oil with a fine golden shimmer that catches the light on shoulders and collarbones. For the guest who plans to shine at the after party.',
     scents: SCENTS,
+    shades: [
+      { name: 'Plain Jane', note: 'Our signature oil blend, no shimmer colour', swatch: '#F3E3B5' },
+      { name: 'Golden Bronze', note: 'A warm golden shimmer', swatch: '#C08A3E' },
+      { name: 'Chocolate Bronze', note: 'A deep chocolate shimmer', swatch: '#6B3F26' },
+    ],
     packaging: [BOTTLE],
     cardMount: false,
     cardMountSizes: [],
@@ -154,7 +161,7 @@ export const PRODUCTS: Product[] = [
     faqs: [
       { q: 'Is the shimmer very sparkly?', a: 'No. It is a fine golden shimmer that gives skin a soft glow, not chunky glitter.' },
       { q: 'Which bottle looks most premium?', a: 'The amber dropper bottle with a black dropper is the most popular. Frosted bottles look soft and modern.' },
-      { q: 'Can men use it?', a: 'Of course. Choose Plain Jane for no added scent.' },
+      { q: 'Can men use it?', a: 'Of course. Choose the Plain Jane shade for our signature oil blend with no shimmer colour.' },
     ],
     imageAlt: 'Amber dropper bottle of golden shimmer oil with a custom label',
   },

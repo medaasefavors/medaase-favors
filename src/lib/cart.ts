@@ -5,6 +5,7 @@ import { PRICES, ADD_ONS, BUNDLE_DISCOUNT, PER_PIECE_CHARGE, type Slug } from '.
 export interface LineOptions {
   size: string;
   scent?: string;
+  shade?: string;
   container: string;
   lid?: string;
   label: boolean;

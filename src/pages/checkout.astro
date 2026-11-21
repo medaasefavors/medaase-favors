@@ -44,7 +44,7 @@ import { url } from '../lib/url';
   const $ = (s: string) => document.querySelector<HTMLElement>(s)!;
 
   function details(l: CartLine) {
-    return [l.size, l.scent, l.container, l.lid && `${l.lid} lid`, labelSummary(l), l.themeColours?.length && `Colours: ${l.themeColours.join(', ')}`,
+    return [l.size, l.shade && `${l.shade} shade`, l.scent, l.container, l.lid && `${l.lid} lid`, labelSummary(l), l.themeColours?.length && `Colours: ${l.themeColours.join(', ')}`,
       l.bag && 'Organza bag', l.card && `Card: ${[l.cardDesign, l.cardShape].filter(Boolean).join(', ')}`, l.tag && 'Thank you tag']
       .filter(Boolean).join(' · ');
   }
