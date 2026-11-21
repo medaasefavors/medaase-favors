@@ -13,8 +13,9 @@ import aluBlack from '../assets/packshots/aluminium-jar-black.jpg';
 import aluGold from '../assets/packshots/aluminium-jar-gold.jpg';
 import aluSilver from '../assets/packshots/aluminium-jar-silver.jpg';
 import dropperClear from '../assets/packshots/dropper-clear-black.jpg';
-import lotionWhite from '../assets/packshots/lotion-bottle-white.jpg';
-import gelClear from '../assets/packshots/gel-bottle-clear.jpg';
+import flipClear from '../assets/packshots/flip-bottle-clear.jpg';
+import flipBlack from '../assets/packshots/flip-bottle-black.jpg';
+import flipWhite from '../assets/packshots/flip-bottle-white.jpg';
 import lotionOrder from '../assets/photos/lotion-and-hand-wash-order.jpg';
 import bottlesFilled from '../assets/photos/lotion-and-gel-bottles-filled.jpg';
 import dropperAmber from '../assets/packshots/dropper-amber-black.jpg';
@@ -98,8 +99,9 @@ const PACKSHOTS: Record<string, Photo> = {
   'lip-balm|Tube · White': { src: tubeWhite, alt: 'White lip balm tube' },
   'lip-balm|Tube · Black': { src: tubeBlack, alt: 'Black lip balm tube' },
   'Dropper bottle · Clear': { src: dropperClear, alt: 'Clear glass dropper bottle' },
-  'hand-cream|Bottle · White': { src: lotionWhite, alt: 'White bottle of hand cream with a flip cap' },
-  'hand-wash-gel|Bottle · Clear': { src: gelClear, alt: 'Clear bottle of pink hand wash gel with a flip cap' },
+  'Bottle · Clear': { src: flipClear, alt: 'Clear bottle with a flip cap' },
+  'Bottle · Black': { src: flipBlack, alt: 'Black bottle with a flip cap' },
+  'Bottle · White': { src: flipWhite, alt: 'White bottle with a flip cap' },
   'Dropper bottle · Amber': { src: dropperAmber, alt: 'Amber glass dropper bottle with a black dropper' },
 };
 
