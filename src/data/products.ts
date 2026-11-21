@@ -49,6 +49,8 @@ export interface Packaging {
   colours: string[];
   lids: string[];
   labelStyle: 'wrap' | 'lid' | 'tube';
+  /** Colours currently out of stock. Shown but not selectable. Managed from the admin panel. */
+  outOfStock?: string[];
 }
 const PLASTIC_JAR: Packaging = { type: 'Plastic jar', colours: ['Clear', 'White', 'Black'], lids: ['Black', 'White'], labelStyle: 'wrap' };
 const ALUMINIUM_JAR: Packaging = { type: 'Aluminium jar', colours: ['Black', 'Silver', 'Gold'], lids: [], labelStyle: 'lid' };

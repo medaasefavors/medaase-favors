@@ -121,8 +121,16 @@ const favourites = ['pure-african-shea-butter', 'shimmer-oil', 'lip-balm', 'body
 <style>
   .hero {
     padding: clamp(20px, 4vw, 56px) 0 clamp(40px, 6vw, 72px);
-    background: linear-gradient(170deg, #fff 30%, var(--pink-soft));
+    background: var(--navy);
+    color: var(--white);
   }
+  .hero .eyebrow { color: var(--pink); }
+  .hero .lede { color: rgba(255, 255, 255, 0.88); }
+  .hero .pill { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); color: var(--white); }
+  .hero .btn { background: var(--white); color: var(--navy); border-color: var(--white); }
+  .hero .btn--ghost { background: transparent; color: var(--white); }
+  .hero :global(.ss__dot::before) { background: rgba(255, 255, 255, 0.35); }
+  .hero :global(.ss__dot[aria-pressed='true']::before) { background: var(--pink); }
   .hero__in {
     display: grid;
     gap: clamp(24px, 4vw, 64px);

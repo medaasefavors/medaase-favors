@@ -108,7 +108,7 @@ const is = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
   .hdr__nav > a:hover,
   .dd summary:hover,
   .hdr__nav > a[aria-current='page'] {
-    background: var(--pink-soft);
+    background: var(--tint);
   }
   .dd {
     position: relative;
@@ -148,7 +148,7 @@ const is = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
     text-decoration: none;
   }
   .dd li a:hover {
-    background: var(--pink-soft);
+    background: var(--tint);
   }
   .hdr__cart {
     display: inline-flex;
@@ -202,10 +202,13 @@ const is = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
     z-index: 60;
     padding: 90px var(--gutter) 40px;
     overflow-y: auto;
-    background: rgba(255, 227, 238, 0.86);
+    background: rgba(27, 42, 78, 0.96);
     backdrop-filter: blur(22px) saturate(1.5);
     -webkit-backdrop-filter: blur(22px) saturate(1.5);
   }
+  .mm__panel, .mm__panel a { color: var(--white); }
+  .mm__panel .btn { background: var(--white); color: var(--navy); border-color: var(--white); }
+  .mm__label { color: var(--pink); }
   .mm__panel nav {
     display: flex;
     flex-direction: column;

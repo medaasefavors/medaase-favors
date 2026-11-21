@@ -71,8 +71,12 @@ const somber = e.slug === 'funerals';
 <style>
   .ev-body { padding: clamp(32px, 5vw, 56px) 0; }
   .ev-body p { font-size: 1.15rem; }
-  .ev-hero { padding: clamp(32px, 6vw, 72px) 0 clamp(48px, 7vw, 90px); background: linear-gradient(160deg, var(--pink-soft), #fff 60%); }
-  .ev-hero--calm { background: linear-gradient(160deg, #eef0f6, #fff 60%); }
+  .ev-hero { padding: clamp(32px, 6vw, 72px) 0 clamp(48px, 7vw, 90px); background: var(--navy); color: var(--white); }
+  .ev-hero .eyebrow { color: var(--pink); }
+  .ev-hero .lede { color: rgba(255,255,255,0.88); }
+  .ev-hero :global(.bc ol), .ev-hero :global(.bc a) { color: rgba(255,255,255,0.8); }
+  .ev-hero .pill { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); color: var(--white); }
+  .ev-hero .btn { background: var(--white); color: var(--navy); border-color: var(--white); }
   .ev-hero h1 { max-width: 18ch; }
   .ideas { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); }
   .ideas li { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 96px; padding: 18px; border: 2px solid var(--navy); border-radius: 18px; background: var(--white); }

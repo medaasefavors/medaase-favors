@@ -4,7 +4,8 @@
   --navy-2: #26386a;
   --white: #ffffff;
   --pink: #ffb8d1;
-  --pink-soft: #ffe3ee;
+  --pink-soft: #ffe3ee; /* accent tint: small highlights only */
+  --tint: #eef1f8; /* light navy: section and surface backgrounds */
   --hot: #e8508a;
   --ink: #1b2a4e;
   --muted: #4a5675;
@@ -84,7 +85,7 @@ p {
   position: relative;
 }
 .section--pink {
-  background: var(--pink-soft);
+  background: var(--tint);
 }
 .section--navy {
   background: var(--navy);

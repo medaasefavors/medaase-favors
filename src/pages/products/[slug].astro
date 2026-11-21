@@ -116,7 +116,11 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
               <fieldset data-for-pack={pk.type} hidden={i !== 0}>
                 <legend>{p.packaging.length > 1 ? `${pk.type} colour` : 'Colour'}</legend>
                 <div class="opts__row">
-                  {pk.colours.map((c, j) => <label class="opt"><input type="radio" name="container" value={containerName(pk, c)} data-pack={pk.type} data-label-style={pk.labelStyle} checked={i === 0 && j === 0} /><span>{c}</span></label>)}
+                  {pk.colours.map((c) => {
+                    const out = (pk.outOfStock ?? []).includes(c);
+                    const firstIn = pk.colours.find((x) => !(pk.outOfStock ?? []).includes(x));
+                    return <label class:list={['opt', { 'is-disabled': out }]}><input type="radio" name="container" value={containerName(pk, c)} data-pack={pk.type} data-label-style={pk.labelStyle} checked={i === 0 && c === firstIn} disabled={out} /><span>{c}{out && <small>Out of stock</small>}</span></label>;
+                  })}
                 </div>
                 {pk.lids.length > 0 && (
                   <>
@@ -295,7 +299,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
       });
       const current = form.querySelector<HTMLInputElement>('input[name="container"]:checked');
       if (!current || current.dataset.pack !== pack) {
-        const first = form.querySelector<HTMLInputElement>(`input[name="container"][data-pack="${pack}"]`);
+        const first = form.querySelector<HTMLInputElement>(`input[name="container"][data-pack="${pack}"]:not(:disabled)`);
         if (first) first.checked = true;
       }
     }
@@ -484,7 +488,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   .pp__lp-front :global(img) { max-height: 64px; width: auto; }
   .pp__lp-date { font-weight: 500; letter-spacing: 0.06em; }
   .qty { display: inline-flex; align-items: stretch; border: 2px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--white); }
-  .qty__btn { width: 52px; min-height: 48px; border: 0; background: var(--pink-soft); color: var(--navy); font-size: 1.4rem; cursor: pointer; }
+  .qty__btn { width: 52px; min-height: 48px; border: 0; background: var(--tint); color: var(--navy); font-size: 1.4rem; cursor: pointer; }
   .qty input { width: 90px; border: 0; text-align: center; font: 700 1.1rem var(--body); color: var(--ink); -moz-appearance: textfield; }
   .qty input::-webkit-outer-spin-button, .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   .field__hint { font-size: 0.92rem; color: var(--muted); margin: 8px 0 0; }
@@ -496,7 +500,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   .opt small { display: block; font-size: 0.82rem; color: var(--muted); }
   .opt.is-disabled { opacity: 0.5; cursor: not-allowed; }
   [data-label-fields][hidden], [hidden] { display: none !important; }
-  .added { margin-top: 14px; padding: 18px; border-radius: var(--radius); background: var(--pink-soft); border: 1px solid var(--line); }
+  .added { margin-top: 14px; padding: 18px; border-radius: var(--radius); background: var(--tint); border: 1px solid var(--line); }
   .added p { margin: 0 0 12px; }
   .pp__stage :global(svg) { width: 100%; }
   .pp__note { font-size: 0.92rem; color: var(--muted); margin-top: 12px; }
@@ -510,7 +514,8 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   .opt input { position: absolute; opacity: 0; inset: 0; }
   .opt > span { display: inline-flex; flex-direction: column; justify-content: center; min-height: 48px; padding: 8px 16px; border: 2px solid var(--line); border-radius: 16px; background: var(--white); }
   .opt b { font-weight: 500; color: var(--muted); font-size: 0.9rem; }
-  .opt input:checked + span { border-color: var(--navy); background: var(--pink-soft); }
+  .opt input:checked + span { border-color: var(--navy); background: var(--navy); color: var(--white); }
+  .opt input:checked + span b, .opt input:checked + span small { color: rgba(255,255,255,0.8); }
   .opt input:focus-visible + span { outline: 3px solid var(--hot); outline-offset: 2px; }
   .opts__row--big { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); }
   .opt--big > span { width: 100%; padding: 16px 18px; border-radius: 20px; gap: 4px; }
