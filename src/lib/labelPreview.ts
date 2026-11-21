@@ -9,6 +9,7 @@ export interface LabelContent {
   text?: string;
   logo?: HTMLImageElement | null;
   date?: string;
+  colours?: string[]; // theme colours: [border, text, date]
 }
 
 function lerp(xs: number[], ys: number[], x: number) {
@@ -44,7 +45,8 @@ function artwork(w: number, h: number, content: LabelContent, round: boolean) {
     c.arc(W / 2, H / 2, Math.min(W, H) / 2, 0, Math.PI * 2);
     c.fill();
   } else c.fillRect(0, 0, W, H);
-  c.strokeStyle = NAVY;
+  const [border, ink, dateInk] = [content.colours?.[0] || NAVY, content.colours?.[1] || NAVY, content.colours?.[2] || content.colours?.[1] || NAVY];
+  c.strokeStyle = border;
   c.lineWidth = Math.max(2, Math.min(W, H) * 0.025);
   if (round) {
     c.beginPath();
@@ -67,12 +69,12 @@ function artwork(w: number, h: number, content: LabelContent, round: boolean) {
   } else {
     const text = (content.text || 'Your names').trim();
     fitFont(c, text, H * 0.3, '400', '"Young Serif", Georgia, serif', boxW);
-    c.fillStyle = content.text ? NAVY : 'rgba(27,42,78,0.35)';
+    c.fillStyle = content.text ? ink : 'rgba(27,42,78,0.35)';
     c.fillText(text, W / 2, frontY);
   }
   if (hasDate) {
     fitFont(c, content.date!, H * 0.13, '700', '"DM Sans", system-ui, sans-serif', boxW * 0.6);
-    c.fillStyle = NAVY;
+    c.fillStyle = dateInk;
     c.fillText(content.date!, W / 2, H * (round ? 0.7 : 0.74));
   }
   return cv;

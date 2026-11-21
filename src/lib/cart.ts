@@ -12,6 +12,7 @@ export interface LineOptions {
   frontText?: string;
   logoName?: string; // file name; the file itself is in IndexedDB under the line id
   eventDate?: string; // YYYY-MM-DD
+  themeColours?: string[]; // up to 3 hex codes, e.g. #1B2A4E
   bag: boolean;
   bagColour?: string;
   card: boolean;

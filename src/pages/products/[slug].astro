@@ -155,6 +155,18 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
                 <label class="field">Event date (printed as 12.12.2026)
                   <input type="date" name="eventDate" />
                 </label>
+                <div class="field theme" data-theme>
+                  <span>Event theme colours (optional, up to 3)</span>
+                  <div class="theme__list" data-theme-list></div>
+                  <button type="button" class="theme__add" data-theme-add>+ Add a colour</button>
+                  <template data-theme-row>
+                    <div class="theme__row">
+                      <input type="color" class="theme__pick" value="#1B2A4E" />
+                      <input type="text" class="theme__hex" value="#1B2A4E" maxlength="7" spellcheck="false" autocomplete="off" inputmode="text" />
+                      <button type="button" class="theme__rm">Remove</button>
+                    </div>
+                  </template>
+                </div>
                 <p class="field__err" data-err="label" hidden></p>
               </div>
             </fieldset>
@@ -277,6 +289,9 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
         pack: checked('packaging'),
         label: checked('label') === 'yes',
         front: (checked('front') as 'text' | 'logo') || 'text',
+        themeColours: Array.from(form.querySelectorAll<HTMLInputElement>('.theme__hex'))
+          .map((i) => i.value.trim().toUpperCase())
+          .filter((v) => /^#[0-9A-F]{6}$/.test(v)),
         frontText: textInput.value.trim(),
         eventDate: dateInput.value,
         bag: box('bag'),
@@ -325,6 +340,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
               text: o.front === 'text' ? o.frontText : '',
               logo: o.front === 'logo' ? logoImg : null,
               date: labelDate(o.eventDate),
+              colours: o.themeColours,
             });
             cv.hidden = false;
             img.style.visibility = 'hidden';
@@ -365,6 +381,9 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
         lpFront.textContent = o.frontText || 'Your names';
       }
       lpFront.classList.toggle('is-empty', o.front === 'text' && !o.frontText);
+      lp.style.borderColor = o.themeColours[0] || '';
+      lpFront.style.color = o.themeColours[1] || '';
+      ($('[data-lp-date]') as HTMLElement).style.color = o.themeColours[2] || o.themeColours[1] || '';
       $('[data-lp-date]')!.textContent = labelDate(o.eventDate);
       // price bar
       const final = read();
@@ -396,6 +415,39 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
         refresh();
       }),
     );
+
+    // ---- event theme colours (up to 3, colour picker + hex code) ----------------
+    const themeList = $('[data-theme-list]')!;
+    const themeAdd = $<HTMLButtonElement>('[data-theme-add]')!;
+    const themeTpl = $<HTMLTemplateElement>('[data-theme-row]')!;
+    const syncThemeUi = () => {
+      const rows = themeList.querySelectorAll('.theme__row');
+      themeAdd.hidden = rows.length >= 3;
+      rows.forEach((r, i) => {
+        r.querySelector('.theme__pick')!.setAttribute('aria-label', `Theme colour ${i + 1}`);
+        r.querySelector('.theme__hex')!.setAttribute('aria-label', `Hex code for colour ${i + 1}`);
+      });
+    };
+    themeAdd.addEventListener('click', () => {
+      if (themeList.children.length >= 3) return;
+      const row = themeTpl.content.firstElementChild!.cloneNode(true) as HTMLElement;
+      const pick = row.querySelector<HTMLInputElement>('.theme__pick')!;
+      const hex = row.querySelector<HTMLInputElement>('.theme__hex')!;
+      pick.addEventListener('input', () => { hex.value = pick.value.toUpperCase(); hex.classList.remove('is-bad'); refresh(); });
+      hex.addEventListener('input', () => {
+        let v = hex.value.trim();
+        if (v && v[0] !== '#') v = '#' + v;
+        const ok = /^#[0-9a-fA-F]{6}$/.test(v);
+        hex.classList.toggle('is-bad', !ok && v.length >= 7);
+        if (ok) { pick.value = v.toLowerCase(); refresh(); }
+      });
+      hex.addEventListener('blur', () => { if (hex.value && hex.value[0] !== '#') hex.value = '#' + hex.value; hex.value = hex.value.toUpperCase(); });
+      row.querySelector('.theme__rm')!.addEventListener('click', () => { row.remove(); syncThemeUi(); refresh(); });
+      themeList.appendChild(row);
+      syncThemeUi();
+      refresh();
+      hex.focus();
+    });
 
     fileInput.addEventListener('change', () => {
       const f = fileInput.files?.[0] || null;
@@ -451,6 +503,7 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
         frontText: o.label && o.front === 'text' ? o.frontText : undefined,
         logoName: o.label && o.front === 'logo' ? logoFile?.name : undefined,
         eventDate: o.label ? o.eventDate : undefined,
+        themeColours: o.label && o.themeColours.length ? o.themeColours : undefined,
         bag: o.bag, bagColour: o.bag ? o.bagColour : undefined,
         card: o.card, cardShape: o.card ? o.cardShape : undefined,
         tag: o.tag,
@@ -477,6 +530,13 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
   .pp__shot { position: absolute; inset: 0; opacity: 0; transition: opacity 0.35s ease; background: var(--white); }
   .pp__shot.is-on { opacity: 1; position: relative; }
   .pp__shot--pack :global(img) { object-fit: contain !important; padding: 6%; background: #fff; }
+  .theme { gap: 8px; }
+  .theme__list { display: grid; gap: 8px; }
+  .theme__row { display: flex; align-items: center; gap: 8px; }
+  .theme__pick { width: 52px !important; min-height: 48px; flex: none; padding: 2px; border: 2px solid var(--line); border-radius: 12px; background: var(--white); cursor: pointer; }
+  .theme__hex { width: 130px !important; font-family: ui-monospace, Menlo, monospace !important; text-transform: uppercase; }
+  .theme__hex.is-bad { border-color: #b3123f !important; }
+  .theme__rm, .theme__add { background: none; border: 0; padding: 10px 4px; color: var(--navy); font: 700 0.95rem var(--body); text-decoration: underline; cursor: pointer; justify-self: start; }
   .pp__paint { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 6%; background: #fff; }
   .pp__lpcap { margin: 16px 0 6px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
   .opts__sub { margin: 14px 0 8px; font-weight: 700; font-size: 0.95rem; }

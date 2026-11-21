@@ -44,7 +44,7 @@ import { url } from '../lib/url';
   const $ = (s: string) => document.querySelector<HTMLElement>(s)!;
 
   function details(l: CartLine) {
-    return [l.size, l.scent, l.container, l.lid && `${l.lid} lid`, labelSummary(l),
+    return [l.size, l.scent, l.container, l.lid && `${l.lid} lid`, labelSummary(l), l.themeColours?.length && `Colours: ${l.themeColours.join(', ')}`,
       l.bag && `Bag: ${l.bagColour}`, l.card && `Card: ${l.cardShape}`, l.tag && 'Thank you tag']
       .filter(Boolean).join(' · ');
   }
