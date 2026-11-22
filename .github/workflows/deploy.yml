@@ -30,8 +30,8 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          SITE_URL: ${{ vars.SITE_URL || 'https://medaasefavors.github.io' }}
-          BASE_PATH: ${{ vars.BASE_PATH || '/medaase-favors' }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://medaasefavors.com' }}
+          BASE_PATH: ${{ vars.BASE_PATH || '/' }}
           PUBLIC_PAYSTACK_KEY: ${{ secrets.PUBLIC_PAYSTACK_KEY }}
           PUBLIC_ORDER_API_URL: ${{ secrets.PUBLIC_ORDER_API_URL }}
       - uses: actions/upload-pages-artifact@v3

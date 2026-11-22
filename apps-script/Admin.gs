@@ -11,7 +11,7 @@
  * (Deploy → Web app, Execute as: Me, Who has access: Anyone).
  */
 
-const SITE_URL = 'https://medaasefavors.github.io/medaase-favors';
+const SITE_URL = 'https://medaasefavors.com';
 const REPO = 'medaasefavors/medaase-favors';
 const PUBLISHED_FILE = 'medaase-favors-published-catalogue.json';
 
