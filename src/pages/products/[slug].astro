@@ -215,12 +215,19 @@ const desc = `${p.name} souvenirs personalised with your names or logo and event
                         <label class="tile"><input type="radio" name="cardDesign" value={d.name} /><span><Illus name={`design-${d.id}`} /><strong>{d.name}</strong><small>{d.note}</small></span></label>
                       ))}
                     </div>
-                    <p class="opts__sub">And the card shape</p>
-                    <div class="tiles tiles--small">
-                      {CARD_SHAPES.map((s) => (
-                        <label class="tile"><input type="radio" name="cardShape" value={s} /><span><Illus name={s === 'Rectangle' ? 'shape-rect' : s === 'Circle' ? 'shape-circle' : 'shape-custom'} /><strong>{s}</strong><small>{s === 'Custom shape' ? `+${cedi(ADD_ONS.shape)} each` : 'Included'}</small></span></label>
-                      ))}
-                    </div>
+                    {CARD_SHAPES.length > 1 ? (
+                      <>
+                        <p class="opts__sub">And the card shape</p>
+                        <div class="tiles tiles--small">
+                          {CARD_SHAPES.map((s) => (
+                            <label class="tile"><input type="radio" name="cardShape" value={s} /><span><Illus name={s === 'Rectangle' ? 'shape-rect' : s === 'Circle' ? 'shape-circle' : 'shape-custom'} /><strong>{s}</strong><small>{s === 'Custom shape' ? `+${cedi(ADD_ONS.shape)} each` : 'Included'}</small></span></label>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      // One standard card shape: chosen automatically, no question shown.
+                      <input type="radio" name="cardShape" value={CARD_SHAPES[0] ?? 'Rectangle'} checked hidden aria-hidden="true" />
+                    )}
                     <p class="field__hint">We design your card to match your label and send it with your label designs.</p>
                     <p class="field__err" data-err="card" hidden></p>
                     <button type="button" class="btn" data-next="presentation">Continue</button>

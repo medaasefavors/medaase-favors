@@ -77,12 +77,12 @@
   {
    "name": "Circle",
    "extra": false,
-   "show": true
+   "show": false
   },
   {
    "name": "Custom shape",
    "extra": true,
-   "show": true
+   "show": false
   }
  ],
  "products": [
@@ -492,14 +492,14 @@
    "shortName": "Lip Balm",
    "category": "lip",
    "blurb": "Pocket sized and always welcome.",
-   "description": "Pocket sized and always welcome. A smooth, nourishing balm that slips into any clutch, and looks especially sweet mounted on a card in the shape of your choice.",
+   "description": "Pocket sized and always welcome. A smooth, nourishing balm that slips into any clutch, and looks especially sweet mounted on a printed card.",
    "kicker": "",
    "why": [
     "Small, affordable and loved by everyone from grandma to the cousins. It goes everywhere in a pocket or clutch.",
-    "Mount it on a printed card in a rectangle, circle, heart or a custom shape for an extra special touch."
+    "Mount it on a printed card with your names, the date and a short thank you message for an extra special touch."
    ],
    "photo": "",
-   "imageAlt": "Pink lip balm tube mounted on a heart shaped printed card",
+   "imageAlt": "Pink lip balm tube mounted on a printed thank you card",
    "sizes": [
     {
      "size": "One size 5g",

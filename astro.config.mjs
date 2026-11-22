@@ -15,7 +15,7 @@ export default defineConfig({
   build: { format: 'file' },
   integrations: [
     sitemap({
-      filter: (page) => !/\/(checkout|order\/)/.test(page) && !/404/.test(page),
+      filter: (page) => !/\/(checkout|order\/|card-styles)/.test(page) && !/404/.test(page),
     }),
   ],
 });

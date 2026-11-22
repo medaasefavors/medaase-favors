@@ -74,7 +74,7 @@ export const EVENT_PAGES: EventPage[] = [
     h1: "Naming ceremony souvenirs with your baby's name",
     intro: 'Thank everyone who came to welcome your little one with a favour that carries their name.',
     body: [
-      "Shea butter has always been part of caring for a newborn in Ghana, so a small jar with the baby's name feels just right. Lip balm on a heart-shaped card is another favourite.",
+      "Shea butter has always been part of caring for a newborn in Ghana, so a small jar with the baby's name feels just right. Lip balm on a printed card with the baby's name is another favourite.",
       "With the eighth day coming fast, you can order before the baby arrives and send us the name later.",
     ],
     products: ['pure-african-shea-butter', 'lip-balm', 'body-butter', 'hand-cream'],
