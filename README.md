@@ -8,7 +8,7 @@ Built with [Astro](https://astro.build): every page is plain HTML first, with in
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321/medaase-favors
+npm run dev      # http://localhost:4321
 npm run build    # outputs to dist/
 ```
 
@@ -31,7 +31,7 @@ Every push to `main` builds the site and publishes it to GitHub Pages.
 
 One-time setup: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 
-The site is served at `https://medaasefavors.github.io/medaase-favors`. When a custom domain is ready, add repository variables `SITE_URL` (for example `https://medaasefavors.com`) and `BASE_PATH` = `/`, then add the domain under Settings → Pages.
+The site is served at `https://medaasefavors.com` (custom domain, set in `public/CNAME` and under Settings → Pages). DNS is at Namecheap: four A records for `@` pointing to GitHub Pages and a `www` CNAME to `medaasefavors.github.io`. Email is Zoho Mail on the same domain.
 
 Secrets (Settings → Secrets and variables → Actions), needed from Phase 5:
 
