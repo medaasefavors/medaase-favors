@@ -68,6 +68,7 @@ import { url } from '../lib/url';
           <button class="btn co__pay" type="button" data-pay>Pay</button>
           <p class="co__note">Full payment upfront with Paystack: MTN MoMo, Telecel Cash, AirtelTigo Money or card.</p>
           <p class="co__note" data-pay-msg role="status" hidden></p>
+          <img class="co__secure" src={url('/images/secured-by-paystack.png')} width="511" height="111" alt="Secured by Paystack: Visa, Mastercard, MTN MoMo, Telecel Cash and AirtelTigo Money accepted" loading="lazy" decoding="async" />
         </aside>
       </div>
     </div>
@@ -356,5 +357,12 @@ import { url } from '../lib/url';
   @media (min-width: 960px) {
     .co { grid-template-columns: 1.6fr 1fr; align-items: start; }
     .co__sum { position: sticky; top: 92px; }
+  }
+  .co__secure {
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    margin: 18px auto 0;
   }
 </style>
