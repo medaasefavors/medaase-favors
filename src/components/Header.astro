@@ -71,6 +71,14 @@ const is = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
     position: sticky;
     top: 0;
     z-index: 50;
+  }
+  /* The frosted glass sits on a pseudo-element. A backdrop-filter on .hdr itself
+     would trap the fixed full-screen mobile menu inside the header bar. */
+  .hdr::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
     background: rgba(255, 255, 255, 0.78);
     backdrop-filter: blur(16px) saturate(1.4);
     -webkit-backdrop-filter: blur(16px) saturate(1.4);
@@ -202,9 +210,7 @@ const is = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
     z-index: 60;
     padding: 90px var(--gutter) 40px;
     overflow-y: auto;
-    background: rgba(27, 42, 78, 0.96);
-    backdrop-filter: blur(22px) saturate(1.5);
-    -webkit-backdrop-filter: blur(22px) saturate(1.5);
+    background: var(--navy);
   }
   .mm__panel, .mm__panel a { color: var(--white); }
   .mm__panel .btn { background: var(--white); color: var(--navy); border-color: var(--white); }
